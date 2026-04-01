@@ -19174,18 +19174,6 @@ do
             if not hrp then return end
 
             for _, aura_name in ipairs(active_auras) do
-
-
-
-
-
-
-
-
-
-
-
-
                 local aura_model = particle_auras[aura_name]
                 if aura_model then
                     local cloned = clone(aura_model)
