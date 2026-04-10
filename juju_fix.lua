@@ -12021,6 +12021,42 @@ do
         menu_references["server_position_indicator_icon_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "icon color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_icon_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0.89, ["transparency_flag"] = "server_position_indicator_icon_transparency"}})
         menu_references["server_position_indicator_glow_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "glow color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_glow_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0.9, ["transparency_flag"] = "server_position_indicator_glow_transparency"}})
         menu_references["server_position_indicator_background_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "background color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_background_color", ["default_color"] = color3_fromrgb(15, 15, 15), ["default_transparency"] = 0.89, ["transparency_flag"] = "server_position_indicator_background_transparency"}})
+
+        -- >> ( server pos indicator - character clone )
+        menu_references["spi_toggle"] = menu_references["hud_section"]:create_element(
+            {["name"] = "server pos indicator (clone)"},
+            {["toggle"] = {["flag"] = "spi_enabled", ["default"] = false}}
+        )
+        menu_references["spi_settings"] = menu_references["spi_toggle"]:create_settings()
+        menu_references["spi_show_clothes"] = menu_references["spi_settings"]:create_element(
+            {["name"] = "show clothes"},
+            {["toggle"] = {["flag"] = "spi_show_clothes", ["default"] = false}}
+        )
+        menu_references["spi_show_accessories"] = menu_references["spi_settings"]:create_element(
+            {["name"] = "show accessories"},
+            {["toggle"] = {["flag"] = "spi_show_accessories", ["default"] = true}}
+        )
+        menu_references["spi_highlight"] = menu_references["spi_settings"]:create_element(
+            {["name"] = "highlight"},
+            {["toggle"] = {["flag"] = "spi_highlight_enabled", ["default"] = true}}
+        )
+        menu_references["spi_color"] = menu_references["spi_settings"]:create_element(
+            {["name"] = "color"},
+            {["colorpicker"] = {
+                ["color_flag"]           = "spi_color",
+                ["transparency_flag"]    = "spi_transparency",
+                ["default_color"]        = color3_fromrgb(100, 150, 255),
+                ["default_transparency"] = 0.5,
+            }}
+        )
+        menu_references["spi_material"] = menu_references["spi_settings"]:create_element(
+            {["name"] = "material"},
+            {["dropdown"] = {
+                ["flag"]    = "spi_material",
+                ["options"] = {"Neon", "ForceField", "SmoothPlastic", "Glass"},
+                ["default"] = {"Neon"},
+            }}
+        )
         menu_references["crosshair_animations"] = menu_references["hud_section"]:create_element({["name"] = "crosshair animations"}, {["toggle"] = {["flag"] = "crosshair_animations"}})
         menu_references["crosshair_animations_settings"] = menu_references["crosshair_animations"]:create_settings()
         menu_references["crosshair_animations_fade_in_and_out"] = menu_references["crosshair_animations_settings"]:create_element({["name"] = "fade in and out"}, {["toggle"] = {["flag"] = "crosshair_animations_fade_in_and_out"}})
@@ -18920,7 +18956,7 @@ do
     menu_references["particle_aura"] = menu_references["local_character_section"]:create_element({["name"] = "particle aura"}, {["toggle"] = {["flag"] = "particle_aura"}})
         menu_references["particle_aura_settings"] = menu_references["particle_aura"]:create_settings()
         menu_references["particle_aura_color"] = menu_references["particle_aura_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "particle_aura_color", ["transparency_flag"] = "particle_aura_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
-        menu_references["particle_aura_particle"] = menu_references["particle_aura_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "particle_aura_particle", ["default"] = {"angel"}, ["options"] = {"starlight", "heavenly", "ribbon", "lightning", "sakura", "angel", "wind", "flow", "star", "angel wing", "blue heat", "heal aura"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}, ["multi"] = true, ["requires_one"] = true}})
+        menu_references["particle_aura_particle"] = menu_references["particle_aura_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "particle_aura_particle", ["default"] = {"angel"}, ["options"] = {"starlight", "heavenly", "ribbon", "lightning", "sakura", "angel", "wind", "flow", "star", "angel wing", "blue heat", "heal aura", "swirl", "bubble", "air", "ritual", "rain"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}, ["multi"] = true, ["requires_one"] = true}})
 
     do
         -- >> ( helper: build procedural lua auras as rbxm-style Model )
@@ -19226,6 +19262,111 @@ do
             ["angel wing"] = build_angel_wing_aura(),
             ["blue heat"] = build_blue_heat_aura(),
             ["heal aura"] = build_heal_aura(),
+            ["swirl"] = (function()
+                local model = Instance.new("Model") model.Name = "swirl"
+                local torso = Instance.new("Part") torso.Name = "LowerTorso" torso.Parent = model
+                local att = Instance.new("Attachment") att.Parent = torso
+                local e1 = Instance.new("ParticleEmitter")
+                e1.Brightness=10 e1.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0.101961,1,0.101961)),ColorSequenceKeypoint.new(1,Color3.new(0.101961,1,0.101961))}
+                e1.Lifetime=NumberRange.new(1,1) e1.LightEmission=0.4 e1.LockedToPart=true
+                e1.Orientation=Enum.ParticleOrientation.VelocityPerpendicular e1.Rate=10
+                e1.RotSpeed=NumberRange.new(200,400) e1.Rotation=NumberRange.new(-180,180)
+                e1.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,3.0625,1.8806),NumberSequenceKeypoint.new(0.642055,2,1.76194),NumberSequenceKeypoint.new(1,0.75,0.75)}
+                e1.Speed=NumberRange.new(3,6) e1.SpreadAngle=Vector2.new(10,-10) e1.Texture="rbxassetid://8047533775"
+                e1.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.170245,0.7,0.014881),NumberSequenceKeypoint.new(0.22546,0.03125,0.03125),NumberSequenceKeypoint.new(0.285276,0,0),NumberSequenceKeypoint.new(0.702454,0,0),NumberSequenceKeypoint.new(0.837423,0.9125,0.0601461),NumberSequenceKeypoint.new(1,1,0)}
+                e1.Parent=att
+                local e2 = Instance.new("ParticleEmitter")
+                e2.Brightness=10 e2.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0.129412,1,0.129412)),ColorSequenceKeypoint.new(1,Color3.new(0.129412,1,0.129412))}
+                e2.Lifetime=NumberRange.new(1,1) e2.LightEmission=1 e2.LockedToPart=true
+                e2.Orientation=Enum.ParticleOrientation.VelocityPerpendicular e2.Rate=10
+                e2.RotSpeed=NumberRange.new(100,300) e2.Rotation=NumberRange.new(-180,180)
+                e2.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,3.125,0),NumberSequenceKeypoint.new(0.416533,1.375,1.375),NumberSequenceKeypoint.new(1,0.9375,0.9375)}
+                e2.Speed=NumberRange.new(3,5) e2.SpreadAngle=Vector2.new(10,-10) e2.Texture="rbxassetid://8047796070"
+                e2.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.22546,0.03125,0.03125),NumberSequenceKeypoint.new(0.628834,0.25625,0.0593491),NumberSequenceKeypoint.new(0.837423,0.9125,0.0601461),NumberSequenceKeypoint.new(1,1,0)}
+                e2.Parent=att
+                local e3 = Instance.new("ParticleEmitter")
+                e3.Acceleration=Vector3.new(0,3,0) e3.Brightness=10 e3.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0,1,0.14902)),ColorSequenceKeypoint.new(1,Color3.new(0,1,0.14902))}
+                e3.Drag=3 e3.Lifetime=NumberRange.new(0.3,1) e3.LightEmission=1 e3.Orientation=Enum.ParticleOrientation.VelocityParallel
+                e3.Rate=30 e3.RotSpeed=NumberRange.new(-30,30)
+                e3.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(0.14687,0.4375,0.1875),NumberSequenceKeypoint.new(1,0,0)}
+                e3.Speed=NumberRange.new(5,15) e3.SpreadAngle=Vector2.new(180,-180) e3.Texture="rbxassetid://8611887361" e3.ZOffset=-1 e3.Parent=att
+                local e4 = Instance.new("ParticleEmitter")
+                e4.Acceleration=Vector3.new(0,3,0) e4.Brightness=10 e4.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0,1,0.14902)),ColorSequenceKeypoint.new(1,Color3.new(0,1,0.14902))}
+                e4.Drag=3 e4.Lifetime=NumberRange.new(1,1) e4.LightEmission=1 e4.RotSpeed=NumberRange.new(-30,30) e4.Rotation=NumberRange.new(-30,30)
+                e4.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(0.149278,0.6875,0.6875),NumberSequenceKeypoint.new(1,0,0)}
+                e4.Speed=NumberRange.new(5,10) e4.SpreadAngle=Vector2.new(180,-180) e4.Texture="rbxassetid://8611887703" e4.ZOffset=2 e4.Parent=att
+                return model
+            end)(),
+            ["bubble"] = (function()
+                local model = Instance.new("Model") model.Name = "bubble"
+                local torso = Instance.new("Part") torso.Name = "LowerTorso" torso.Parent = model
+                local att = Instance.new("Attachment") att.Parent = torso
+                local e1 = Instance.new("ParticleEmitter")
+                e1.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(1,1,0.588235)),ColorSequenceKeypoint.new(0.5,Color3.new(1,0.901961,0.396078)),ColorSequenceKeypoint.new(1,Color3.new(1,1,0.588235))}
+                e1.Lifetime=NumberRange.new(0.333,0.333) e1.LightEmission=1 e1.LockedToPart=true e1.Rate=12
+                e1.Rotation=NumberRange.new(-180,180) e1.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,4.8,0.4),NumberSequenceKeypoint.new(1,4.8,0.4)}
+                e1.Speed=NumberRange.new(0,0) e1.Texture="rbxassetid://1084955012"
+                e1.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,0.883114,0),NumberSequenceKeypoint.new(0.0555,0.982574,0),NumberSequenceKeypoint.new(0.111,0.170537,0),NumberSequenceKeypoint.new(0.1665,0.393078,0),NumberSequenceKeypoint.new(0.222,0.129063,0),NumberSequenceKeypoint.new(0.2775,0.920743,0),NumberSequenceKeypoint.new(0.333,0.415693,0),NumberSequenceKeypoint.new(0.3885,0.215033,0),NumberSequenceKeypoint.new(0.444,0.782067,0),NumberSequenceKeypoint.new(0.4995,0.232032,0),NumberSequenceKeypoint.new(0.555,0.789819,0),NumberSequenceKeypoint.new(0.6105,0.810999,0),NumberSequenceKeypoint.new(0.666,0.911618,0),NumberSequenceKeypoint.new(0.7215,0.874569,0),NumberSequenceKeypoint.new(0.777,0.419294,0),NumberSequenceKeypoint.new(0.8325,0.300272,0),NumberSequenceKeypoint.new(0.888,0.164006,0),NumberSequenceKeypoint.new(0.9435,0.396039,0),NumberSequenceKeypoint.new(0.999,0.700339,0),NumberSequenceKeypoint.new(1,1,0)}
+                e1.Parent=att
+                local e2 = Instance.new("ParticleEmitter")
+                e2.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(1,1,1)),ColorSequenceKeypoint.new(0.49481,Color3.new(1,0.815686,0.254902)),ColorSequenceKeypoint.new(1,Color3.new(1,1,1))}
+                e2.Lifetime=NumberRange.new(1,1) e2.LightEmission=1 e2.LockedToPart=true e2.Rate=6
+                e2.Rotation=NumberRange.new(-180,180) e2.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,4,0),NumberSequenceKeypoint.new(1,4,0)}
+                e2.Speed=NumberRange.new(0,0) e2.Texture="rbxassetid://1084955488"
+                e2.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.5,0.7,0),NumberSequenceKeypoint.new(1,1,0)}
+                e2.Parent=att
+                return model
+            end)(),
+            ["air"] = (function()
+                local model = Instance.new("Model") model.Name = "air"
+                local torso = Instance.new("Part") torso.Name = "LowerTorso" torso.Parent = model
+                local att = Instance.new("Attachment") att.Parent = torso
+                local e1 = Instance.new("ParticleEmitter")
+                e1.Brightness=15 e1.Lifetime=NumberRange.new(2,2) e1.LightEmission=1
+                e1.Orientation=Enum.ParticleOrientation.VelocityParallel e1.Rate=75 e1.RotSpeed=NumberRange.new(200,200)
+                e1.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,7,0),NumberSequenceKeypoint.new(1,7,0)}
+                e1.Speed=NumberRange.new(0.01,0.01) e1.SpreadAngle=Vector2.new(-360,360)
+                e1.Squash=NumberSequence.new{NumberSequenceKeypoint.new(0,0,0.163934),NumberSequenceKeypoint.new(1,0,0)}
+                e1.Texture="rbxassetid://10558425570"
+                e1.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.500623,0.93125,0.01875),NumberSequenceKeypoint.new(1,1,0)}
+                e1.ZOffset=-1 e1.LockedToPart=true e1.Parent=att
+                return model
+            end)(),
+            ["ritual"] = (function()
+                local model = Instance.new("Model") model.Name = "ritual"
+                local torso = Instance.new("Part") torso.Name = "LowerTorso" torso.Parent = model
+                local att = Instance.new("Attachment") att.Parent = torso
+                local e1 = Instance.new("ParticleEmitter")
+                e1.Brightness=7 e1.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(1,0,0)),ColorSequenceKeypoint.new(1,Color3.new(1,0,0))}
+                e1.Lifetime=NumberRange.new(1,1) e1.LightEmission=1 e1.LockedToPart=true
+                e1.Orientation=Enum.ParticleOrientation.VelocityPerpendicular e1.Rate=1 e1.RotSpeed=NumberRange.new(300,300)
+                e1.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,5,0),NumberSequenceKeypoint.new(1,5,0)}
+                e1.Speed=NumberRange.new(0.001,0.001) e1.Texture="rbxassetid://8920073892"
+                e1.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.166879,0.617143,0),NumberSequenceKeypoint.new(0.831847,0.6,0),NumberSequenceKeypoint.new(1,1,0)}
+                e1.ZOffset=1 e1.Parent=att
+                local e2 = Instance.new("ParticleEmitter")
+                e2.Brightness=7 e2.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(1,0,0)),ColorSequenceKeypoint.new(1,Color3.new(1,0,0))}
+                e2.Lifetime=NumberRange.new(1,1) e2.LightEmission=1 e2.LockedToPart=true
+                e2.Orientation=Enum.ParticleOrientation.VelocityPerpendicular e2.Rate=1 e2.RotSpeed=NumberRange.new(360,360)
+                e2.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,5,0),NumberSequenceKeypoint.new(1,5,0)}
+                e2.Speed=NumberRange.new(0.001,0.001) e2.Texture="http://www.roblox.com/asset/?id=564938805"
+                e2.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.107643,0,0),NumberSequenceKeypoint.new(0.828025,0,0),NumberSequenceKeypoint.new(1,1,0)}
+                e2.Parent=att
+                return model
+            end)(),
+            ["rain"] = (function()
+                local model = Instance.new("Model") model.Name = "rain"
+                local hrp = Instance.new("Part") hrp.Name = "HumanoidRootPart" hrp.Parent = model
+                local att = Instance.new("Attachment") att.Parent = hrp
+                local e1 = Instance.new("ParticleEmitter")
+                e1.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0.67451,0.815686,0.85098)),ColorSequenceKeypoint.new(1,Color3.new(0.67451,0.815686,0.85098))}
+                e1.EmissionDirection=Enum.NormalId.Top e1.Lifetime=NumberRange.new(1.5,1.5) e1.LightInfluence=1 e1.Rate=100
+                e1.Size=NumberSequence.new{NumberSequenceKeypoint.new(0,0.5,0),NumberSequenceKeypoint.new(1,0.5,0)}
+                e1.Speed=NumberRange.new(25,25) e1.Texture="rbxassetid://419625073"
+                e1.Transparency=NumberSequence.new{NumberSequenceKeypoint.new(0,0.5,0),NumberSequenceKeypoint.new(1,0.5,0)}
+                e1.VelocityInheritance=100 e1.SpreadAngle=Vector2.new(10,10) e1.Parent=att
+                return model
+            end)(),
         }
 
         -- multi-aura: selected_auras is a list of active aura names
@@ -19460,43 +19601,6 @@ do
         joint_map          = {},
         forced_invisible   = {},
     }
-
-    -- UI
-    menu_references["spi_toggle"] = menu_references["local_character_section"]:create_element(
-        {["name"] = "server pos indicator"},
-        {["toggle"] = {["flag"] = "spi_enabled", ["default"] = false}}
-    )
-    menu_references["spi_settings"] = menu_references["spi_toggle"]:create_settings()
-
-    menu_references["spi_show_clothes"] = menu_references["spi_settings"]:create_element(
-        {["name"] = "show clothes"},
-        {["toggle"] = {["flag"] = "spi_show_clothes", ["default"] = false}}
-    )
-    menu_references["spi_show_accessories"] = menu_references["spi_settings"]:create_element(
-        {["name"] = "show accessories"},
-        {["toggle"] = {["flag"] = "spi_show_accessories", ["default"] = true}}
-    )
-    menu_references["spi_highlight"] = menu_references["spi_settings"]:create_element(
-        {["name"] = "highlight"},
-        {["toggle"] = {["flag"] = "spi_highlight_enabled", ["default"] = true}}
-    )
-    menu_references["spi_color"] = menu_references["spi_settings"]:create_element(
-        {["name"] = "color"},
-        {["colorpicker"] = {
-            ["color_flag"]            = "spi_color",
-            ["transparency_flag"]     = "spi_transparency",
-            ["default_color"]         = color3_fromrgb(100, 150, 255),
-            ["default_transparency"]  = 0.5,
-        }}
-    )
-    menu_references["spi_material"] = menu_references["spi_settings"]:create_element(
-        {["name"] = "material"},
-        {["dropdown"] = {
-            ["flag"]    = "spi_material",
-            ["options"] = {"Neon", "ForceField", "SmoothPlastic", "Glass"},
-            ["default"] = {"Neon"},
-        }}
-    )
 
     -- Helpers
     local function spi_apply_visuals()
