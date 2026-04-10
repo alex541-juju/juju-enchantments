@@ -12021,27 +12021,25 @@ do
         menu_references["server_position_indicator_icon_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "icon color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_icon_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0.89, ["transparency_flag"] = "server_position_indicator_icon_transparency"}})
         menu_references["server_position_indicator_glow_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "glow color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_glow_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0.9, ["transparency_flag"] = "server_position_indicator_glow_transparency"}})
         menu_references["server_position_indicator_background_color"] = menu_references["server_position_indicator_settings"]:create_element({["name"] = "background color"}, {["colorpicker"] = {["color_flag"] = "server_position_indicator_background_color", ["default_color"] = color3_fromrgb(15, 15, 15), ["default_transparency"] = 0.89, ["transparency_flag"] = "server_position_indicator_background_transparency"}})
-
-        -- >> ( server pos indicator - character clone )
-        menu_references["spi_toggle"] = menu_references["hud_section"]:create_element(
-            {["name"] = "server pos indicator (clone)"},
+        -- >> ( character clone - thêm vào settings của server position indicator )
+        menu_references["spi_toggle"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "character clone"},
             {["toggle"] = {["flag"] = "spi_enabled", ["default"] = false}}
         )
-        menu_references["spi_settings"] = menu_references["spi_toggle"]:create_settings()
-        menu_references["spi_show_clothes"] = menu_references["spi_settings"]:create_element(
-            {["name"] = "show clothes"},
+        menu_references["spi_show_clothes"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "clone clothes"},
             {["toggle"] = {["flag"] = "spi_show_clothes", ["default"] = false}}
         )
-        menu_references["spi_show_accessories"] = menu_references["spi_settings"]:create_element(
-            {["name"] = "show accessories"},
+        menu_references["spi_show_accessories"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "clone accessories"},
             {["toggle"] = {["flag"] = "spi_show_accessories", ["default"] = true}}
         )
-        menu_references["spi_highlight"] = menu_references["spi_settings"]:create_element(
-            {["name"] = "highlight"},
+        menu_references["spi_highlight"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "clone highlight"},
             {["toggle"] = {["flag"] = "spi_highlight_enabled", ["default"] = true}}
         )
-        menu_references["spi_color"] = menu_references["spi_settings"]:create_element(
-            {["name"] = "color"},
+        menu_references["spi_color"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "clone color"},
             {["colorpicker"] = {
                 ["color_flag"]           = "spi_color",
                 ["transparency_flag"]    = "spi_transparency",
@@ -12049,8 +12047,8 @@ do
                 ["default_transparency"] = 0.5,
             }}
         )
-        menu_references["spi_material"] = menu_references["spi_settings"]:create_element(
-            {["name"] = "material"},
+        menu_references["spi_material"] = menu_references["server_position_indicator_settings"]:create_element(
+            {["name"] = "clone material"},
             {["dropdown"] = {
                 ["flag"]    = "spi_material",
                 ["options"] = {"Neon", "ForceField", "SmoothPlastic", "Glass"},
