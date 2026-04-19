@@ -19624,8 +19624,8 @@ do
 
     menu_references["china_hat"] = menu_references["local_character_section"]:create_element({["name"] = "china hat"}, {["toggle"] = {["flag"] = "china_hat"}})
         menu_references["china_hat_settings"] = menu_references["china_hat"]:create_settings()
-        menu_references["china_hat_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "china_hat_color", ["transparency_flag"] = "china_hat_color_transparency", ["default_color"] = color3_fromrgb(255, 105, 180), ["default_transparency"] = 0.2}})
-        menu_references["china_hat_light_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "light color"}, {["colorpicker"] = {["color_flag"] = "china_hat_light_color", ["transparency_flag"] = "china_hat_light_transparency", ["default_color"] = color3_fromrgb(255, 105, 180), ["default_transparency"] = 0}})
+        menu_references["china_hat_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "china_hat_color", ["transparency_flag"] = "china_hat_color_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
+        menu_references["china_hat_light_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "light color"}, {["colorpicker"] = {["color_flag"] = "china_hat_light_color", ["transparency_flag"] = "china_hat_light_transparency", ["default_color"] = color3_fromrgb(133, 220, 225), ["default_transparency"] = 0}})
         menu_references["china_hat_scale"] = menu_references["china_hat_settings"]:create_element({["name"] = "scale"}, {["slider"] = {["flag"] = "china_hat_scale", ["min"] = 0.5, ["max"] = 4, ["default"] = 1.7, ["decimals"] = 2}})
         menu_references["china_hat_light_brightness"] = menu_references["china_hat_settings"]:create_element({["name"] = "light brightness"}, {["slider"] = {["flag"] = "china_hat_light_brightness", ["min"] = 0, ["max"] = 10, ["default"] = 5, ["decimals"] = 1}})
 
@@ -19657,7 +19657,7 @@ do
                 ["Anchored"]    = false,
                 ["CanCollide"]  = false,
                 ["CastShadow"]  = false,
-                ["Color"]       = flags["china_hat_color"] or color3_fromrgb(255, 105, 180),
+                ["Color"]       = flags["china_hat_color"] or color3_fromrgb(133, 220, 225),
                 ["Name"]        = "ChinaHat",
                 ["Parent"]      = char,
             })
@@ -19677,7 +19677,7 @@ do
             })
 
             local light = create_instance("PointLight", {
-                ["Color"]      = flags["china_hat_light_color"] or color3_fromrgb(255, 105, 180),
+                ["Color"]      = flags["china_hat_light_color"] or color3_fromrgb(133, 220, 225),
                 ["Brightness"] = flags["china_hat_light_brightness"] or 5,
                 ["Range"]      = 12,
                 ["Shadows"]    = true,
