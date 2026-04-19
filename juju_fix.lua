@@ -12175,7 +12175,7 @@ do
         menu_references["drawing_crosshair_outline_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "outline color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_outline_color", ["default_color"] = color3_fromrgb(15, 15, 15), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_outline_transparency"}})
         menu_references["drawing_crosshair_line_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_line_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_line_transparency"}})
         menu_references["drawing_crosshair_line_thickness"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line thickness"}, {["slider"] = {["flag"] = "drawing_crosshair_line_thickness", ["min"] = 1, ["max"] = 4, ["suffix"] = "px", ["default"] = 2}})
-        menu_references["drawing_crosshair_line_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line size"}, {["slider"] = {["flag"] = "drawing_crosshair_line_size", ["min"] = 4, ["max"] = 30, ["suffix"] = "px", ["default"] = 5}})
+        menu_references["drawing_crosshair_line_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line size"}, {["slider"] = {["flag"] = "drawing_crosshair_line_size", ["min"] = 4, ["max"] = 30, ["suffix"] = "px", ["default"] = 12}})
         menu_references["drawing_crosshair_gap_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "gap size"}, {["slider"] = {["flag"] = "drawing_crosshair_gap_size", ["min"] = 1, ["max"] = 30, ["suffix"] = "px", ["default"] = 2}})
         menu_references["drawing_crosshair_rotation"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "rotating"}, {["slider"] = {["flag"] = "drawing_crosshair_rotation", ["min"] = 0, ["max"] = 100, ["suffix"] = "%", ["min_text"] = "off"}})
         menu_references["center_panel"] = menu_references["hud_section"]:create_element({["name"] = "center panel"}, {["toggle"] = {["flag"] = "center_panel"}})
@@ -12632,61 +12632,63 @@ do
             local angles = {rot_rad, pi / 2 + rot_rad, pi + rot_rad, 3 * pi / 2 + rot_rad}
 
             if crosshair_style == "symbol" then
-                -- symbol style: each arm is a filled triangle (wide base at gap, point at tip)
-                -- lines[1..8]  = 4 outline triangles (odd=fill, even=outline)
-                -- lines[17,18] = center dot (fill, outline)
-                local half_base = thickness * 1.2
+                -- symbol style: 4 sharp triangles pointing outward
+                -- base width scales with arm length for a proper pointed look
+                local half_base = len * 0.35 + 1.5  -- wide enough to see, scales with length
 
                 for i = 1, 4 do
-                    local angle = angles[i]
-                    local perp  = angle + pi / 2
+                    local angle   = angles[i]
+                    local perp    = angle + pi / 2
 
-                    -- tip point (sharp end)
-                    local tx = px + (gap + len) * cos(angle)
-                    local ty = py + (gap + len) * sin(angle)
-                    -- base left
+                    -- tip (sharp point at end of arm)
+                    local tx  = px + (gap + len) * cos(angle)
+                    local ty  = py + (gap + len) * sin(angle)
+                    -- base corners (at gap from center)
                     local blx = px + gap * cos(angle) + half_base * cos(perp)
                     local bly = py + gap * sin(angle) + half_base * sin(perp)
-                    -- base right
                     local brx = px + gap * cos(angle) - half_base * cos(perp)
                     local bry = py + gap * sin(angle) - half_base * sin(perp)
 
-                    -- outline triangle (slightly bigger)
-                    local otx = px + (gap + len + 1.5) * cos(angle)
-                    local oty = py + (gap + len + 1.5) * sin(angle)
-                    local oblx = px + (gap - 1) * cos(angle) + (half_base + 1.5) * cos(perp)
-                    local obly = py + (gap - 1) * sin(angle) + (half_base + 1.5) * sin(perp)
-                    local obrx = px + (gap - 1) * cos(angle) - (half_base + 1.5) * cos(perp)
-                    local obry = py + (gap - 1) * sin(angle) - (half_base + 1.5) * sin(perp)
+                    -- outline: 1px bigger all around
+                    local ob = half_base + 1
+                    local otx  = px + (gap + len + 1) * cos(angle)
+                    local oty  = py + (gap + len + 1) * sin(angle)
+                    local oblx = px + (gap - 0.5) * cos(angle) + ob * cos(perp)
+                    local obly = py + (gap - 0.5) * sin(angle) + ob * sin(perp)
+                    local obrx = px + (gap - 0.5) * cos(angle) - ob * cos(perp)
+                    local obry = py + (gap - 0.5) * sin(angle) - ob * sin(perp)
 
                     local idx_fill    = (i - 1) * 2 + 1
                     local idx_outline = idx_fill + 1
 
-                    lines[idx_fill]["PointA"]      = vector2_new(tx,  ty)
-                    lines[idx_fill]["PointB"]      = vector2_new(blx, bly)
-                    lines[idx_fill]["PointC"]      = vector2_new(brx, bry)
-                    lines[idx_fill]["Color"]       = line_color
-                    lines[idx_fill]["Filled"]      = true
-                    lines[idx_fill]["Visible"]     = true
+                    -- draw outline first (lower ZIndex = behind)
+                    lines[idx_outline]["PointA"]  = vector2_new(otx,  oty)
+                    lines[idx_outline]["PointB"]  = vector2_new(oblx, obly)
+                    lines[idx_outline]["PointC"]  = vector2_new(obrx, obry)
+                    lines[idx_outline]["Color"]   = outline_color
+                    lines[idx_outline]["Filled"]  = true
+                    lines[idx_outline]["Visible"] = true
 
-                    lines[idx_outline]["PointA"]   = vector2_new(otx,  oty)
-                    lines[idx_outline]["PointB"]   = vector2_new(oblx, obly)
-                    lines[idx_outline]["PointC"]   = vector2_new(obrx, obry)
-                    lines[idx_outline]["Color"]    = outline_color
-                    lines[idx_outline]["Filled"]   = true
-                    lines[idx_outline]["Visible"]  = true
+                    -- draw fill on top
+                    lines[idx_fill]["PointA"]  = vector2_new(tx,  ty)
+                    lines[idx_fill]["PointB"]  = vector2_new(blx, bly)
+                    lines[idx_fill]["PointC"]  = vector2_new(brx, bry)
+                    lines[idx_fill]["Color"]   = line_color
+                    lines[idx_fill]["Filled"]  = true
+                    lines[idx_fill]["Visible"] = true
                 end
 
                 -- center dot
+                local dot_r = math.max(2, thickness)
                 if lines[17] then
-                    lines[17]["Position"] = vector2_new(px - 2, py - 2)
-                    lines[17]["Size"]     = vector2_new(4, 4)
+                    lines[17]["Position"] = vector2_new(px - dot_r,     py - dot_r)
+                    lines[17]["Size"]     = vector2_new(dot_r * 2,       dot_r * 2)
                     lines[17]["Color"]    = line_color
                     lines[17]["Visible"]  = true
                 end
                 if lines[18] then
-                    lines[18]["Position"] = vector2_new(px - 3, py - 3)
-                    lines[18]["Size"]     = vector2_new(6, 6)
+                    lines[18]["Position"] = vector2_new(px - dot_r - 1, py - dot_r - 1)
+                    lines[18]["Size"]     = vector2_new(dot_r * 2 + 2,  dot_r * 2 + 2)
                     lines[18]["Color"]    = outline_color
                     lines[18]["Visible"]  = true
                 end
