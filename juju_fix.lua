@@ -1,4 +1,4 @@
---> dont make key sys pls
+-- > dont make key sys pls
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
