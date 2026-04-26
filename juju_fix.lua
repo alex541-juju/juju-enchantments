@@ -8728,7 +8728,8 @@ do
                         local handle = args[2]
                         local dir = (mb_smart_origin - mb_target_pos)["Unit"]
                         local Magnitude = dir["Magnitude"]
-                        spawn(get_bullet_result, nil, mb_target_part)
+                        local mb_player = find_first_child(players_service, mb_target_part["Parent"]["Name"])
+                        if mb_player then spawn(get_bullet_result, mb_player, mb_target_part) end
                         return old_namecall(self, "ShootGun", handle, mb_smart_origin, mb_target_pos, mb_target_part, (Magnitude <= 0 or Magnitude ~= Magnitude) and vector3_new(0,-1,0) or dir)
                     end
 
@@ -10481,7 +10482,7 @@ do
         mb_smart_origin = nil
         local mb_fov_circle = create_real_drawing("Circle", {["Visible"] = false, ["Filled"] = false, ["Thickness"] = 1.5, ["ZIndex"] = 10, ["Color"] = color3_fromrgb(255, 136, 0), ["Transparency"] = 1})
         local mb_fov_outline = create_real_drawing("Circle", {["Visible"] = false, ["Filled"] = false, ["Thickness"] = 3,   ["ZIndex"] = 9,  ["Color"] = color3_fromrgb(0, 0, 0),   ["Transparency"] = 1})
-        local mb_ray_params  = RaycastParams.new()
+        local mb_ray_params  = RaycastParams["new"]()
         mb_ray_params["FilterType"] = Enum["RaycastFilterType"]["Exclude"]
 
         local mb_heartbeat_conn = nil
@@ -11748,11 +11749,12 @@ do
             return asset
         end
 
+        local music_sound_service = cloneref(game:GetService("SoundService"))
+
         local function music_stop()
             if music_sound then
                 pcall(function()
-                    music_sound["Stop"](music_sound)
-                    music_sound["Parent"] = nil
+                    music_sound:Stop()
                     music_sound:Destroy()
                 end)
                 music_sound = nil
@@ -11768,13 +11770,13 @@ do
                 return
             end
             music_sound = create_instance("Sound", {
-                ["SoundId"]      = asset,
-                ["Volume"]       = (flags["music_player_volume"] or 50) / 100,
-                ["Looped"]       = true,
-                ["Name"]         = "\0",
-                ["Parent"]       = game:GetService("SoundService"),
+                ["SoundId"]  = asset,
+                ["Volume"]   = (flags["music_player_volume"] or 50) / 100,
+                ["Looped"]   = true,
+                ["Name"]     = "\0",
+                ["Parent"]   = music_sound_service,
             })
-            music_sound["Play"](music_sound)
+            music_sound:Play()
             music_playing = true
             new_notification("playing: " .. name, 2)
         end
@@ -12275,7 +12277,7 @@ do
         local rand = Random.new()
 
         local function startLoop()
-            rain_connections[#rain_connections+1] = run_service["RenderStepped"]:Connect(function()
+            rain_connections[#rain_connections+1] = create_connection(run_service["RenderStepped"], function()
                 local part, _ = doRaycast(Ray.new(camera.CFrame.p, -rainDirection * RAIN_SCANHEIGHT), true)
                 if not part then
                     frame = RAIN_UPDATE_PERIOD
@@ -12295,7 +12297,7 @@ do
                     inside = true
                 end
             end)
-            rain_connections[#rain_connections+1] = run_service["Stepped"]:Connect(function()
+            rain_connections[#rain_connections+1] = create_connection(run_service["Stepped"], function()
                 frame = frame + 1
                 if frame >= RAIN_UPDATE_PERIOD then
                     local t = math.abs(camera.CFrame.lookVector:Dot(rainDirection))
@@ -12357,7 +12359,7 @@ do
                     splashAttachments[i].Parent = workspace.Terrain
                     rainAttachments[i].Parent = workspace.Terrain
                 end
-                SoundGroup.Parent = game:GetService("SoundService")
+                SoundGroup.Parent = cloneref(game:GetService("SoundService"))
                 RainSound:Play()
                 -- apply current settings
                 local intensity = (flags["weather_custom_rain_intensity"] or 100) / 100
@@ -15523,8 +15525,10 @@ local hit_sounds = {
 
         local do_hit_particle = LPH_NO_VIRTUALIZE(function(player, part)
             -- sample.hit style effects
-            if sample_hit_effects[flags["hit_particle_particle"] and flags["hit_particle_particle"] or ""] then
-                local func = sample_hit_effects[flags["hit_particle_particle"]]
+            local _eff = flags["hit_particle_particle"]
+            local eff_name = type(_eff) == "table" and _eff[1] or _eff
+            if sample_hit_effects[eff_name] then
+                local func = sample_hit_effects[eff_name]
                 if func and part then func(part["Position"]) end
                 return
             end
