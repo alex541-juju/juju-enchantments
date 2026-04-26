@@ -21917,17 +21917,20 @@ do
                         -- >> ( exp connection )
                         if flags["exp_connection"] and ragebot_target then
                             local char   = local_character
-                            local hum    = char and char:FindFirstChildOfClass("Humanoid")
                             local bp     = local_player["Backpack"]
                             local t_char = ragebot_target[4]
                             local t_hrp  = t_char["HumanoidRootPart"]
                             local t_head = t_char["Head"]
                             local hrp    = char and char:FindFirstChild("HumanoidRootPart")
+                            local t_pos  = t_hrp and (t_hrp["CFrame"] * CFrame.new(0, 1.8, 2.4)) or nil
 
                             if flags["exp_flame"] then
                                 local ft = char:FindFirstChild("[Flamethrower]") or bp:FindFirstChild("[Flamethrower]")
                                 if ft and t_hrp and hrp then
-                                    if ft["Parent"] ~= char then hum:EquipTool(ft) end
+                                    if ft["Parent"] ~= char then
+                                        setscriptable(ft, "Parent", true)
+                                        ft["Parent"] = char
+                                    end
                                     hrp["CFrame"] = t_hrp["CFrame"] * CFrame.new(0, 0, 3)
                                     local handle = ft:FindFirstChild("Handle")
                                     if handle and t_head then
@@ -21935,28 +21938,34 @@ do
                                     end
                                     ft:Activate()
                                 end
-                                return -- skip normal gun fire
+                                return
 
                             elseif flags["exp_knife"] then
                                 local knife = char:FindFirstChild("[Knife]") or bp:FindFirstChild("[Knife]")
-                                if knife and t_hrp and hrp then
-                                    if knife["Parent"] ~= char then hum:EquipTool(knife) end
-                                    hrp["CFrame"] = t_char:GetPivot() * CFrame.new(0, 1.8, 2.4)
+                                if knife and t_pos and hrp then
+                                    if knife["Parent"] ~= char then
+                                        setscriptable(knife, "Parent", true)
+                                        knife["Parent"] = char
+                                    end
+                                    hrp["CFrame"] = t_pos
                                     knife:Activate()
                                 end
-                                return -- skip normal gun fire
+                                return
 
                             elseif flags["exp_bag"] then
                                 local bag = char:FindFirstChild("[BrownBag]") or bp:FindFirstChild("[BrownBag]") or
                                             char:FindFirstChild("[BeanBag]")  or bp:FindFirstChild("[BeanBag]")
-                                if bag and t_hrp and hrp then
-                                    if bag["Parent"] ~= char then hum:EquipTool(bag) end
-                                    hrp["CFrame"] = t_char:GetPivot() * CFrame.new(0, 1.8, 2.4)
+                                if bag and t_pos and hrp then
+                                    if bag["Parent"] ~= char then
+                                        setscriptable(bag, "Parent", true)
+                                        bag["Parent"] = char
+                                    end
+                                    hrp["CFrame"] = t_pos
                                     local handle = bag:FindFirstChild("Handle")
                                     if handle then handle["CFrame"] = t_hrp["CFrame"] end
                                     bag:Activate()
                                 end
-                                return -- skip normal gun fire
+                                return
                             end
                         end
 
