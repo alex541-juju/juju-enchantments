@@ -10455,7 +10455,127 @@ do
         end)
     end
 
-    -- >> ( auto reload )
+    -- >> ( magic bullet )
+
+    menu_references["magic_bullet"] = menu_references["utility_section"]:create_element({["name"] = "magic bullet"}, {["toggle"] = {["flag"] = "magic_bullet", ["default"] = false}})
+        menu_references["magic_bullet_settings"] = menu_references["magic_bullet"]:create_settings()
+        menu_references["magic_bullet_fov"] = menu_references["magic_bullet_settings"]:create_element({["name"] = "show fov"}, {["toggle"] = {["flag"] = "magic_bullet_fov", ["default"] = false}})
+        menu_references["magic_bullet_fov_color"] = menu_references["magic_bullet_settings"]:create_element({["name"] = "fov color"}, {["colorpicker"] = {["color_flag"] = "magic_bullet_fov_color", ["default_color"] = color3_fromrgb(255, 136, 0), ["default_transparency"] = 0, ["transparency_flag"] = "magic_bullet_fov_color_trans"}})
+        menu_references["magic_bullet_fov_size"] = menu_references["magic_bullet_settings"]:create_element({["name"] = "fov size"}, {["slider"] = {["flag"] = "magic_bullet_fov_size", ["min"] = 10, ["max"] = 1000, ["default"] = 200, ["suffix"] = "px"}})
+
+    do
+        local mb_target_pos  = vector3_zero
+        local mb_target_part = nil
+        local mb_smart_origin = vector3_zero
+        local mb_fov_circle = create_real_drawing("Circle", {["Visible"] = false, ["Filled"] = false, ["Thickness"] = 1.5, ["ZIndex"] = 10, ["Color"] = color3_fromrgb(255, 136, 0), ["Transparency"] = 1})
+        local mb_fov_outline = create_real_drawing("Circle", {["Visible"] = false, ["Filled"] = false, ["Thickness"] = 3,   ["ZIndex"] = 9,  ["Color"] = color3_fromrgb(0, 0, 0),   ["Transparency"] = 1})
+        local mb_ray_params  = RaycastParams.new()
+        mb_ray_params["FilterType"] = Enum["RaycastFilterType"]["Exclude"]
+
+        local mb_heartbeat_conn = nil
+
+        local function mb_get_nearest()
+            local nearest_player   = nil
+            local nearest_distance = math_huge
+            local mouse_pos        = get_mouse_location(user_input_service)
+            for _, plr in ipairs(players_service:GetPlayers()) do
+                if plr == local_player or not plr["Character"] then continue end
+                local hrp = plr["Character"]:FindFirstChild("HumanoidRootPart")
+                if not hrp then continue end
+                local sp, on = world_to_viewport_point(camera, hrp["Position"])
+                if on then
+                    local d = (vector2_new(sp["X"], sp["Y"]) - mouse_pos)["Magnitude"]
+                    if d <= (flags["magic_bullet_fov_size"] or 200) and d < nearest_distance then
+                        nearest_distance = d
+                        nearest_player   = plr
+                    end
+                end
+            end
+            return nearest_player
+        end
+
+        create_connection(menu_references["magic_bullet"]["on_toggle_change"], function(value)
+            if mb_heartbeat_conn then
+                mb_heartbeat_conn:Disconnect()
+                mb_heartbeat_conn = nil
+            end
+            mb_fov_circle["Visible"] = false
+            mb_fov_outline["Visible"] = false
+            mb_target_part  = nil
+            mb_target_pos   = vector3_zero
+            mb_smart_origin = vector3_zero
+
+            if value then
+                mb_heartbeat_conn = create_connection(run_service["Heartbeat"], function()
+                    -- update FOV circle
+                    local show_fov  = flags["magic_bullet_fov"]
+                    local mouse_pos = get_mouse_location(user_input_service)
+                    local radius    = flags["magic_bullet_fov_size"] or 200
+                    local col       = flags["magic_bullet_fov_color"] or color3_fromrgb(255, 136, 0)
+                    mb_fov_circle["Position"] = mouse_pos
+                    mb_fov_circle["Radius"]   = radius
+                    mb_fov_circle["Color"]    = col
+                    mb_fov_circle["Visible"]  = show_fov
+                    mb_fov_outline["Position"] = mouse_pos
+                    mb_fov_outline["Radius"]   = radius
+                    mb_fov_outline["Visible"]  = show_fov
+
+                    -- find nearest target and compute smart origin
+                    local char = local_player["Character"]
+                    if not char then return end
+                    local tool   = char:FindFirstChildOfClass("Tool")
+                    local handle = tool and tool:FindFirstChild("Handle")
+                    if not handle then
+                        mb_target_part  = nil
+                        mb_smart_origin = vector3_zero
+                        return
+                    end
+
+                    local target = mb_get_nearest()
+                    if not target or not target["Character"] then
+                        mb_target_part  = nil
+                        mb_smart_origin = vector3_zero
+                        return
+                    end
+
+                    local t_char = target["Character"]
+                    local t_head = t_char:FindFirstChild("Head")
+                    local t_hrp  = t_char:FindFirstChild("HumanoidRootPart")
+                    if not (t_head and t_hrp) then return end
+
+                    mb_target_pos  = t_hrp["Position"]
+                    mb_target_part = t_head
+
+                    -- smart origin: raycast from target toward handle, pick last unobstructed point
+                    mb_ray_params["FilterDescendantsInstances"] = {char, t_char}
+                    local player_origin = handle["Position"]
+                    local target_pos    = t_head["Position"]
+                    local direction     = (player_origin - target_pos)["Unit"]
+                    local distance      = (player_origin - target_pos)["Magnitude"]
+                    local result        = workspace:Raycast(target_pos, direction * distance, mb_ray_params)
+                    mb_smart_origin = (result and result["Instance"]) and (result["Position"] + direction * 0.1) or player_origin
+                end)
+            end
+        end)
+
+        -- hook into namecall to override ShootGun args when magic bullet active
+        local old_mb_nc = nil
+        old_mb_nc = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+            if not checkcaller() and getnamecallmethod() == "FireServer" and flags["magic_bullet"] then
+                local args = {...}
+                if args[1] == "ShootGun" and mb_target_part then
+                    args[3] = mb_smart_origin
+                    args[4] = mb_target_pos
+                    args[5] = mb_target_part
+                    args[6] = vector3_zero
+                    return old_mb_nc(self, unpack(args))
+                end
+            end
+            return old_mb_nc(self, ...)
+        end))
+
+        create_connection(menu_references["magic_bullet_fov_size"]["on_slider_change"], function() end)
+    end
 
     menu_references["auto_reload"] = menu_references["utility_section"]:create_element({["name"] = "auto reload"}, {["toggle"] = {["flag"] = "auto_reload"}})
         menu_references["auto_reload_settings"] = menu_references["auto_reload"]:create_settings()
@@ -11549,6 +11669,140 @@ do
                 sound["SoundId"] = new_sound
                 sound["Stop"](sound)
                 sound["Play"](sound)
+            end
+        end)
+    end
+
+    -- >> ( lighting mode )
+
+    menu_references["music_player"] = menu_references["lighting_section"]:create_element({["name"] = "music player"}, {["toggle"] = {["flag"] = "music_player", ["default"] = false}})
+        menu_references["music_player_settings"] = menu_references["music_player"]:create_settings()
+        menu_references["music_player_song"] = menu_references["music_player_settings"]:create_element({["name"] = "song"}, {["dropdown"] = {["flag"] = "music_player_song", ["requires_one"] = true, ["default"] = {"Tame Impala - One More Hour"}, ["options"] = {
+            "Tame Impala - One More Hour",
+            "Trippie Redd - Wish",
+            "Kate Bush - Running Up That Hill",
+            "Xxx & Trippie - Fuck Love",
+            "Chris Grey - LET THE WORLD BURN",
+            "Djo - End of Beginning",
+            "Miss Me",
+            "Lil Peep - Nuts",
+            "Somewhere Only We Know",
+            "Headlock x Headlock",
+            "King Von - Anti Piracy",
+            "xaviersobased - in the yo",
+            "Ken Carson - margiela",
+            "Ken Carson - ss",
+            "Scars",
+            "Ken Carson - Fighting My Demons",
+            "Playboi Carti - EVIL J0RDAN",
+            "Playboi Carti - Timeless",
+            "Skepta - That's Not Me"
+        }}})
+        menu_references["music_player_volume"] = menu_references["music_player_settings"]:create_element({["name"] = "volume"}, {["slider"] = {["flag"] = "music_player_volume", ["min"] = 0, ["max"] = 100, ["default"] = 50, ["suffix"] = "%"}})
+
+    do
+        local music_sound   = nil
+        local music_folder  = "juju-music"
+        local music_playing = false
+
+        local music_data = {
+            ["Tame Impala - One More Hour"]        = {file = "one_more_hour.mp3",    url = "https://pomf2.lain.la/f/s8k21saj.mp3"},
+            ["Trippie Redd - Wish"]                = {file = "wishtrp.mp3",           url = "https://pomf2.lain.la/f/ytgag6nr.mp3"},
+            ["Kate Bush - Running Up That Hill"]   = {file = "running_up_that_hill.mp3", url = "https://cdn.getsample.lol/4n3jkiqw"},
+            ["Xxx & Trippie - Fuck Love"]          = {file = "fuck_love.mp3",         url = "https://pomf2.lain.la/f/v1v8je0j.mp3"},
+            ["Chris Grey - LET THE WORLD BURN"]   = {file = "let_world_burn.mp3",     url = "https://cdn.getsample.lol/lsgkdiry"},
+            ["Djo - End of Beginning"]             = {file = "end_of_beginning.mp3",  url = "https://cdn.getsample.lol/64swey4v"},
+            ["Miss Me"]                            = {file = "miss_me.mp3",            url = "https://github.com/NewbieScripter-web/mp3/raw/refs/heads/main/MissMe.mp3"},
+            ["Lil Peep - Nuts"]                    = {file = "nuts.mp3",               url = "https://pomf2.lain.la/f/3rp08d8.mp3"},
+            ["Somewhere Only We Know"]             = {file = "somewhere.mp3",          url = "https://pomf2.lain.la/f/v4kygzal.mp3"},
+            ["Headlock x Headlock"]                = {file = "headlock.mp3",           url = "https://pomf2.lain.la/f/uwr5n4vz.mp3"},
+            ["King Von - Anti Piracy"]             = {file = "anti_piracy.mp3",        url = "https://pomf2.lain.la/f/5xltbwdx.mp3"},
+            ["xaviersobased - in the yo"]          = {file = "in_the_yo.mp3",          url = "https://pomf2.lain.la/f/dfdqazh.mp3"},
+            ["Ken Carson - margiela"]              = {file = "margiela.mp3",            url = "https://pomf2.lain.la/f/e2zpwgt3.mp3"},
+            ["Ken Carson - ss"]                    = {file = "ss.mp3",                  url = "https://pomf2.lain.la/f/s3jb1j5g.mp3"},
+            ["Scars"]                              = {file = "scars.mp3",               url = "https://cdn.getsample.lol/3f4mufoc"},
+            ["Ken Carson - Fighting My Demons"]    = {file = "fighting_my_demons.mp3",  url = "https://pomf2.lain.la/f/zwhwa8z2.mp3"},
+            ["Playboi Carti - EVIL J0RDAN"]        = {file = "evil_j0rdan.mp3",         url = "https://pomf2.lain.la/f/yg82v42f.mp3"},
+            ["Playboi Carti - Timeless"]           = {file = "timeless.mp3",            url = "https://pomf2.lain.la/f/dd43lkk3.mp3"},
+            ["Skepta - That's Not Me"]             = {file = "thats_not_me.mp3",        url = "https://pomf2.lain.la/f/t8qdrudt.mp3"},
+        }
+
+        local function music_get_asset(name)
+            local data = music_data[name]
+            if not data then return nil end
+            pcall(function()
+                if not isfolder(music_folder) then makefolder(music_folder) end
+            end)
+            local path = music_folder .. "/" .. data["file"]
+            pcall(function()
+                if not isfile(path) then
+                    local ok, raw = pcall(function() return game:HttpGet(data["url"], true) end)
+                    if ok and raw and #raw > 1000 then writefile(path, raw) end
+                end
+            end)
+            local asset = nil
+            pcall(function()
+                asset = getcustomasset(path)
+            end)
+            if not asset then
+                pcall(function()
+                    asset = getsynasset(path)
+                end)
+            end
+            return asset
+        end
+
+        local function music_stop()
+            if music_sound then
+                pcall(function()
+                    music_sound["Stop"](music_sound)
+                    music_sound["Parent"] = nil
+                    music_sound:Destroy()
+                end)
+                music_sound = nil
+            end
+            music_playing = false
+        end
+
+        local function music_play(name)
+            music_stop()
+            local asset = music_get_asset(name)
+            if not asset then
+                new_notification("failed to load: " .. name, 3)
+                return
+            end
+            music_sound = create_instance("Sound", {
+                ["SoundId"]      = asset,
+                ["Volume"]       = (flags["music_player_volume"] or 50) / 100,
+                ["Looped"]       = true,
+                ["Name"]         = "\0",
+                ["Parent"]       = game:GetService("SoundService"),
+            })
+            music_sound["Play"](music_sound)
+            music_playing = true
+            new_notification("playing: " .. name, 2)
+        end
+
+        create_connection(menu_references["music_player"]["on_toggle_change"], function(value)
+            if value then
+                local song = flags["music_player_song"]
+                song = type(song) == "table" and song[1] or song
+                if song then music_play(song) end
+            else
+                music_stop()
+            end
+        end)
+
+        create_connection(menu_references["music_player_song"]["on_dropdown_change"], function(value)
+            if flags["music_player"] then
+                local song = type(value) == "table" and value[1] or value
+                if song then music_play(song) end
+            end
+        end)
+
+        create_connection(menu_references["music_player_volume"]["on_slider_change"], function(value)
+            if music_sound then
+                music_sound["Volume"] = value / 100
             end
         end)
     end
@@ -13798,7 +14052,7 @@ do
         menu_references["hit_particle_behind_walls"] = menu_references["hit_particle_settings"]:create_element({["name"] = "behind walls"}, {["toggle"] = {["flag"] = "hit_particle_behind_walls"}})
         menu_references["hit_particle_lethal_color"] = menu_references["hit_particle_settings"]:create_element({["name"] = "lethal color"}, {["colorpicker"] = {["color_flag"] = "hit_particle_lethal_color", ["transparency_flag"] = "hit_particle_lethal_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
         menu_references["hit_particle_color"] = menu_references["hit_particle_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "hit_particle_color", ["transparency_flag"] = "hit_particle_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
-        menu_references["hit_particle_particle"] = menu_references["hit_particle_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "hit_particle_particle", ["default"] = {"sparks"}, ["options"] = {"bubble", "sparks", "orbs", "air", "blood", "light", "lightning", "blackflash", "gravity", "meteor"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}}})
+        menu_references["hit_particle_particle"] = menu_references["hit_particle_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "hit_particle_particle", ["default"] = {"sparks"}, ["options"] = {"bubble", "sparks", "orbs", "air", "blood", "light", "lightning", "blackflash", "gravity", "meteor", "nova", "glitch", "slash", "cosmic", "crescent slash"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}}})
     --[[menu_references["rpg_warning"] = menu_references["game_section"]:create_element({["name"] = "rpg warning"}, {["toggle"] = {["flag"] = "rpg_warning"}})
         menu_references["rpg_warning_settings"] = menu_references["rpg_warning"]:create_settings()
         menu_references["hit_overlay_lifetime"] = menu_references["rpg_warning_settings"]:create_element({["name"] = "lifetime"}, {["slider"] = {["flag"] = "hit_overlay_lifetime", ["min"] = 0.1, ["max"] = 0.8, ["default"] = 0.7, ["decimals"] = 1, ["suffix"] = "s", ["prefix"] = ""}})
@@ -15218,10 +15472,66 @@ local hit_sounds = {
             },
         }
 
-        local hit_particle_connection = nil
+        -- sample.hit style effects (spawn Part at hit position)
+        local function hp_get_color()
+            return flags["hit_particle_color"] or color3_fromrgb(255, 81, 0)
+        end
+
+        local sample_hit_effects = {
+            ["nova"] = function(pos)
+                local col = ColorSequence.new(hp_get_color())
+                local part = create_instance("Part", {["Position"] = pos, ["Anchored"] = true, ["Transparency"] = 1, ["CanCollide"] = false, ["Size"] = vector3_new(1,1,1), ["Parent"] = ignored})
+                local p1 = create_instance("ParticleEmitter", {["Color"] = col, ["Lifetime"] = NumberRange.new(0.5,0.5), ["LightEmission"] = 1, ["LockedToPart"] = true, ["Orientation"] = Enum["ParticleOrientation"]["VelocityPerpendicular"], ["Rate"] = 0, ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,10,0)}, ["Speed"] = NumberRange.new(1.5,1.5), ["Texture"] = "rbxassetid://1084991215", ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.1,0,0),NumberSequenceKeypoint.new(0.6,0,0),NumberSequenceKeypoint.new(1,1,0)}, ["ZOffset"] = 1, ["Parent"] = part})
+                local p2 = create_instance("ParticleEmitter", {["Color"] = col, ["Lifetime"] = NumberRange.new(0.5,0.5), ["LightEmission"] = 1, ["LockedToPart"] = true, ["Rate"] = 0, ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,10,0)}, ["Speed"] = NumberRange.new(0,0), ["Texture"] = "rbxassetid://1084991215", ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.1,0,0),NumberSequenceKeypoint.new(0.6,0,0),NumberSequenceKeypoint.new(1,1,0)}, ["ZOffset"] = 1, ["Parent"] = part})
+                local p3 = create_instance("ParticleEmitter", {["Color"] = col, ["Lifetime"] = NumberRange.new(0.2,0.5), ["LockedToPart"] = true, ["Orientation"] = Enum["ParticleOrientation"]["VelocityParallel"], ["Rate"] = 0, ["Rotation"] = NumberRange.new(-90,90), ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.39,8.8,1.5),NumberSequenceKeypoint.new(1,0,0)}, ["Speed"] = NumberRange.new(0.1,0.1), ["SpreadAngle"] = vector2_new(180,180), ["Texture"] = "http://www.roblox.com/asset/?id=6820680001", ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(0.2,0,0),NumberSequenceKeypoint.new(0.7,0,0),NumberSequenceKeypoint.new(1,1,0)}, ["ZOffset"] = 1.5, ["Parent"] = part})
+                p1:Emit(1) p2:Emit(1) p3:Emit(1)
+                task.delay(1, function() pcall(function() part:Destroy() end) end)
+            end,
+            ["glitch"] = function(pos)
+                local col = ColorSequence.new(hp_get_color())
+                local part = create_instance("Part", {["Transparency"] = 1, ["Size"] = vector3_new(2.6,5.52,2.8), ["Position"] = pos, ["CanCollide"] = false, ["Anchored"] = true, ["Parent"] = ignored})
+                for _ = 1, 10 do
+                    local pe = create_instance("ParticleEmitter", {["Color"] = col, ["Lifetime"] = NumberRange.new(0.1,0.1), ["Rate"] = 0, ["Size"] = NumberSequence.new(0.4), ["Texture"] = "rbxassetid://6888586040", ["Transparency"] = NumberSequence.new(0), ["Parent"] = part})
+                    pe:Emit(5)
+                end
+                task.delay(1.5, function() pcall(function() part:Destroy() end) end)
+            end,
+            ["slash"] = function(pos)
+                local col = ColorSequence.new(hp_get_color())
+                local part = create_instance("Part", {["Size"] = vector3_new(2,2,2), ["Anchored"] = true, ["CanCollide"] = false, ["Transparency"] = 1, ["Position"] = pos, ["Parent"] = ignored})
+                local att = create_instance("Attachment", {["Parent"] = part})
+                local cres = create_instance("ParticleEmitter", {["Lifetime"] = NumberRange.new(0.19,0.38), ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.19,0),NumberSequenceKeypoint.new(0.78,0),NumberSequenceKeypoint.new(1,1)}, ["LightEmission"] = 10, ["Color"] = col, ["Speed"] = NumberRange.new(0.08,0.08), ["Brightness"] = 4, ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.39,8.8),NumberSequenceKeypoint.new(1,11.4)}, ["Texture"] = "rbxassetid://12509373457", ["RotSpeed"] = NumberRange.new(800,1000), ["Orientation"] = Enum["ParticleOrientation"]["VelocityPerpendicular"], ["Rate"] = 0, ["Parent"] = att})
+                cres:Emit(3)
+                task.delay(1.5, function() pcall(function() part:Destroy() end) end)
+            end,
+            ["cosmic"] = function(pos)
+                local col = ColorSequence.new(hp_get_color())
+                local part = create_instance("Part", {["Size"] = vector3_new(2,2,2), ["Anchored"] = true, ["CanCollide"] = false, ["Transparency"] = 1, ["Position"] = pos, ["Parent"] = ignored})
+                local att = create_instance("Attachment", {["Parent"] = part})
+                local p1 = create_instance("ParticleEmitter", {["Color"] = col, ["Texture"] = "rbxassetid://8708637750", ["Size"] = NumberSequence.new(9,16), ["Lifetime"] = NumberRange.new(0.16,0.16), ["Brightness"] = 5, ["Rate"] = 0, ["Parent"] = att})
+                local p2 = create_instance("ParticleEmitter", {["Color"] = col, ["Texture"] = "rbxassetid://8196169974", ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,11)}, ["Lifetime"] = NumberRange.new(0.3,0.3), ["Brightness"] = 5, ["Rate"] = 0, ["Parent"] = att})
+                p1:Emit(2) p2:Emit(3)
+                task.delay(1.5, function() pcall(function() part:Destroy() end) end)
+            end,
+            ["crescent slash"] = function(pos)
+                local col = ColorSequence.new(hp_get_color())
+                local part = create_instance("Part", {["Size"] = vector3_new(2,2,2), ["Anchored"] = true, ["CanCollide"] = false, ["Transparency"] = 1, ["Position"] = pos, ["Parent"] = ignored})
+                local att = create_instance("Attachment", {["Parent"] = part})
+                local glow = create_instance("ParticleEmitter", {["Lifetime"] = NumberRange.new(0.16,0.16), ["Color"] = col, ["Brightness"] = 5, ["Size"] = NumberSequence.new(9,16), ["Texture"] = "rbxassetid://8708637750", ["Rate"] = 0, ["Parent"] = att})
+                local shards = create_instance("ParticleEmitter", {["Lifetime"] = NumberRange.new(0.2,0.7), ["Color"] = col, ["Speed"] = NumberRange.new(90,140), ["Texture"] = "rbxassetid://8030734851", ["Rate"] = 0, ["SpreadAngle"] = vector2_new(180,180), ["Parent"] = att})
+                glow:Emit(2) shards:Emit(8)
+                task.delay(2, function() pcall(function() part:Destroy() end) end)
+            end,
+        }
         local hit_particle = hit_particles["sparks"]
 
         local do_hit_particle = LPH_NO_VIRTUALIZE(function(player, part)
+            -- sample.hit style effects
+            if sample_hit_effects[flags["hit_particle_particle"] and flags["hit_particle_particle"] or ""] then
+                local func = sample_hit_effects[flags["hit_particle_particle"]]
+                if func and part then func(part["Position"]) end
+                return
+            end
             local color = ColorSequence["new"](player_data[player][18] and flags["hit_particle_lethal_color"] or flags["hit_particle_color"])
             local z_offset = flags["hit_particle_behind_walls"] and 1 or 0
             hit_particle_part["CFrame"] = part["CFrame"]
@@ -20816,6 +21126,15 @@ do
         menu_references["void_spam_resolver_accuracy"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "accuracy"}, {["slider"] = {["flag"] = "void_spam_resolver_accuracy", ["min"] = 5, ["suffix"] = "%", ["max_text"] = "high", ["max"] = 110, ["default"] = 76.82, ["decimals"] = 2}})
         menu_references["void_spam_resolver_lerp"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "lerp % when close"}, {["slider"] = {["flag"] = "void_spam_resolver_lerp", ["min"] = 10, ["suffix"] = "%", ["max_text"] = "instant", ["max"] = 100, ["default"] = 10, ["decimals"] = 1}})
         menu_references["void_spam_resolver_dist_penalty"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "distance penalty"}, {["slider"] = {["flag"] = "void_spam_resolver_dist_penalty", ["min"] = 0, ["max"] = 5, ["default"] = 2, ["decimals"] = 1, ["suffix"] = "x"}})
+        menu_references["fake_pos_resolver"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "fake pos resolve"}, {["toggle"] = {["flag"] = "fake_pos_resolver", ["default"] = false}})
+        menu_references["glue_resolver"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "glue resolve"}, {["toggle"] = {["flag"] = "glue_resolver", ["default"] = false}})
+
+        -- >> ( exp connection )
+        menu_references["exp_connection"] = menu_references["general_section"]:create_element({["name"] = "exp connection"}, {["toggle"] = {["flag"] = "exp_connection", ["default"] = false}})
+            menu_references["exp_connection_settings"] = menu_references["exp_connection"]:create_settings()
+            menu_references["exp_flame"] = menu_references["exp_connection_settings"]:create_element({["name"] = "flame"}, {["toggle"] = {["flag"] = "exp_flame", ["default"] = false}})
+            menu_references["exp_knife"] = menu_references["exp_connection_settings"]:create_element({["name"] = "knife"}, {["toggle"] = {["flag"] = "exp_knife", ["default"] = false}})
+            menu_references["exp_bag"] = menu_references["exp_connection_settings"]:create_element({["name"] = "bag"}, {["toggle"] = {["flag"] = "exp_bag", ["default"] = false}})
         menu_references["ragebot_hitbox"] = menu_references["general_section"]:create_element({["name"] = "target hitbox"}, {["dropdown"] = {["flag"] = "ragebot_hitbox", ["options"] = {"head", "root"}, ["default"] = {"head"}}})
         menu_references["prediction"] = menu_references["general_section"]:create_element({["name"] = "prediction"}, {["slider"] = {["flag"] = "prediction", ["min"] = 0, ["max"] = 2000, ["default"] = 0, ["min_text"] = "auto", ["max_text"] = "disabled", ["suffix"] = "%", ["decimals"] = 2}})
         menu_references["prediction_settings"] = menu_references["prediction"]:create_settings()
@@ -21336,6 +21655,14 @@ do
             return
         end
 
+        -- exp connection: warn if enabled but no method selected
+        if target and flags["exp_connection"] then
+            if not flags["exp_flame"] and not flags["exp_knife"] and not flags["exp_bag"] then
+                new_notification("error when set target rage bot cuz exp connection method didnt choosed", 5)
+                return
+            end
+        end
+
         if do_notification and message and message ~= "" then
             new_notification((message and message ~= "") and message or "ragebot target set to none", 1)
         end
@@ -21587,19 +21914,63 @@ do
                         local pos = ragebot_aim_position
                         local origin = local_server_position
 
+                        -- >> ( exp connection )
+                        if flags["exp_connection"] and ragebot_target then
+                            local char   = local_character
+                            local hum    = char and char:FindFirstChildOfClass("Humanoid")
+                            local bp     = local_player["Backpack"]
+                            local t_char = ragebot_target[4]
+                            local t_hrp  = t_char["HumanoidRootPart"]
+                            local t_head = t_char["Head"]
+                            local hrp    = char and char:FindFirstChild("HumanoidRootPart")
+
+                            if flags["exp_flame"] then
+                                local ft = char:FindFirstChild("[Flamethrower]") or bp:FindFirstChild("[Flamethrower]")
+                                if ft and t_hrp and hrp then
+                                    if ft["Parent"] ~= char then hum:EquipTool(ft) end
+                                    hrp["CFrame"] = t_hrp["CFrame"] * CFrame.new(0, 0, 3)
+                                    local handle = ft:FindFirstChild("Handle")
+                                    if handle and t_head then
+                                        handle["CFrame"] = t_head["CFrame"] * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(-90), 0, 0)
+                                    end
+                                    ft:Activate()
+                                end
+                                return -- skip normal gun fire
+
+                            elseif flags["exp_knife"] then
+                                local knife = char:FindFirstChild("[Knife]") or bp:FindFirstChild("[Knife]")
+                                if knife and t_hrp and hrp then
+                                    if knife["Parent"] ~= char then hum:EquipTool(knife) end
+                                    hrp["CFrame"] = t_char:GetPivot() * CFrame.new(0, 1.8, 2.4)
+                                    knife:Activate()
+                                end
+                                return -- skip normal gun fire
+
+                            elseif flags["exp_bag"] then
+                                local bag = char:FindFirstChild("[BrownBag]") or bp:FindFirstChild("[BrownBag]") or
+                                            char:FindFirstChild("[BeanBag]")  or bp:FindFirstChild("[BeanBag]")
+                                if bag and t_hrp and hrp then
+                                    if bag["Parent"] ~= char then hum:EquipTool(bag) end
+                                    hrp["CFrame"] = t_char:GetPivot() * CFrame.new(0, 1.8, 2.4)
+                                    local handle = bag:FindFirstChild("Handle")
+                                    if handle then handle["CFrame"] = t_hrp["CFrame"] end
+                                    bag:Activate()
+                                end
+                                return -- skip normal gun fire
+                            end
+                        end
+
                         -- >> ( bullet tp )
                         if flags["auto_fire_bullet_tp"] and local_tool and ragebot_target then
                             local right_hand = local_parts["RightHand"]
                             local target_hrp = ragebot_target[4]["HumanoidRootPart"]
                             if right_hand and target_hrp then
                                 local original_grip = local_tool["Grip"]
-                                -- disable grip property changed connections
                                 pcall(function()
                                     for _, conn in getconnections(local_tool:GetPropertyChangedSignal("Grip")) do
                                         conn:Disable()
                                     end
                                 end)
-                                -- compute offset: RightHand → target HRP
                                 local actual_origin = right_hand["CFrame"] * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
                                 local offset = (actual_origin:ToObjectSpace(target_hrp["CFrame"])):Inverse()
                                 setscriptable(local_tool, "Parent", true)
@@ -21610,7 +21981,6 @@ do
                                 local_tool["Parent"] = local_player["Backpack"]
                                 local_tool["Grip"] = original_grip
                                 local_tool["Parent"] = local_character
-                                -- re-enable grip connections
                                 pcall(function()
                                     for _, conn in getconnections(local_tool:GetPropertyChangedSignal("Grip")) do
                                         conn:Enable()
@@ -21725,6 +22095,156 @@ do
 
     create_connection(menu_references["void_spam_resolver_dist_penalty"]["on_slider_change"], function(value)
         void_spam_resolver_dist_penalty = value
+    end)
+
+    create_connection(menu_references["fake_pos_resolver"]["on_toggle_change"], function(value)
+        getgenv().FakePosResolverEnabled = value
+    end)
+
+    create_connection(menu_references["glue_resolver"]["on_toggle_change"], function(value)
+        getgenv().GlueResolverEnabled = value
+    end)
+
+    -- >> ( exp connection handlers )
+    local exp_methods = {"exp_flame", "exp_knife", "exp_bag"}
+
+    local function exp_select(chosen)
+        for _, m in ipairs(exp_methods) do
+            if m ~= chosen then
+                flags[m] = false
+                menu_references[m]:set_visible(false)
+            end
+        end
+        if chosen then
+            menu_references[chosen]:set_visible(true)
+        end
+    end
+
+    create_connection(menu_references["exp_connection"]["on_toggle_change"], function(value)
+        if not value then
+            for _, m in ipairs(exp_methods) do
+                flags[m] = false
+                menu_references[m]:set_visible(false)
+            end
+            getgenv().connectionresolvderfgdg = false
+            getgenv().beanbag_method         = false
+            flags["auto_fire_bullet_tp"]     = false
+        else
+            -- show all 3 so player can pick one
+            for _, m in ipairs(exp_methods) do
+                menu_references[m]:set_visible(true)
+            end
+        end
+    end)
+
+    create_connection(menu_references["exp_flame"]["on_toggle_change"], function(value)
+        if value then
+            exp_select("exp_flame")
+            -- buy flamethrower if not already owned
+            local char = local_player["Character"]
+            local bp   = local_player["Backpack"]
+            if char and not char:FindFirstChild("[Flamethrower]") and bp and not bp:FindFirstChild("[Flamethrower]") then
+                local shop = workspace:FindFirstChild("Ignored") and workspace["Ignored"]:FindFirstChild("Shop")
+                if shop then
+                    for _, item in ipairs(shop:GetChildren()) do
+                        if item["Name"]:find("%[Flamethrower%]") then
+                            local cd = item:FindFirstChildOfClass("ClickDetector")
+                            local head = item:FindFirstChild("Head") or item:FindFirstChildWhichIsA("BasePart")
+                            if cd and head and char:FindFirstChild("HumanoidRootPart") then
+                                local hrp = char["HumanoidRootPart"]
+                                local saved = hrp["CFrame"]
+                                hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
+                                wait(0.19)
+                                fireclickdetector(cd, 0)
+                                wait(0.15)
+                                fireclickdetector(cd, 0)
+                                wait(0.1)
+                                hrp["CFrame"] = saved
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+            flags["auto_fire_bullet_tp"]     = false
+            getgenv().connectionresolvderfgdg = false
+            getgenv().beanbag_method         = false
+        end
+    end)
+
+    create_connection(menu_references["exp_knife"]["on_toggle_change"], function(value)
+        if value then
+            exp_select("exp_knife")
+            -- buy knife if not already owned
+            local char = local_player["Character"]
+            local bp   = local_player["Backpack"]
+            if char and not char:FindFirstChild("[Knife]") and bp and not bp:FindFirstChild("[Knife]") then
+                local shop = workspace:FindFirstChild("Ignored") and workspace["Ignored"]:FindFirstChild("Shop")
+                if shop then
+                    for _, item in ipairs(shop:GetChildren()) do
+                        if item["Name"]:find("%[Knife%]") then
+                            local cd = item:FindFirstChildOfClass("ClickDetector")
+                            local head = item:FindFirstChild("Head") or item:FindFirstChildWhichIsA("BasePart")
+                            if cd and head and char:FindFirstChild("HumanoidRootPart") then
+                                local hrp = char["HumanoidRootPart"]
+                                local saved = hrp["CFrame"]
+                                hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
+                                wait(0.19)
+                                fireclickdetector(cd, 0)
+                                wait(0.15)
+                                fireclickdetector(cd, 0)
+                                wait(0.1)
+                                hrp["CFrame"] = saved
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+            getgenv().connectionresolvderfgdg = true
+            getgenv().beanbag_method         = false
+            flags["auto_fire_bullet_tp"]     = false
+        else
+            getgenv().connectionresolvderfgdg = false
+        end
+    end)
+
+    create_connection(menu_references["exp_bag"]["on_toggle_change"], function(value)
+        if value then
+            exp_select("exp_bag")
+            -- buy beanbag if not already owned
+            local char = local_player["Character"]
+            local bp   = local_player["Backpack"]
+            if char and not char:FindFirstChild("[BrownBag]") and bp and not bp:FindFirstChild("[BrownBag]") then
+                local shop = workspace:FindFirstChild("Ignored") and workspace["Ignored"]:FindFirstChild("Shop")
+                if shop then
+                    for _, item in ipairs(shop:GetChildren()) do
+                        if item["Name"]:find("%[BrownBag%]") or item["Name"]:find("%[BeanBag%]") then
+                            local cd = item:FindFirstChildOfClass("ClickDetector")
+                            local head = item:FindFirstChild("Head") or item:FindFirstChildWhichIsA("BasePart")
+                            if cd and head and char:FindFirstChild("HumanoidRootPart") then
+                                local hrp = char["HumanoidRootPart"]
+                                local saved = hrp["CFrame"]
+                                hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
+                                wait(0.19)
+                                fireclickdetector(cd, 0)
+                                wait(0.15)
+                                fireclickdetector(cd, 0)
+                                wait(0.1)
+                                hrp["CFrame"] = saved
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+            getgenv().beanbag_method         = true
+            getgenv().connectionresolvderfgdg = true
+            flags["auto_fire_bullet_tp"]     = false
+        else
+            getgenv().beanbag_method         = false
+            getgenv().connectionresolvderfgdg = false
+        end
     end)
 
     create_connection(menu_references["auto_fire_defensive"]["on_toggle_change"], function(value)
