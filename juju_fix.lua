@@ -11871,19 +11871,379 @@ do
 
     menu_references["weather"] = menu_references["lighting_section"]:create_element({["name"] = "weather"}, {["toggle"] = {["flag"] = "weather"}})
         menu_references["weather_settings"] = menu_references["weather"]:create_settings()
-        menu_references["weather_type"] = menu_references["weather_settings"]:create_element({["name"] = "type"}, {["dropdown"] = {["flag"] = "weather_type", ["options"] = {"light rain", "rain", "snow"}, ["default"] = {"rain"}, ["requires_one"] = true}})
+        menu_references["weather_type"] = menu_references["weather_settings"]:create_element({["name"] = "type"}, {["dropdown"] = {["flag"] = "weather_type", ["options"] = {"light rain", "rain", "snow", "custom rain"}, ["default"] = {"rain"}, ["requires_one"] = true}})
         menu_references["weather_color"] = menu_references["weather_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "weather_color", ["default_color"] = color3_fromrgb(255, 255, 255), ["default_transparency"] = 0, ["transparency_flag"] = "weather_transparency"}})
         menu_references["weather_rate"] = menu_references["weather_settings"]:create_element({["name"] = "rate"}, {["slider"] = {["flag"] = "weather_rate", ["min"] = 1, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_intensity"] = menu_references["weather_settings"]:create_element({["name"] = "intensity"}, {["slider"] = {["flag"] = "weather_custom_rain_intensity", ["min"] = 0, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_speed"] = menu_references["weather_settings"]:create_element({["name"] = "speed"}, {["slider"] = {["flag"] = "weather_custom_rain_speed", ["min"] = 0, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_intensity"]:set_visible(false)
+        menu_references["weather_custom_rain_speed"]:set_visible(false)
 
     local weather_part = nil
     local weather_particle = nil
 
+    -- >> ( custom rain - buildthomas Rain module )
+    local rain_module = nil
+    local rain_active = false
+
+    local function setup_rain_module()
+        if rain_module then return end
+        -- inline Rain module init (stripped to essentials)
+        local MIN_SIZE = Vector3.new(0.05,0.05,0.05)
+        local RAIN_DEFAULT_LIGHTEMISSION = 0.05
+        local RAIN_DEFAULT_LIGHTINFLUENCE = 0.9
+        local RAIN_STRAIGHT_ASSET = "rbxassetid://1822883048"
+        local RAIN_TOPDOWN_ASSET = "rbxassetid://1822856633"
+        local RAIN_SPLASH_ASSET = "rbxassetid://1822856633"
+        local RAIN_STRAIGHT_MAX_RATE = 600
+        local RAIN_TOPDOWN_MAX_RATE = 600
+        local RAIN_STRAIGHT_MAX_SPEED = 60
+        local RAIN_TOPDOWN_MAX_SPEED = 60
+        local RAIN_SPLASH_NUM = 20
+        local RAIN_EMITTER_DIM_DEFAULT = 40
+        local RAIN_EMITTER_DIM_MAXFORWARD = 100
+        local RAIN_EMITTER_UP_MODIFIER = 20
+        local RAIN_SCANHEIGHT = 1000
+        local RAIN_UPDATE_PERIOD = 6
+        local RAIN_OCCLUDECHECK_OFFSET_Y = 500
+        local RAIN_OCCLUDECHECK_OFFSET_XZ_MIN = -100
+        local RAIN_OCCLUDECHECK_OFFSET_XZ_MAX = 100
+        local RAIN_OCCLUDECHECK_SCAN_Y = 550
+        local RAIN_OCCLUDED_MINSPEED = 70
+        local RAIN_OCCLUDED_MAXSPEED = 100
+        local RAIN_OCCLUDED_SPREAD = Vector2.new(10,10)
+        local RAIN_OCCLUDED_MAXINTENSITY = 2
+        local RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MIN = 20
+        local RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MAX = 100
+        local RAIN_SPLASH_STRAIGHT_OFFSET_Y = 50
+        local RAIN_SPLASH_CORRECTION_Y = 0.5
+        local RAIN_TRANSPARENCY_T1 = 0.25
+        local RAIN_TRANSPARENCY_T2 = 0.75
+        local RAIN_SOUND_ASSET = "rbxassetid://1516791621"
+        local RAIN_SOUND_BASEVOLUME = 0.2
+        local rainDirection = Vector3.new(0,-1,0)
+        local straightLowAlpha = 1
+        local topdownLowAlpha = 1
+        local intensityOccludedRain = 0
+        local numSplashes = 0
+        local volumeTarget = 0
+        local NSK010 = NumberSequenceKeypoint.new(0,1,0)
+        local NSK110 = NumberSequenceKeypoint.new(1,1,0)
+
+        local SoundGroup = Instance.new("SoundGroup")
+        SoundGroup.Name = "__RainSG"
+        SoundGroup.Volume = RAIN_SOUND_BASEVOLUME
+        SoundGroup.Archivable = false
+        local RainSound = Instance.new("Sound")
+        RainSound.SoundId = RAIN_SOUND_ASSET
+        RainSound.Looped = true
+        RainSound.Volume = 0
+        RainSound.SoundGroup = SoundGroup
+        RainSound.Archivable = false
+        RainSound.Parent = SoundGroup
+
+        local RainEmitter = Instance.new("Part")
+        RainEmitter.Transparency = 1
+        RainEmitter.Anchored = true
+        RainEmitter.CanCollide = false
+        RainEmitter.Archivable = false
+        RainEmitter.Size = MIN_SIZE
+        RainEmitter.Name = "RainPart"
+        local straight = Instance.new("ParticleEmitter")
+        straight.Name = "RainStraight"
+        straight.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+        straight.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+        straight.Size = NumberSequence.new(10)
+        straight.Texture = RAIN_STRAIGHT_ASSET
+        straight.LockedToPart = true
+        straight.Enabled = false
+        straight.Lifetime = NumberRange.new(0.8)
+        straight.Rate = RAIN_STRAIGHT_MAX_RATE
+        straight.Speed = NumberRange.new(RAIN_STRAIGHT_MAX_SPEED)
+        straight.EmissionDirection = Enum.NormalId.Bottom
+        straight.Orientation = Enum.ParticleOrientation.FacingCameraWorldUp
+        straight.Parent = RainEmitter
+        local topdown = Instance.new("ParticleEmitter")
+        topdown.Name = "RainTopDown"
+        topdown.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+        topdown.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+        topdown.Size = NumberSequence.new{NumberSequenceKeypoint.new(0,5.33,2.75),NumberSequenceKeypoint.new(1,5.33,2.75)}
+        topdown.Texture = RAIN_TOPDOWN_ASSET
+        topdown.LockedToPart = true
+        topdown.Enabled = false
+        topdown.Rotation = NumberRange.new(0,360)
+        topdown.Lifetime = NumberRange.new(0.8)
+        topdown.Rate = RAIN_TOPDOWN_MAX_RATE
+        topdown.Speed = NumberRange.new(RAIN_TOPDOWN_MAX_SPEED)
+        topdown.EmissionDirection = Enum.NormalId.Bottom
+        topdown.Parent = RainEmitter
+
+        local splashAttachments, rainAttachments = {}, {}
+        for i = 1, RAIN_SPLASH_NUM do
+            local sa = Instance.new("Attachment")
+            sa.Name = "__RainSplash"
+            sa.Archivable = false
+            local spe = Instance.new("ParticleEmitter")
+            spe.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+            spe.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+            spe.Size = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.4,3),NumberSequenceKeypoint.new(1,0)}
+            spe.Texture = RAIN_SPLASH_ASSET
+            spe.Rotation = NumberRange.new(0,360)
+            spe.Lifetime = NumberRange.new(0.1,0.15)
+            spe.Enabled = false
+            spe.Rate = 0
+            spe.Speed = NumberRange.new(0)
+            spe.Name = "RainSplash"
+            spe.Parent = sa
+            splashAttachments[i] = sa
+            local ra = Instance.new("Attachment")
+            ra.Name = "__RainOccluded"
+            ra.Archivable = false
+            local rs = straight:Clone()
+            rs.Speed = NumberRange.new(RAIN_OCCLUDED_MINSPEED, RAIN_OCCLUDED_MAXSPEED)
+            rs.SpreadAngle = RAIN_OCCLUDED_SPREAD
+            rs.LockedToPart = false
+            rs.Enabled = false
+            rs.Parent = ra
+            local rt = topdown:Clone()
+            rt.Speed = NumberRange.new(RAIN_OCCLUDED_MINSPEED, RAIN_OCCLUDED_MAXSPEED)
+            rt.SpreadAngle = RAIN_OCCLUDED_SPREAD
+            rt.LockedToPart = false
+            rt.Enabled = false
+            rt.Parent = ra
+            rainAttachments[i] = ra
+        end
+
+        local ignoreList = {RainEmitter}
+        local function doRaycast(ray, ignoreChar)
+            return workspace:FindPartOnRayWithIgnoreList(ray, ignoreChar and {RainEmitter, local_player.Character} or ignoreList)
+        end
+
+        local rain_connections = {}
+        local inside = true
+        local frame = RAIN_UPDATE_PERIOD
+        local rand = Random.new()
+
+        local function startLoop()
+            rain_connections[#rain_connections+1] = run_service["RenderStepped"]:Connect(function()
+                local part, _ = doRaycast(Ray.new(camera.CFrame.p, -rainDirection * RAIN_SCANHEIGHT), true)
+                if not part then
+                    frame = RAIN_UPDATE_PERIOD
+                    local t = math.abs(camera.CFrame.lookVector:Dot(rainDirection))
+                    local center = camera.CFrame.p
+                    local right = camera.CFrame.lookVector:Cross(-rainDirection)
+                    right = right.Magnitude > 0.001 and right.Unit or -rainDirection
+                    local forward = rainDirection:Cross(right).Unit
+                    RainEmitter.Size = Vector3.new(RAIN_EMITTER_DIM_DEFAULT, RAIN_EMITTER_DIM_DEFAULT, RAIN_EMITTER_DIM_DEFAULT + (1-t)*(RAIN_EMITTER_DIM_MAXFORWARD-RAIN_EMITTER_DIM_DEFAULT))
+                    RainEmitter.CFrame = CFrame.new(center.X,center.Y,center.Z, right.X,-rainDirection.X,forward.X, right.Y,-rainDirection.Y,forward.Y, right.Z,-rainDirection.Z,forward.Z) + (1-t)*camera.CFrame.lookVector*RainEmitter.Size.Z/3 - t*rainDirection*RAIN_EMITTER_UP_MODIFIER
+                    RainEmitter.RainStraight.Enabled = true
+                    RainEmitter.RainTopDown.Enabled = true
+                    inside = false
+                else
+                    RainEmitter.RainStraight.Enabled = false
+                    RainEmitter.RainTopDown.Enabled = false
+                    inside = true
+                end
+            end)
+            rain_connections[#rain_connections+1] = run_service["Stepped"]:Connect(function()
+                frame = frame + 1
+                if frame >= RAIN_UPDATE_PERIOD then
+                    local t = math.abs(camera.CFrame.lookVector:Dot(rainDirection))
+                    local mapped = camera.CFrame:Inverse() * (camera.CFrame.p - rainDirection)
+                    local rot = NumberRange.new(math.deg(math.atan2(-mapped.X, mapped.Y)))
+                    if inside then
+                        for _,v in ipairs(rainAttachments) do
+                            v.RainStraight.Rotation = rot
+                        end
+                    else
+                        if RainEmitter then
+                            RainEmitter.RainStraight.Rotation = rot
+                        end
+                    end
+                    frame = 0
+                end
+                local center = camera.CFrame.p
+                local right = camera.CFrame.lookVector:Cross(-rainDirection)
+                right = right.Magnitude > 0.001 and right.Unit or -rainDirection
+                local forward = rainDirection:Cross(right).Unit
+                local transform = CFrame.new(center.X,center.Y,center.Z, right.X,-rainDirection.X,forward.X, right.Y,-rainDirection.Y,forward.Y, right.Z,-rainDirection.Z,forward.Z)
+                local rayDir = rainDirection * RAIN_OCCLUDECHECK_SCAN_Y
+                for i = 1, numSplashes do
+                    local sa = splashAttachments[i]
+                    local ra = rainAttachments[i]
+                    local x = rand:NextNumber(RAIN_OCCLUDECHECK_OFFSET_XZ_MIN, RAIN_OCCLUDECHECK_OFFSET_XZ_MAX)
+                    local z = rand:NextNumber(RAIN_OCCLUDECHECK_OFFSET_XZ_MIN, RAIN_OCCLUDECHECK_OFFSET_XZ_MAX)
+                    local p, pos, norm = doRaycast(Ray.new(transform * Vector3.new(x, RAIN_OCCLUDECHECK_OFFSET_Y, z), rayDir))
+                    if p then
+                        sa.Position = pos + (norm or Vector3.new(0,1,0)) * RAIN_SPLASH_CORRECTION_Y
+                        sa.RainSplash:Emit(1)
+                        if inside then
+                            local corrected = pos - rainDirection * RAIN_SPLASH_STRAIGHT_OFFSET_Y
+                            ra.CFrame = transform - transform.p + corrected
+                            ra.RainStraight:Emit(intensityOccludedRain)
+                            ra.RainTopDown:Emit(intensityOccludedRain)
+                        end
+                    elseif inside then
+                        local corrected = transform * Vector3.new(x, rand:NextNumber(RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MIN, RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MAX), z)
+                        ra.CFrame = transform - transform.p + corrected
+                        ra.RainStraight:Emit(intensityOccludedRain)
+                        ra.RainTopDown:Emit(intensityOccludedRain)
+                    end
+                end
+            end)
+        end
+
+        local function stopLoop()
+            for _,c in ipairs(rain_connections) do c:Disconnect() end
+            rain_connections = {}
+        end
+
+        rain_module = {
+            enable = function()
+                if rain_active then return end
+                rain_active = true
+                RainEmitter.Parent = camera
+                for i = 1, RAIN_SPLASH_NUM do
+                    splashAttachments[i].Parent = workspace.Terrain
+                    rainAttachments[i].Parent = workspace.Terrain
+                end
+                SoundGroup.Parent = game:GetService("SoundService")
+                RainSound:Play()
+                -- apply current settings
+                local intensity = (flags["weather_custom_rain_intensity"] or 100) / 100
+                local speed = (flags["weather_custom_rain_speed"] or 100) / 100
+                RainEmitter.RainStraight.Rate = RAIN_STRAIGHT_MAX_RATE * intensity
+                RainEmitter.RainTopDown.Rate = RAIN_TOPDOWN_MAX_RATE * intensity
+                RainEmitter.RainStraight.Speed = NumberRange.new(speed * RAIN_STRAIGHT_MAX_SPEED)
+                RainEmitter.RainTopDown.Speed = NumberRange.new(speed * RAIN_TOPDOWN_MAX_SPEED)
+                intensityOccludedRain = math.ceil(RAIN_OCCLUDED_MAXINTENSITY * intensity)
+                numSplashes = math.floor(RAIN_SPLASH_NUM * intensity)
+                local col = ColorSequence.new(flags["weather_color"] or Color3.new(1,1,1))
+                RainEmitter.RainStraight.Color = col
+                RainEmitter.RainTopDown.Color = col
+                startLoop()
+            end,
+            disable = function()
+                if not rain_active then return end
+                rain_active = false
+                stopLoop()
+                RainEmitter.RainStraight.Enabled = false
+                RainEmitter.RainTopDown.Enabled = false
+                RainEmitter.Size = MIN_SIZE
+                RainEmitter.Parent = nil
+                for i = 1, RAIN_SPLASH_NUM do
+                    splashAttachments[i].Parent = nil
+                    rainAttachments[i].Parent = nil
+                end
+                RainSound:Stop()
+                SoundGroup.Parent = nil
+            end,
+            set_intensity = function(v)
+                local intensity = math.clamp(v, 0, 1)
+                RainEmitter.RainStraight.Rate = RAIN_STRAIGHT_MAX_RATE * intensity
+                RainEmitter.RainTopDown.Rate = RAIN_TOPDOWN_MAX_RATE * intensity
+                intensityOccludedRain = math.ceil(RAIN_OCCLUDED_MAXINTENSITY * intensity)
+                numSplashes = math.floor(RAIN_SPLASH_NUM * intensity)
+            end,
+            set_speed = function(v)
+                local speed = math.clamp(v, 0, 1)
+                RainEmitter.RainStraight.Speed = NumberRange.new(speed * RAIN_STRAIGHT_MAX_SPEED)
+                RainEmitter.RainTopDown.Speed = NumberRange.new(speed * RAIN_TOPDOWN_MAX_SPEED)
+            end,
+            set_color = function(c)
+                local col = ColorSequence.new(c)
+                RainEmitter.RainStraight.Color = col
+                RainEmitter.RainTopDown.Color = col
+                for _,v in ipairs(splashAttachments) do v.RainSplash.Color = col end
+                for _,v in ipairs(rainAttachments) do v.RainStraight.Color = col v.RainTopDown.Color = col end
+            end,
+        }
+    end
+
+    local weather_types = {
+        ["rain"] = {
+            ["Speed"] = NumberRange.new(60, 60),
+            ["LockedToPart"] = true,
+            ["Rate"] = 600,
+            ["Texture"] = "rbxassetid://1822883048",
+            ["EmissionDirection"] = Enum.NormalId.Bottom,
+            ["Transparency"] = NumberSequence.new{
+            NumberSequenceKeypoint.new(0, 1),
+            NumberSequenceKeypoint.new(0.25, 0.7842668294906616),
+            NumberSequenceKeypoint.new(0.75, 0.7842668294906616),
+            NumberSequenceKeypoint.new(1, 1)
+            },
+            ["Lifetime"] = NumberRange.new(0.800000011920929, 0.800000011920929),
+            ["LightEmission"] = 0.05000000074505806,
+            ["LightInfluence"] = 0.8999999761581421,
+            ["Orientation"] = Enum.ParticleOrientation.FacingCameraWorldUp,
+            ["Size"] = NumberSequence.new{
+            NumberSequenceKeypoint.new(0, 10),
+            NumberSequenceKeypoint.new(1, 10)
+            }
+        },
+        ["snow"] = {
+            ["Transparency"] = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 0.7374999523162842),
+                NumberSequenceKeypoint.new(0.973, 0.768750011920929),
+                NumberSequenceKeypoint.new(1, 1)
+            },
+            ["Texture"] = "http://www.roblox.com/asset/?id=99851851",
+            ["SpreadAngle"] = Vector2.new(50, 50),
+            ["Speed"] = NumberRange.new(30, 30),
+            ["LightEmission"] = 0.5,
+            ["Rate"] = 1000,
+            ["EmissionDirection"] = Enum.NormalId.Bottom,
+            ["Size"] = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 0.33096909523010254),
+                NumberSequenceKeypoint.new(0.551, 0.40189146995544434),
+                NumberSequenceKeypoint.new(1, 0.33096909523010254)
+            }
+        },
+        ["light rain"] = {
+            ["LockedToPart"] = true,
+            ["Rate"] = 500,
+                ["Squash"] = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 3),
+                NumberSequenceKeypoint.new(1, 3)
+            },
+                ["LightInfluence"] = 0.30000001192092896,
+                ["Transparency"] = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 0),
+                NumberSequenceKeypoint.new(0.435, 0),
+                NumberSequenceKeypoint.new(1, 0)
+            },
+            ["Texture"] = "rbxasset://textures/particles/sparkles_main.dds",
+            ["Speed"] = NumberRange.new(30, 50),
+            ["Lifetime"] = NumberRange.new(9, 9),
+            ["LightEmission"] = 0.5,
+            ["Brightness"] = 2,
+            ["EmissionDirection"] = Enum.NormalId.Bottom,
+            ["Orientation"] = Enum.ParticleOrientation.FacingCameraWorldUp,
+            ["Size"] = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 0.20000000298023224),
+                NumberSequenceKeypoint.new(1, 0.20000000298023224)
+            }
+        }
+    }
+
+    local offset = vector3_new(0, 20, 0)
+
+    local do_weather = LPH_NO_VIRTUALIZE(function(dt, hrp)
+        weather_part["CFrame"] = cframe_new(camera["CFrame"]["p"]) + offset
+    end)
+
+    local ignored = ignored["Siren"]["Radius"]
 
     create_connection(menu_references["weather"]["on_toggle_change"], function(value)
+        -- disable both systems
         if weather_part then
             destroy(weather_part)
             weather_part = nil
             weather_particle = nil
+        end
+        if rain_module and rain_active then
+            rain_module.disable()
         end
 
         for i = 1, #heartbeat do
@@ -11895,50 +12255,78 @@ do
 
         if value then
             local wtype = flags["weather_type"] and flags["weather_type"][1] or "rain"
-            weather_part = create_instance("Part", {
-                ["Size"] = vector3_new(40, 40, 85),
-                ["CanCollide"] = false,
-                ["Massless"] = true,
-                ["CastShadow"] = false,
-                ["Transparency"] = 1,
-                ["Anchored"] = true,
-                ["Name"] = "\0",
-                ["Parent"] = ignored
-            })
-            local data = weather_types[wtype]
-            local color = ColorSequence.new(flags["weather_color"])
-            weather_particle = create_instance("ParticleEmitter", data)
-            weather_particle["Color"] = color
-            weather_particle["Parent"] = weather_part
-            heartbeat[#heartbeat+1] = do_weather
+            if wtype == "custom rain" then
+                setup_rain_module()
+                rain_module.enable()
+            else
+                weather_part = create_instance("Part", {
+                    ["Size"] = vector3_new(40, 40, 85),
+                    ["CanCollide"] = false,
+                    ["Massless"] = true,
+                    ["CastShadow"] = false,
+                    ["Transparency"] = 1,
+                    ["Anchored"] = true,
+                    ["Name"] = "\0",
+                    ["Parent"] = ignored
+                })
+                local data = weather_types[wtype]
+                local color = ColorSequence.new(flags["weather_color"])
+                weather_particle = create_instance("ParticleEmitter", data)
+                weather_particle["Color"] = color
+                weather_particle["Parent"] = weather_part
+                heartbeat[#heartbeat+1] = do_weather
+            end
         end
     end)
 
     create_connection(menu_references["weather_type"]["on_dropdown_change"], function(value)
         local wtype = value[1]
+        local is_custom = wtype == "custom rain"
+        menu_references["weather_custom_rain_intensity"]:set_visible(is_custom)
+        menu_references["weather_custom_rain_speed"]:set_visible(is_custom)
+
         if not flags["weather"] then return end
 
-        if weather_particle then
-            destroy(weather_particle)
-            weather_particle = nil
+        if is_custom then
+            -- switch from particle to rain module
+            if weather_part then
+                destroy(weather_part)
+                weather_part = nil
+                weather_particle = nil
+                for i = 1, #heartbeat do
+                    if heartbeat[i] == do_weather then remove(heartbeat, i) break end
+                end
+            end
+            setup_rain_module()
+            rain_module.enable()
+        else
+            -- switch from rain module to particle
+            if rain_module and rain_active then rain_module.disable() end
+            if weather_particle then
+                destroy(weather_particle)
+                weather_particle = nil
+            end
+            if not weather_part then
+                weather_part = create_instance("Part", {
+                    ["Size"] = vector3_new(40, 40, 85),
+                    ["CanCollide"] = false, ["Massless"] = true,
+                    ["CastShadow"] = false, ["Transparency"] = 1,
+                    ["Anchored"] = true, ["Name"] = "\0", ["Parent"] = ignored
+                })
+                heartbeat[#heartbeat+1] = do_weather
+            end
+            weather_particle = create_instance("ParticleEmitter", weather_types[wtype])
+            weather_particle["Color"] = ColorSequence.new(flags["weather_color"])
+            weather_particle["Parent"] = weather_part
         end
-        if not weather_part then
-            weather_part = create_instance("Part", {
-                ["Size"] = vector3_new(40, 40, 85),
-                ["CanCollide"] = false, ["Massless"] = true,
-                ["CastShadow"] = false, ["Transparency"] = 1,
-                ["Anchored"] = true, ["Name"] = "\0", ["Parent"] = ignored
-            })
-            heartbeat[#heartbeat+1] = do_weather
-        end
-        weather_particle = create_instance("ParticleEmitter", weather_types[wtype])
-        weather_particle["Color"] = ColorSequence.new(flags["weather_color"])
-        weather_particle["Parent"] = weather_part
     end)
 
     create_connection(menu_references["weather_color"]["on_color_change"], function(color)
         if weather_particle then
             weather_particle["Color"] = ColorSequence.new(color)
+        end
+        if rain_module and rain_active then
+            rain_module.set_color(color)
         end
     end)
 
@@ -11954,7 +12342,17 @@ do
         end
     end)
 
+    create_connection(menu_references["weather_custom_rain_intensity"]["on_slider_change"], function(value)
+        if rain_module and rain_active then
+            rain_module.set_intensity(value / 100)
+        end
+    end)
 
+    create_connection(menu_references["weather_custom_rain_speed"]["on_slider_change"], function(value)
+        if rain_module and rain_active then
+            rain_module.set_speed(value / 100)
+        end
+    end)
 
     -- >> ( skybox )
 
@@ -20418,11 +20816,6 @@ do
         menu_references["void_spam_resolver_accuracy"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "accuracy"}, {["slider"] = {["flag"] = "void_spam_resolver_accuracy", ["min"] = 5, ["suffix"] = "%", ["max_text"] = "high", ["max"] = 110, ["default"] = 76.82, ["decimals"] = 2}})
         menu_references["void_spam_resolver_lerp"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "lerp % when close"}, {["slider"] = {["flag"] = "void_spam_resolver_lerp", ["min"] = 10, ["suffix"] = "%", ["max_text"] = "instant", ["max"] = 100, ["default"] = 10, ["decimals"] = 1}})
         menu_references["void_spam_resolver_dist_penalty"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "distance penalty"}, {["slider"] = {["flag"] = "void_spam_resolver_dist_penalty", ["min"] = 0, ["max"] = 5, ["default"] = 2, ["decimals"] = 1, ["suffix"] = "x"}})
-        menu_references["exp_connection"] = menu_references["general_section"]:create_element({["name"] = "exp connection"}, {["toggle"] = {["flag"] = "exp_connection", ["default"] = false}})
-            menu_references["exp_connection_settings"] = menu_references["exp_connection"]:create_settings()
-            menu_references["flame_connect"] = menu_references["exp_connection_settings"]:create_element({["name"] = "flame connect"}, {["toggle"] = {["flag"] = "flame_connect", ["default"] = false}})
-            menu_references["knife_connect"] = menu_references["exp_connection_settings"]:create_element({["name"] = "knife connect"}, {["toggle"] = {["flag"] = "knife_connect", ["default"] = false}})
-            menu_references["bag_connect"] = menu_references["exp_connection_settings"]:create_element({["name"] = "bag connect"}, {["toggle"] = {["flag"] = "bag_connect", ["default"] = false}})
         menu_references["ragebot_hitbox"] = menu_references["general_section"]:create_element({["name"] = "target hitbox"}, {["dropdown"] = {["flag"] = "ragebot_hitbox", ["options"] = {"head", "root"}, ["default"] = {"head"}}})
         menu_references["prediction"] = menu_references["general_section"]:create_element({["name"] = "prediction"}, {["slider"] = {["flag"] = "prediction", ["min"] = 0, ["max"] = 2000, ["default"] = 0, ["min_text"] = "auto", ["max_text"] = "disabled", ["suffix"] = "%", ["decimals"] = 2}})
         menu_references["prediction_settings"] = menu_references["prediction"]:create_settings()
@@ -20938,58 +21331,6 @@ do
     local void_spam_resolver_position_weight = 1.5
     local void_spam_resolver_dist_penalty = 2.0
 
-    -- >> ( exp connection )
-    local exp_connection_enabled = false
-    local exp_connection_flame = false
-    local exp_connection_knife = false
-    local exp_connection_bag = false
-
-    local function exp_buy_tool(tool_name)
-        local p = local_player
-        local backpack = p:FindFirstChild("Backpack")
-        local char = p["Character"]
-        local has_tool = (backpack and backpack:FindFirstChild(tool_name)) or (char and char:FindFirstChild(tool_name))
-        if not has_tool then
-            local saved_cframe = char and char:FindFirstChild("HumanoidRootPart") and char["HumanoidRootPart"]["CFrame"]
-            pcall(function() event:FireServer("BuyItem", tool_name) end)
-            task_wait(0.2)
-            if saved_cframe and char and char:FindFirstChild("HumanoidRootPart") then
-                char["HumanoidRootPart"]["CFrame"] = saved_cframe
-            end
-        end
-    end
-
-    local function exp_connection_activate()
-        if not exp_connection_enabled then return end
-        if exp_connection_flame then
-            exp_buy_tool("[Flamethrower]")
-            getgenv().exp_flamethrower_active = true
-            getgenv().exp_knife_active = false
-            getgenv().exp_bag_active = false
-        elseif exp_connection_knife then
-            exp_buy_tool("[Knife]")
-            getgenv().exp_knife_active = true
-            getgenv().exp_flamethrower_active = false
-            getgenv().exp_bag_active = false
-        elseif exp_connection_bag then
-            exp_buy_tool("[BeanBag]")
-            getgenv().exp_bag_active = true
-            getgenv().exp_flamethrower_active = false
-            getgenv().exp_knife_active = false
-        end
-    end
-
-    local function exp_connection_deactivate()
-        getgenv().exp_flamethrower_active = false
-        getgenv().exp_knife_active = false
-        getgenv().exp_bag_active = false
-        local char = local_player["Character"]
-        if char then
-            local hrp = char:FindFirstChild("HumanoidRootPart")
-            if hrp then pcall(function() sethiddenproperty(hrp, "PhysicsRepRootPart", nil) end) end
-        end
-    end
-
     set_ragebot_target = LPH_NO_VIRTUALIZE(function(target, message)
         if ragebot_target == target then
             return
@@ -21011,13 +21352,6 @@ do
 
         if fov_circle_outline then
             tween(fov_circle_outline, {["Color"] = ragebot_target and flags["ragebot_field_of_view_active_outline"] or flags["ragebot_field_of_view_outline_color"], ["Transparency"] = ragebot_target and 1-flags["ragebot_field_of_view_active_outline_transparency"] or 1-flags["ragebot_field_of_view_outline_transparency"]}, quad, out, 0.11)
-        end
-
-        -- >> ( exp connection integration )
-        if target then
-            exp_connection_activate()
-        else
-            exp_connection_deactivate()
         end
     end)
 
@@ -21318,53 +21652,6 @@ do
                                 setthreadidentity(4)
                             end
                         end
-
-                        -- >> ( exp connection method execution )
-                        if exp_connection_enabled and ragebot_target then
-                            local target_char = ragebot_target[2]["Character"]
-                            local target_hrp = target_char and target_char:FindFirstChild("HumanoidRootPart")
-                            local char = local_player["Character"]
-                            local hum = char and char:FindFirstChildOfClass("Humanoid")
-                            if target_hrp and hum then
-                                if exp_connection_flame then
-                                    -- flamethrower method: equip and orbit target head
-                                    local ft = char:FindFirstChild("[Flamethrower]") or local_player["Backpack"]:FindFirstChild("[Flamethrower]")
-                                    if ft then
-                                        if ft["Parent"] ~= char then hum:EquipTool(ft) end
-                                        local handle = ft:FindFirstChild("Handle")
-                                        if handle then
-                                            local target_head = target_char:FindFirstChild("Head")
-                                            if target_head then
-                                                handle["CFrame"] = target_head["CFrame"] * CFrame.new(0, 8, 0) * CFrame.Angles(math.rad(-90), 0, 0)
-                                            end
-                                        end
-                                        pcall(function() ft:Activate() end)
-                                    end
-                                elseif exp_connection_knife then
-                                    -- knife method: equip knife with connection resolver
-                                    local knife = char:FindFirstChild("[Knife]") or local_player["Backpack"]:FindFirstChild("[Knife]")
-                                    if knife then
-                                        if knife["Parent"] ~= char then hum:EquipTool(knife) end
-                                        local handle = knife:FindFirstChild("Handle")
-                                        if handle then
-                                            handle["CFrame"] = target_hrp["CFrame"]
-                                        end
-                                        pcall(function() knife:Activate() end)
-                                    end
-                                elseif exp_connection_bag then
-                                    -- bag method: equip beanbag and fire at target
-                                    local bag = char:FindFirstChild("[BeanBag]") or local_player["Backpack"]:FindFirstChild("[BeanBag]")
-                                    if bag then
-                                        if bag["Parent"] ~= char then hum:EquipTool(bag) end
-                                        local handle = bag:FindFirstChild("Handle")
-                                        if handle then
-                                            handle["CFrame"] = target_hrp["CFrame"]
-                                        end
-                                        pcall(function() bag:Activate() end)
-                                    end
-                                end
-                            end
-                        end
                     end
                 end
             else
@@ -21438,65 +21725,6 @@ do
 
     create_connection(menu_references["void_spam_resolver_dist_penalty"]["on_slider_change"], function(value)
         void_spam_resolver_dist_penalty = value
-    end)
-
-    -- >> ( exp connection callbacks )
-    create_connection(menu_references["exp_connection"]["on_toggle_change"], function(value)
-        exp_connection_enabled = value
-        if not value then
-            exp_connection_deactivate()
-        elseif ragebot_target then
-            exp_connection_activate()
-        end
-    end)
-
-    create_connection(menu_references["flame_connect"]["on_toggle_change"], function(value)
-        if value then
-            -- hide other two toggles
-            menu_references["knife_connect"]:set_visible(false)
-            menu_references["bag_connect"]:set_visible(false)
-            exp_connection_flame = true
-            exp_connection_knife = false
-            exp_connection_bag = false
-            if exp_connection_enabled and ragebot_target then exp_connection_activate() end
-        else
-            menu_references["knife_connect"]:set_visible(true)
-            menu_references["bag_connect"]:set_visible(true)
-            exp_connection_flame = false
-            exp_connection_deactivate()
-        end
-    end)
-
-    create_connection(menu_references["knife_connect"]["on_toggle_change"], function(value)
-        if value then
-            menu_references["flame_connect"]:set_visible(false)
-            menu_references["bag_connect"]:set_visible(false)
-            exp_connection_knife = true
-            exp_connection_flame = false
-            exp_connection_bag = false
-            if exp_connection_enabled and ragebot_target then exp_connection_activate() end
-        else
-            menu_references["flame_connect"]:set_visible(true)
-            menu_references["bag_connect"]:set_visible(true)
-            exp_connection_knife = false
-            exp_connection_deactivate()
-        end
-    end)
-
-    create_connection(menu_references["bag_connect"]["on_toggle_change"], function(value)
-        if value then
-            menu_references["flame_connect"]:set_visible(false)
-            menu_references["knife_connect"]:set_visible(false)
-            exp_connection_bag = true
-            exp_connection_flame = false
-            exp_connection_knife = false
-            if exp_connection_enabled and ragebot_target then exp_connection_activate() end
-        else
-            menu_references["flame_connect"]:set_visible(true)
-            menu_references["knife_connect"]:set_visible(true)
-            exp_connection_bag = false
-            exp_connection_deactivate()
-        end
     end)
 
     create_connection(menu_references["auto_fire_defensive"]["on_toggle_change"], function(value)
