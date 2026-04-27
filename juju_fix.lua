@@ -8724,7 +8724,7 @@ do
                 
                 if packet == "ShootGun" then
                     -- magic bullet override
-                    if flags["magic_bullet"] and mb_target_part then
+                    if flags["magic_bullet"] and mb_target_part and mb_smart_origin and mb_target_pos then
                         local handle = args[2]
                         local dir = (mb_smart_origin - mb_target_pos)["Unit"]
                         local Magnitude = dir["Magnitude"]
@@ -22120,7 +22120,7 @@ do
     local function exp_select(chosen)
         for _, m in ipairs(exp_methods) do
             if m ~= chosen then
-                flags[m] = false
+                menu_references[m]:set_toggle(false)
                 menu_references[m]:set_visible(false)
             end
         end
@@ -22132,14 +22132,13 @@ do
     create_connection(menu_references["exp_connection"]["on_toggle_change"], function(value)
         if not value then
             for _, m in ipairs(exp_methods) do
-                flags[m] = false
+                menu_references[m]:set_toggle(false)
                 menu_references[m]:set_visible(false)
             end
             getgenv().connectionresolvderfgdg = false
             getgenv().beanbag_method         = false
-            flags["auto_fire_bullet_tp"]     = false
+            menu_references["auto_fire_bullet_tp"]:set_toggle(false)
         else
-            -- show all 3 so player can pick one
             for _, m in ipairs(exp_methods) do
                 menu_references[m]:set_visible(true)
             end
@@ -22164,9 +22163,9 @@ do
                                 local saved = hrp["CFrame"]
                                 hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
                                 wait(0.19)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.15)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.1)
                                 hrp["CFrame"] = saved
                             end
@@ -22175,7 +22174,7 @@ do
                     end
                 end
             end
-            flags["auto_fire_bullet_tp"]     = false
+            menu_references["auto_fire_bullet_tp"]:set_toggle(false)
             getgenv().connectionresolvderfgdg = false
             getgenv().beanbag_method         = false
         end
@@ -22199,9 +22198,9 @@ do
                                 local saved = hrp["CFrame"]
                                 hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
                                 wait(0.19)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.15)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.1)
                                 hrp["CFrame"] = saved
                             end
@@ -22212,7 +22211,7 @@ do
             end
             getgenv().connectionresolvderfgdg = true
             getgenv().beanbag_method         = false
-            flags["auto_fire_bullet_tp"]     = false
+            menu_references["auto_fire_bullet_tp"]:set_toggle(false)
         else
             getgenv().connectionresolvderfgdg = false
         end
@@ -22236,9 +22235,9 @@ do
                                 local saved = hrp["CFrame"]
                                 hrp["CFrame"] = CFrame.new(head["Position"] + vector3_new(0, 5, 0))
                                 wait(0.19)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.15)
-                                fireclickdetector(cd, 0)
+                                fireclickdetector(cd)
                                 wait(0.1)
                                 hrp["CFrame"] = saved
                             end
@@ -22249,7 +22248,7 @@ do
             end
             getgenv().beanbag_method         = true
             getgenv().connectionresolvderfgdg = true
-            flags["auto_fire_bullet_tp"]     = false
+            menu_references["auto_fire_bullet_tp"]:set_toggle(false)
         else
             getgenv().beanbag_method         = false
             getgenv().connectionresolvderfgdg = false
