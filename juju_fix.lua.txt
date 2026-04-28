@@ -1,6 +1,6 @@
---> dont make key sys pls
+-- > dont make key sys pls
 
-repeat task["wait"]() until game:IsLoaded()
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 if (identifyexecutor() == "AWP" or identifyexecutor() == "Nihon") then
     cleardrawcache()
@@ -104,7 +104,9 @@ local tween_service = cloneref(game:GetService("TweenService"))
     local get_value = tween_service["GetValue"]
 local http_service = cloneref(game:GetService("HttpService"))
 local workspace = workspace
-    local camera = cloneref(workspace["CurrentCamera"])
+    local camera
+repeat task.wait() until workspace.CurrentCamera
+camera = cloneref(workspace["CurrentCamera"])
 local hui = cloneref(gethui())
 
 local color3_fromrgb = Color3["fromRGB"]
@@ -361,40 +363,40 @@ do
     do
         local files = {
             ["assets"] = {
-                ["api.lua"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/api.lua") end,
-                ["sparkle.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/sparkle.ogg") end,
-                ["skeet.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/skeet.ogg") end,
-                ["neverlose.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/neverlose.ogg") end,
-                ["break.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/break.ogg") end,
-        ["agpa2.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/agpa2.ogg") end,
-        ["agpa1.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/agpa1.ogg") end,
-        ["Beep1.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/Beep1.ogg") end,
-        ["bubble.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/bubble.ogg") end,
-        ["copperbell.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/copperbell.ogg") end,
-        ["cowbell.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/cowbell.ogg") end,
-        ["huhh.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/huhh.ogg") end,
-        ["quake.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/quake.ogg") end,
-                ["mc bow.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/mc%20bow.ogg") end,
-                ["primordial.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/primordial.ogg") end,
-                ["rust.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/rust.ogg") end,
-                ["sexy.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/sexy.ogg") end,
-                ["jaydes.png"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/jaydes.png") end,
-                ["1.png"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/1.png") end,
-                ["2.png"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/2.png") end,
-                ["logo.png"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/logo.png") end,
-                ["saturation.png"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/saturation.png") end,
+                ["api.lua"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/api.lua") end,
+                ["sparkle.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/sparkle.ogg") end,
+                ["skeet.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/skeet.ogg") end,
+                ["neverlose.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/neverlose.ogg") end,
+                ["break.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/break.ogg") end,
+        ["agpa2.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/agpa2.ogg") end,
+        ["agpa1.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/agpa1.ogg") end,
+        ["Beep1.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/Beep1.ogg") end,
+        ["bubble.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/bubble.ogg") end,
+        ["copperbell.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/copperbell.ogg") end,
+        ["cowbell.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/cowbell.ogg") end,
+        ["huhh.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/huhh.ogg") end,
+        ["quake.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/quake.ogg") end,
+                ["mc bow.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/mc%20bow.ogg") end,
+                ["primordial.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/primordial.ogg") end,
+                ["rust.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/rust.ogg") end,
+                ["sexy.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/sexy.ogg") end,
+                ["jaydes.png"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/jaydes.png") end,
+                ["1.png"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/1.png") end,
+                ["2.png"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/2.png") end,
+                ["logo.png"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/logo.png") end,
+                ["saturation.png"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/saturation.png") end,
             },
             ["custom"] = {
-                ["textures.json"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/textures.json") end,
-                ["character.rbxm"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/character.rbxm") end,
-                ["pinksky.rbxm"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/pinksky.rbxm") end,
-                ["scar.ogg"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/scar.ogg") end,
-                ["x hit.rbxm"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/x%20hit.rbxm") end,
-                ["blossom aura.rbxm"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/blossom%20aura.rbxm") end,
-                ["spam.json"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/spam.json") end,
+                ["textures.json"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/textures.json") end,
+                ["character.rbxm"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/character.rbxm") end,
+                ["pinksky.rbxm"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/pinksky.rbxm") end,
+                ["scar.ogg"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/scar.ogg") end,
+                ["x hit.rbxm"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/x%20hit.rbxm") end,
+                ["blossom aura.rbxm"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/blossom%20aura.rbxm") end,
+                ["spam.json"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/spam.json") end,
             },
             ["themes"] = {
-                ["default.th"] = function() return game:HttpGet("https://github.com/quiwti08/juju/raw/refs/heads/main/default.th") end,
+                ["default.th"] = function() return game:HttpGet("https://github.com/alex541-juju/juju/raw/refs/heads/main/default.th") end,
             },
             ["addons"] = {},
             ["configs"] = {},
@@ -428,7 +430,7 @@ do
 
     local drawing = Drawing
     LPH_NO_VIRTUALIZE(function()
-        drawing = loadstring(game:HttpGet("https://raw.githubusercontent.com/quiwti08/juju/refs/heads/main/customapi.lua"))()
+        drawing = loadstring(game:HttpGet("https://raw.githubusercontent.com/alex541-juju/juju/refs/heads/main/customapi.lua"))()
     end)()
 
     getgenv()["fake_drawing"] = drawing
@@ -9511,7 +9513,7 @@ do
 
     menu_references["animation_player"] = menu_references["other_section"]:create_element({["name"] = "animation player"}, {["toggle"] = {["flag"] = "animation_player"}})
         menu_references["animation_player_settings"] = menu_references["animation_player"]:create_settings()
-        menu_references["animation_player_animation"] = menu_references["animation_player_settings"]:create_element({["name"] = "animation"}, {["dropdown"] = {["default"] = {"sleep"}, ["options"] = {"custom", "sleep", "floss", "hype"}, ["flag"] = "animation_player_animation"}})
+        menu_references["animation_player_animation"] = menu_references["animation_player_settings"]:create_element({["name"] = "animation"}, {["dropdown"] = {["default"] = {"sleep"}, ["options"] = {"custom", "sleep", "floss", "hype", "china dance", "aura idle", "headless basketball", "aura farming", "sturdy", "ramge"}, ["flag"] = "animation_player_animation"}})
         menu_references["animation_player_asset_id"] = menu_references["animation_player_settings"]:create_element({["name"] = "asset id"}, {["textbox"] = {["default"] = "15609995579", ["flag"] = "animation_player_asset_id"}})
         menu_references["animation_player_asset_id"]:set_visible(false)
 
@@ -9573,7 +9575,19 @@ do
 
     create_connection(menu_references["animation_player_animation"]["on_dropdown_change"], function(value)
         local value = value[1]
-        animation_id = value == "custom" and "rbxassetid://"..flags["animation_player_asset_id"] or value == "floss" and "rbxassetid://10714340543" or value == "hype" and "rbxassetid://10714369624" or value == "sleep" and "rbxassetid://10714360343"
+        local emote_ids = {
+            ["custom"]             = "rbxassetid://"..flags["animation_player_asset_id"],
+            ["sleep"]              = "rbxassetid://10714360343",
+            ["floss"]              = "rbxassetid://10714340543",
+            ["hype"]               = "rbxassetid://10714369624",
+            ["china dance"]        = "rbxassetid://112134517351163",
+            ["aura idle"]          = "rbxassetid://131556235813350",
+            ["headless basketball"]= "rbxassetid://71379317586292",
+            ["aura farming"]       = "rbxassetid://119737281881349",
+            ["sturdy"]             = "rbxassetid://95578613077512",
+            ["ramge"]              = "rbxassetid://104322051945322",
+        }
+        animation_id = emote_ids[value] or ("rbxassetid://"..flags["animation_player_asset_id"])
         menu_references["animation_player_asset_id"]:set_visible(value == "custom")
 
         if animation_player_connection then
@@ -10281,6 +10295,166 @@ do
         end)
     end
 
+    -- >> ( anti bag )
+
+    menu_references["anti_bag"] = menu_references["utility_section"]:create_element({["name"] = "anti bag"}, {["toggle"] = {["flag"] = "anti_bag"}})
+
+    do
+        local anti_bag_connection = nil
+
+        create_connection(menu_references["anti_bag"]["on_toggle_change"], function(value)
+            if anti_bag_connection then
+                anti_bag_connection:Disconnect()
+                anti_bag_connection = nil
+            end
+            if value then
+                anti_bag_connection = create_connection(run_service["Heartbeat"], function()
+                    local char = local_player["Character"]
+                    if not char then return end
+                    local sock = char:FindFirstChild("Christmas_Sock")
+                    if sock then
+                        sock:Destroy()
+                    end
+                end)
+            end
+        end)
+    end
+
+    -- >> ( kill aura )
+
+    do
+        local killaura_running = false
+        local killaura_target = nil
+        local killaura_unloading = false
+
+        local KILLAURA_MELEE = {
+            knife=true, bat=true, sword=true, fist=true, punch=true,
+            melee=true, blade=true, axe=true, hammer=true, crowbar=true
+        }
+
+        local function ka_is_gun()
+            local char = local_player["Character"]
+            if not char then return false end
+            local tool = char:FindFirstChildOfClass("Tool")
+            if not tool then return false end
+            local nameLower = tool["Name"]:lower()
+            for k in pairs(KILLAURA_MELEE) do
+                if nameLower:find(k) then return false end
+            end
+            return tool:FindFirstChildOfClass("RemoteEvent") ~= nil
+                or tool:FindFirstChildWhichIsA("RemoteEvent", true) ~= nil
+        end
+
+        local function ka_has_ff(p)
+            local char = p["Character"]
+            if not char then return false end
+            return char:FindFirstChildOfClass("ForceField") ~= nil
+        end
+
+        local function ka_in_range(p, range)
+            local mychar = local_player["Character"]
+            local myhrp = mychar and mychar:FindFirstChild("HumanoidRootPart")
+            if not myhrp then return false end
+            local char = p["Character"]
+            if not char then return false end
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            if not hrp then return false end
+            return (hrp["Position"] - myhrp["Position"])["Magnitude"] <= range
+        end
+
+        local function ka_shoot(p)
+            if not ka_is_gun() then return end
+            if ka_has_ff(p) then return end
+            local char = p["Character"]
+            if not char then return end
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if not hum or hum["Health"] <= 0 then return end
+            killaura_target = p
+            wait(0.03)
+            pcall(function()
+                local mychar = local_player["Character"]
+                local tool = mychar and mychar:FindFirstChildOfClass("Tool")
+                if tool then tool:Activate() end
+            end)
+            wait(0.08)
+            killaura_target = nil
+        end
+
+        local idxHook = nil
+        pcall(function()
+            idxHook = hookmetamethod(game, "__index", function(self, key)
+                if flags["killaura_enabled"] and rawequal(self, mouse) and (key == "Hit" or key == "Target") then
+                    local target_char = killaura_target and killaura_target["Character"]
+                    if target_char then
+                        local part = target_char:FindFirstChild("Head")
+                            or target_char:FindFirstChild("UpperTorso")
+                            or target_char:FindFirstChild("HumanoidRootPart")
+                        if part then
+                            if key == "Target" then return part end
+                            if key == "Hit" then return part["CFrame"] end
+                        end
+                    end
+                end
+                return idxHook(self, key)
+            end)
+        end)
+
+        local function ka_loop()
+            if killaura_running then return end
+            killaura_running = true
+            spawn(function()
+                while flags["killaura_enabled"] and not killaura_unloading do
+                    if not ka_is_gun() then
+                        wait(0.1)
+                        continue
+                    end
+                    local range = flags["killaura_range"] or 60
+                    local nearby = {}
+                    for _, p in players_service:GetPlayers() do
+                        if p == local_player then continue end
+                        if ka_has_ff(p) then continue end
+                        if not ka_in_range(p, range) then continue end
+                        local char = p["Character"]
+                        if not char then continue end
+                        local hum = char:FindFirstChildOfClass("Humanoid")
+                        if not hum or hum["Health"] <= 0 then continue end
+                        nearby[#nearby+1] = p
+                    end
+                    if #nearby == 0 then
+                        wait(0.1)
+                        continue
+                    end
+                    for _, p in nearby do
+                        if not flags["killaura_enabled"] or killaura_unloading then break end
+                        ka_shoot(p)
+                        wait(0.12)
+                    end
+                    wait(0.05)
+                end
+                killaura_target = nil
+                killaura_running = false
+            end)
+        end
+
+        menu_references["killaura_toggle"] = menu_references["utility_section"]:create_element({["name"] = "kill aura"}, {["toggle"] = {["flag"] = "killaura_enabled", ["default"] = false}})
+        menu_references["killaura_settings"] = menu_references["killaura_toggle"]:create_settings()
+        menu_references["killaura_range"] = menu_references["killaura_settings"]:create_element({["name"] = "range"}, {["slider"] = {["flag"] = "killaura_range", ["min"] = 10, ["max"] = 999999, ["default"] = 60, ["suffix"] = " st"}})
+
+        create_connection(menu_references["killaura_toggle"]["on_toggle_change"], function(value)
+            killaura_target = nil
+            if value then
+                ka_loop()
+                new_notification("kill aura enabled", 1)
+            else
+                new_notification("kill aura disabled", 3)
+            end
+        end)
+
+        create_connection(signals["on_local_character_added"], function()
+            killaura_target = nil
+        end)
+    end
+
     -- >> ( auto reload )
 
     menu_references["auto_reload"] = menu_references["utility_section"]:create_element({["name"] = "auto reload"}, {["toggle"] = {["flag"] = "auto_reload"}})
@@ -10462,21 +10636,21 @@ do
     -- >> ( redeem codes )
 
     create_connection(menu_references["utility_section"]:create_element({["name"] = "redeem codes"}, {["button"] = {}})["on_clicked"], function()
-        local html = game:HttpGet("https://gamerant.com/roblox-da-hood-codes/")
-        local html = html:sub(html:find("All Active Da Hood Codes"), html:find("All Expired Da Hood Codes") - 1)
-
-        local codes = {}
-        for code in html:gmatch("<strong>(.-)</strong>") do
-            if not code:find("%(") then
-                codes[#codes+1] = code:gsub("%s+$", "")
-            end
+    local raw = game:HttpGet("https://raw.githubusercontent.com/alex541-juju/juju/refs/heads/main/codes.txt")
+    
+    local codes = {}
+    for code in raw:gmatch("[^\n]+") do
+        code = code:gsub("%s+$", ""):gsub("^%s+", "") -- trim
+        if code ~= "" then
+            codes[#codes+1] = code
         end
+    end
 
-        for i = 1, #codes do
-            event:FireServer("EnterPromoCode", codes[i])
-            wait(6)
-        end
-    end)
+    for i = 1, #codes do
+        event:FireServer("EnterPromoCode", codes[i])
+        wait(6)
+    end
+end)
 
     -- >> ( get vehicle )
 
@@ -11697,12 +11871,294 @@ do
 
     menu_references["weather"] = menu_references["lighting_section"]:create_element({["name"] = "weather"}, {["toggle"] = {["flag"] = "weather"}})
         menu_references["weather_settings"] = menu_references["weather"]:create_settings()
-        menu_references["weather_type"] = menu_references["weather_settings"]:create_element({["name"] = "type"}, {["dropdown"] = {["flag"] = "weather_type", ["options"] = {"light rain", "rain", "snow"}, ["default"] = {"rain"}, ["requires_one"] = true}})
+        menu_references["weather_type"] = menu_references["weather_settings"]:create_element({["name"] = "type"}, {["dropdown"] = {["flag"] = "weather_type", ["options"] = {"light rain", "rain", "snow", "custom rain"}, ["default"] = {"rain"}, ["requires_one"] = true}})
         menu_references["weather_color"] = menu_references["weather_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "weather_color", ["default_color"] = color3_fromrgb(255, 255, 255), ["default_transparency"] = 0, ["transparency_flag"] = "weather_transparency"}})
         menu_references["weather_rate"] = menu_references["weather_settings"]:create_element({["name"] = "rate"}, {["slider"] = {["flag"] = "weather_rate", ["min"] = 1, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_intensity"] = menu_references["weather_settings"]:create_element({["name"] = "intensity"}, {["slider"] = {["flag"] = "weather_custom_rain_intensity", ["min"] = 0, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_speed"] = menu_references["weather_settings"]:create_element({["name"] = "speed"}, {["slider"] = {["flag"] = "weather_custom_rain_speed", ["min"] = 0, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["weather_custom_rain_intensity"]:set_visible(false)
+        menu_references["weather_custom_rain_speed"]:set_visible(false)
 
     local weather_part = nil
     local weather_particle = nil
+
+    -- >> ( custom rain - buildthomas Rain module )
+    local rain_module = nil
+    local rain_active = false
+
+    local function setup_rain_module()
+        if rain_module then return end
+        -- inline Rain module init (stripped to essentials)
+        local MIN_SIZE = Vector3.new(0.05,0.05,0.05)
+        local RAIN_DEFAULT_LIGHTEMISSION = 0.05
+        local RAIN_DEFAULT_LIGHTINFLUENCE = 0.9
+        local RAIN_STRAIGHT_ASSET = "rbxassetid://1822883048"
+        local RAIN_TOPDOWN_ASSET = "rbxassetid://1822856633"
+        local RAIN_SPLASH_ASSET = "rbxassetid://1822856633"
+        local RAIN_STRAIGHT_MAX_RATE = 600
+        local RAIN_TOPDOWN_MAX_RATE = 600
+        local RAIN_STRAIGHT_MAX_SPEED = 60
+        local RAIN_TOPDOWN_MAX_SPEED = 60
+        local RAIN_SPLASH_NUM = 20
+        local RAIN_EMITTER_DIM_DEFAULT = 40
+        local RAIN_EMITTER_DIM_MAXFORWARD = 100
+        local RAIN_EMITTER_UP_MODIFIER = 20
+        local RAIN_SCANHEIGHT = 1000
+        local RAIN_UPDATE_PERIOD = 6
+        local RAIN_OCCLUDECHECK_OFFSET_Y = 500
+        local RAIN_OCCLUDECHECK_OFFSET_XZ_MIN = -100
+        local RAIN_OCCLUDECHECK_OFFSET_XZ_MAX = 100
+        local RAIN_OCCLUDECHECK_SCAN_Y = 550
+        local RAIN_OCCLUDED_MINSPEED = 70
+        local RAIN_OCCLUDED_MAXSPEED = 100
+        local RAIN_OCCLUDED_SPREAD = Vector2.new(10,10)
+        local RAIN_OCCLUDED_MAXINTENSITY = 2
+        local RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MIN = 20
+        local RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MAX = 100
+        local RAIN_SPLASH_STRAIGHT_OFFSET_Y = 50
+        local RAIN_SPLASH_CORRECTION_Y = 0.5
+        local RAIN_TRANSPARENCY_T1 = 0.25
+        local RAIN_TRANSPARENCY_T2 = 0.75
+        local RAIN_SOUND_ASSET = "rbxassetid://1516791621"
+        local RAIN_SOUND_BASEVOLUME = 0.2
+        local rainDirection = Vector3.new(0,-1,0)
+        local straightLowAlpha = 1
+        local topdownLowAlpha = 1
+        local intensityOccludedRain = 0
+        local numSplashes = 0
+        local volumeTarget = 0
+        local NSK010 = NumberSequenceKeypoint.new(0,1,0)
+        local NSK110 = NumberSequenceKeypoint.new(1,1,0)
+
+        local SoundGroup = Instance.new("SoundGroup")
+        SoundGroup.Name = "__RainSG"
+        SoundGroup.Volume = RAIN_SOUND_BASEVOLUME
+        SoundGroup.Archivable = false
+        local RainSound = Instance.new("Sound")
+        RainSound.SoundId = RAIN_SOUND_ASSET
+        RainSound.Looped = true
+        RainSound.Volume = 0
+        RainSound.SoundGroup = SoundGroup
+        RainSound.Archivable = false
+        RainSound.Parent = SoundGroup
+
+        local RainEmitter = Instance.new("Part")
+        RainEmitter.Transparency = 1
+        RainEmitter.Anchored = true
+        RainEmitter.CanCollide = false
+        RainEmitter.Archivable = false
+        RainEmitter.Size = MIN_SIZE
+        RainEmitter.Name = "RainPart"
+        local straight = Instance.new("ParticleEmitter")
+        straight.Name = "RainStraight"
+        straight.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+        straight.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+        straight.Size = NumberSequence.new(10)
+        straight.Texture = RAIN_STRAIGHT_ASSET
+        straight.LockedToPart = true
+        straight.Enabled = false
+        straight.Lifetime = NumberRange.new(0.8)
+        straight.Rate = RAIN_STRAIGHT_MAX_RATE
+        straight.Speed = NumberRange.new(RAIN_STRAIGHT_MAX_SPEED)
+        straight.EmissionDirection = Enum.NormalId.Bottom
+        straight.Orientation = Enum.ParticleOrientation.FacingCameraWorldUp
+        straight.Parent = RainEmitter
+        local topdown = Instance.new("ParticleEmitter")
+        topdown.Name = "RainTopDown"
+        topdown.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+        topdown.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+        topdown.Size = NumberSequence.new{NumberSequenceKeypoint.new(0,5.33,2.75),NumberSequenceKeypoint.new(1,5.33,2.75)}
+        topdown.Texture = RAIN_TOPDOWN_ASSET
+        topdown.LockedToPart = true
+        topdown.Enabled = false
+        topdown.Rotation = NumberRange.new(0,360)
+        topdown.Lifetime = NumberRange.new(0.8)
+        topdown.Rate = RAIN_TOPDOWN_MAX_RATE
+        topdown.Speed = NumberRange.new(RAIN_TOPDOWN_MAX_SPEED)
+        topdown.EmissionDirection = Enum.NormalId.Bottom
+        topdown.Parent = RainEmitter
+
+        local splashAttachments, rainAttachments = {}, {}
+        for i = 1, RAIN_SPLASH_NUM do
+            local sa = Instance.new("Attachment")
+            sa.Name = "__RainSplash"
+            sa.Archivable = false
+            local spe = Instance.new("ParticleEmitter")
+            spe.LightEmission = RAIN_DEFAULT_LIGHTEMISSION
+            spe.LightInfluence = RAIN_DEFAULT_LIGHTINFLUENCE
+            spe.Size = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.4,3),NumberSequenceKeypoint.new(1,0)}
+            spe.Texture = RAIN_SPLASH_ASSET
+            spe.Rotation = NumberRange.new(0,360)
+            spe.Lifetime = NumberRange.new(0.1,0.15)
+            spe.Enabled = false
+            spe.Rate = 0
+            spe.Speed = NumberRange.new(0)
+            spe.Name = "RainSplash"
+            spe.Parent = sa
+            splashAttachments[i] = sa
+            local ra = Instance.new("Attachment")
+            ra.Name = "__RainOccluded"
+            ra.Archivable = false
+            local rs = straight:Clone()
+            rs.Speed = NumberRange.new(RAIN_OCCLUDED_MINSPEED, RAIN_OCCLUDED_MAXSPEED)
+            rs.SpreadAngle = RAIN_OCCLUDED_SPREAD
+            rs.LockedToPart = false
+            rs.Enabled = false
+            rs.Parent = ra
+            local rt = topdown:Clone()
+            rt.Speed = NumberRange.new(RAIN_OCCLUDED_MINSPEED, RAIN_OCCLUDED_MAXSPEED)
+            rt.SpreadAngle = RAIN_OCCLUDED_SPREAD
+            rt.LockedToPart = false
+            rt.Enabled = false
+            rt.Parent = ra
+            rainAttachments[i] = ra
+        end
+
+        local ignoreList = {RainEmitter}
+        local function doRaycast(ray, ignoreChar)
+            return workspace:FindPartOnRayWithIgnoreList(ray, ignoreChar and {RainEmitter, local_player.Character} or ignoreList)
+        end
+
+        local rain_connections = {}
+        local inside = true
+        local frame = RAIN_UPDATE_PERIOD
+        local rand = Random.new()
+
+        local function startLoop()
+            rain_connections[#rain_connections+1] = run_service["RenderStepped"]:Connect(function()
+                local part, _ = doRaycast(Ray.new(camera.CFrame.p, -rainDirection * RAIN_SCANHEIGHT), true)
+                if not part then
+                    frame = RAIN_UPDATE_PERIOD
+                    local t = math.abs(camera.CFrame.lookVector:Dot(rainDirection))
+                    local center = camera.CFrame.p
+                    local right = camera.CFrame.lookVector:Cross(-rainDirection)
+                    right = right.Magnitude > 0.001 and right.Unit or -rainDirection
+                    local forward = rainDirection:Cross(right).Unit
+                    RainEmitter.Size = Vector3.new(RAIN_EMITTER_DIM_DEFAULT, RAIN_EMITTER_DIM_DEFAULT, RAIN_EMITTER_DIM_DEFAULT + (1-t)*(RAIN_EMITTER_DIM_MAXFORWARD-RAIN_EMITTER_DIM_DEFAULT))
+                    RainEmitter.CFrame = CFrame.new(center.X,center.Y,center.Z, right.X,-rainDirection.X,forward.X, right.Y,-rainDirection.Y,forward.Y, right.Z,-rainDirection.Z,forward.Z) + (1-t)*camera.CFrame.lookVector*RainEmitter.Size.Z/3 - t*rainDirection*RAIN_EMITTER_UP_MODIFIER
+                    RainEmitter.RainStraight.Enabled = true
+                    RainEmitter.RainTopDown.Enabled = true
+                    inside = false
+                else
+                    RainEmitter.RainStraight.Enabled = false
+                    RainEmitter.RainTopDown.Enabled = false
+                    inside = true
+                end
+            end)
+            rain_connections[#rain_connections+1] = run_service["Stepped"]:Connect(function()
+                frame = frame + 1
+                if frame >= RAIN_UPDATE_PERIOD then
+                    local t = math.abs(camera.CFrame.lookVector:Dot(rainDirection))
+                    local mapped = camera.CFrame:Inverse() * (camera.CFrame.p - rainDirection)
+                    local rot = NumberRange.new(math.deg(math.atan2(-mapped.X, mapped.Y)))
+                    if inside then
+                        for _,v in ipairs(rainAttachments) do
+                            v.RainStraight.Rotation = rot
+                        end
+                    else
+                        if RainEmitter then
+                            RainEmitter.RainStraight.Rotation = rot
+                        end
+                    end
+                    frame = 0
+                end
+                local center = camera.CFrame.p
+                local right = camera.CFrame.lookVector:Cross(-rainDirection)
+                right = right.Magnitude > 0.001 and right.Unit or -rainDirection
+                local forward = rainDirection:Cross(right).Unit
+                local transform = CFrame.new(center.X,center.Y,center.Z, right.X,-rainDirection.X,forward.X, right.Y,-rainDirection.Y,forward.Y, right.Z,-rainDirection.Z,forward.Z)
+                local rayDir = rainDirection * RAIN_OCCLUDECHECK_SCAN_Y
+                for i = 1, numSplashes do
+                    local sa = splashAttachments[i]
+                    local ra = rainAttachments[i]
+                    local x = rand:NextNumber(RAIN_OCCLUDECHECK_OFFSET_XZ_MIN, RAIN_OCCLUDECHECK_OFFSET_XZ_MAX)
+                    local z = rand:NextNumber(RAIN_OCCLUDECHECK_OFFSET_XZ_MIN, RAIN_OCCLUDECHECK_OFFSET_XZ_MAX)
+                    local p, pos, norm = doRaycast(Ray.new(transform * Vector3.new(x, RAIN_OCCLUDECHECK_OFFSET_Y, z), rayDir))
+                    if p then
+                        sa.Position = pos + (norm or Vector3.new(0,1,0)) * RAIN_SPLASH_CORRECTION_Y
+                        sa.RainSplash:Emit(1)
+                        if inside then
+                            local corrected = pos - rainDirection * RAIN_SPLASH_STRAIGHT_OFFSET_Y
+                            ra.CFrame = transform - transform.p + corrected
+                            ra.RainStraight:Emit(intensityOccludedRain)
+                            ra.RainTopDown:Emit(intensityOccludedRain)
+                        end
+                    elseif inside then
+                        local corrected = transform * Vector3.new(x, rand:NextNumber(RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MIN, RAIN_NOSPLASH_STRAIGHT_OFFSET_Y_MAX), z)
+                        ra.CFrame = transform - transform.p + corrected
+                        ra.RainStraight:Emit(intensityOccludedRain)
+                        ra.RainTopDown:Emit(intensityOccludedRain)
+                    end
+                end
+            end)
+        end
+
+        local function stopLoop()
+            for _,c in ipairs(rain_connections) do c:Disconnect() end
+            rain_connections = {}
+        end
+
+        rain_module = {
+            enable = function()
+                if rain_active then return end
+                rain_active = true
+                RainEmitter.Parent = camera
+                for i = 1, RAIN_SPLASH_NUM do
+                    splashAttachments[i].Parent = workspace.Terrain
+                    rainAttachments[i].Parent = workspace.Terrain
+                end
+                SoundGroup.Parent = game:GetService("SoundService")
+                RainSound:Play()
+                -- apply current settings
+                local intensity = (flags["weather_custom_rain_intensity"] or 100) / 100
+                local speed = (flags["weather_custom_rain_speed"] or 100) / 100
+                RainEmitter.RainStraight.Rate = RAIN_STRAIGHT_MAX_RATE * intensity
+                RainEmitter.RainTopDown.Rate = RAIN_TOPDOWN_MAX_RATE * intensity
+                RainEmitter.RainStraight.Speed = NumberRange.new(speed * RAIN_STRAIGHT_MAX_SPEED)
+                RainEmitter.RainTopDown.Speed = NumberRange.new(speed * RAIN_TOPDOWN_MAX_SPEED)
+                intensityOccludedRain = math.ceil(RAIN_OCCLUDED_MAXINTENSITY * intensity)
+                numSplashes = math.floor(RAIN_SPLASH_NUM * intensity)
+                local col = ColorSequence.new(flags["weather_color"] or Color3.new(1,1,1))
+                RainEmitter.RainStraight.Color = col
+                RainEmitter.RainTopDown.Color = col
+                startLoop()
+            end,
+            disable = function()
+                if not rain_active then return end
+                rain_active = false
+                stopLoop()
+                RainEmitter.RainStraight.Enabled = false
+                RainEmitter.RainTopDown.Enabled = false
+                RainEmitter.Size = MIN_SIZE
+                RainEmitter.Parent = nil
+                for i = 1, RAIN_SPLASH_NUM do
+                    splashAttachments[i].Parent = nil
+                    rainAttachments[i].Parent = nil
+                end
+                RainSound:Stop()
+                SoundGroup.Parent = nil
+            end,
+            set_intensity = function(v)
+                local intensity = math.clamp(v, 0, 1)
+                RainEmitter.RainStraight.Rate = RAIN_STRAIGHT_MAX_RATE * intensity
+                RainEmitter.RainTopDown.Rate = RAIN_TOPDOWN_MAX_RATE * intensity
+                intensityOccludedRain = math.ceil(RAIN_OCCLUDED_MAXINTENSITY * intensity)
+                numSplashes = math.floor(RAIN_SPLASH_NUM * intensity)
+            end,
+            set_speed = function(v)
+                local speed = math.clamp(v, 0, 1)
+                RainEmitter.RainStraight.Speed = NumberRange.new(speed * RAIN_STRAIGHT_MAX_SPEED)
+                RainEmitter.RainTopDown.Speed = NumberRange.new(speed * RAIN_TOPDOWN_MAX_SPEED)
+            end,
+            set_color = function(c)
+                local col = ColorSequence.new(c)
+                RainEmitter.RainStraight.Color = col
+                RainEmitter.RainTopDown.Color = col
+                for _,v in ipairs(splashAttachments) do v.RainSplash.Color = col end
+                for _,v in ipairs(rainAttachments) do v.RainStraight.Color = col v.RainTopDown.Color = col end
+            end,
+        }
+    end
 
     local weather_types = {
         ["rain"] = {
@@ -11780,10 +12236,14 @@ do
     local ignored = ignored["Siren"]["Radius"]
 
     create_connection(menu_references["weather"]["on_toggle_change"], function(value)
+        -- disable both systems
         if weather_part then
             destroy(weather_part)
             weather_part = nil
             weather_particle = nil
+        end
+        if rain_module and rain_active then
+            rain_module.disable()
         end
 
         for i = 1, #heartbeat do
@@ -11794,33 +12254,68 @@ do
         end
 
         if value then
-            weather_part = create_instance("Part", {
-                ["Size"] = vector3_new(40, 40, 85),
-                ["CanCollide"] = false,
-                ["Massless"] = true,
-                ["CastShadow"] = false,
-                ["Transparency"] = 1,
-                ["Anchored"] = true,
-                ["Name"] = "\0",
-                ["Parent"] = ignored
-            })
-
-            local data = weather_types[flags["weather_type"][1]]
-            local color = ColorSequence.new(flags["weather_color"])
-            weather_particle = create_instance("ParticleEmitter", data)
-            weather_particle["Color"] = color
-            weather_particle["Parent"] = weather_part
-
-            heartbeat[#heartbeat+1] = do_weather
+            local wtype = flags["weather_type"] and flags["weather_type"][1] or "rain"
+            if wtype == "custom rain" then
+                setup_rain_module()
+                rain_module.enable()
+            else
+                weather_part = create_instance("Part", {
+                    ["Size"] = vector3_new(40, 40, 85),
+                    ["CanCollide"] = false,
+                    ["Massless"] = true,
+                    ["CastShadow"] = false,
+                    ["Transparency"] = 1,
+                    ["Anchored"] = true,
+                    ["Name"] = "\0",
+                    ["Parent"] = ignored
+                })
+                local data = weather_types[wtype]
+                local color = ColorSequence.new(flags["weather_color"])
+                weather_particle = create_instance("ParticleEmitter", data)
+                weather_particle["Color"] = color
+                weather_particle["Parent"] = weather_part
+                heartbeat[#heartbeat+1] = do_weather
+            end
         end
     end)
 
     create_connection(menu_references["weather_type"]["on_dropdown_change"], function(value)
-        if weather_particle then
-            destroy(weather_particle)
-            weather_particle = nil
+        local wtype = value[1]
+        local is_custom = wtype == "custom rain"
+        menu_references["weather_custom_rain_intensity"]:set_visible(is_custom)
+        menu_references["weather_custom_rain_speed"]:set_visible(is_custom)
 
-            weather_particle = create_instance("ParticleEmitter", weather_types[value[1]])
+        if not flags["weather"] then return end
+
+        if is_custom then
+            -- switch from particle to rain module
+            if weather_part then
+                destroy(weather_part)
+                weather_part = nil
+                weather_particle = nil
+                for i = 1, #heartbeat do
+                    if heartbeat[i] == do_weather then remove(heartbeat, i) break end
+                end
+            end
+            setup_rain_module()
+            rain_module.enable()
+        else
+            -- switch from rain module to particle
+            if rain_module and rain_active then rain_module.disable() end
+            if weather_particle then
+                destroy(weather_particle)
+                weather_particle = nil
+            end
+            if not weather_part then
+                weather_part = create_instance("Part", {
+                    ["Size"] = vector3_new(40, 40, 85),
+                    ["CanCollide"] = false, ["Massless"] = true,
+                    ["CastShadow"] = false, ["Transparency"] = 1,
+                    ["Anchored"] = true, ["Name"] = "\0", ["Parent"] = ignored
+                })
+                heartbeat[#heartbeat+1] = do_weather
+            end
+            weather_particle = create_instance("ParticleEmitter", weather_types[wtype])
             weather_particle["Color"] = ColorSequence.new(flags["weather_color"])
             weather_particle["Parent"] = weather_part
         end
@@ -11828,8 +12323,10 @@ do
 
     create_connection(menu_references["weather_color"]["on_color_change"], function(color)
         if weather_particle then
-            local color = ColorSequence.new(color)
-            weather_particle["Color"] = color
+            weather_particle["Color"] = ColorSequence.new(color)
+        end
+        if rain_module and rain_active then
+            rain_module.set_color(color)
         end
     end)
 
@@ -11842,6 +12339,18 @@ do
 
         for weather, data in weather_types do
             weather_types[weather]["Rate"] = rate
+        end
+    end)
+
+    create_connection(menu_references["weather_custom_rain_intensity"]["on_slider_change"], function(value)
+        if rain_module and rain_active then
+            rain_module.set_intensity(value / 100)
+        end
+    end)
+
+    create_connection(menu_references["weather_custom_rain_speed"]["on_slider_change"], function(value)
+        if rain_module and rain_active then
+            rain_module.set_speed(value / 100)
         end
     end)
 
@@ -11907,12 +12416,48 @@ do
             ["SkyboxBk"] = "rbxassetid://653719502",
             ["SunTextureId"] = sky["SunTextureId"],
             ["MoonTextureId"] = sky["MoonTextureId"]
-        }
+        },
+        ["minecraft"] = {["SkyboxBk"]="rbxassetid://1876545003",["SkyboxDn"]="rbxassetid://1876544331",["SkyboxFt"]="rbxassetid://1876542941",["SkyboxLf"]="rbxassetid://1876543392",["SkyboxRt"]="rbxassetid://1876543764",["SkyboxUp"]="rbxassetid://1876544642",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["purple day"] = {["SkyboxBk"]="rbxassetid://296908715",["SkyboxDn"]="rbxassetid://296908724",["SkyboxFt"]="rbxassetid://296908740",["SkyboxLf"]="rbxassetid://296908755",["SkyboxRt"]="rbxassetid://296908764",["SkyboxUp"]="rbxassetid://296908769",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["red night"] = {["SkyboxBk"]="rbxassetid://401664839",["SkyboxDn"]="rbxassetid://401664862",["SkyboxFt"]="rbxassetid://401664960",["SkyboxLf"]="rbxassetid://401664881",["SkyboxRt"]="rbxassetid://401664901",["SkyboxUp"]="rbxassetid://401664936",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["trollge"] = {["SkyboxBk"]="rbxassetid://6155393905",["SkyboxDn"]="rbxassetid://6155393905",["SkyboxFt"]="rbxassetid://6155393905",["SkyboxLf"]="rbxassetid://6155393905",["SkyboxRt"]="rbxassetid://6155393905",["SkyboxUp"]="rbxassetid://6155393905",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["night"] = {["SkyboxBk"]="rbxassetid://48020371",["SkyboxDn"]="rbxassetid://48020144",["SkyboxFt"]="rbxassetid://48020234",["SkyboxLf"]="rbxassetid://48020211",["SkyboxRt"]="rbxassetid://48020254",["SkyboxUp"]="rbxassetid://48020383",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["space"] = {["SkyboxBk"]="rbxassetid://149397692",["SkyboxDn"]="rbxassetid://149397686",["SkyboxFt"]="rbxassetid://149397697",["SkyboxLf"]="rbxassetid://149397684",["SkyboxRt"]="rbxassetid://149397688",["SkyboxUp"]="rbxassetid://149397702",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["vibe morning"] = {["SkyboxBk"]="rbxassetid://1417494030",["SkyboxDn"]="rbxassetid://1417494146",["SkyboxFt"]="rbxassetid://1417494253",["SkyboxLf"]="rbxassetid://1417494402",["SkyboxRt"]="rbxassetid://1417494499",["SkyboxUp"]="rbxassetid://1417494643",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["vibe night"] = {["SkyboxBk"]="rbxassetid://5084575798",["SkyboxDn"]="rbxassetid://5084575916",["SkyboxFt"]="rbxassetid://5103949679",["SkyboxLf"]="rbxassetid://5103948542",["SkyboxRt"]="rbxassetid://5103948784",["SkyboxUp"]="rbxassetid://5084576400",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["purple splash"] = {["SkyboxBk"]="rbxassetid://8539982183",["SkyboxDn"]="rbxassetid://8539981943",["SkyboxFt"]="rbxassetid://8539981721",["SkyboxLf"]="rbxassetid://8539981424",["SkyboxRt"]="rbxassetid://8539980766",["SkyboxUp"]="rbxassetid://8539981085",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["green space"] = {["SkyboxBk"]="rbxassetid://159248188",["SkyboxDn"]="rbxassetid://159248183",["SkyboxFt"]="rbxassetid://159248187",["SkyboxLf"]="rbxassetid://159248173",["SkyboxRt"]="rbxassetid://159248192",["SkyboxUp"]="rbxassetid://159248176",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["snowy"] = {["SkyboxBk"]="rbxassetid://155657655",["SkyboxDn"]="rbxassetid://155674246",["SkyboxFt"]="rbxassetid://155657609",["SkyboxLf"]="rbxassetid://155657671",["SkyboxRt"]="rbxassetid://155657619",["SkyboxUp"]="rbxassetid://155674931",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["spongebob"] = {["SkyboxBk"]="rbxassetid://10287764626",["SkyboxDn"]="rbxassetid://10287766382",["SkyboxFt"]="rbxassetid://10287764626",["SkyboxLf"]="rbxassetid://10287763421",["SkyboxRt"]="rbxassetid://10287764626",["SkyboxUp"]="rbxassetid://10287767597",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["pink day"] = {["SkyboxBk"]="rbxassetid://271042516",["SkyboxDn"]="rbxassetid://271077243",["SkyboxFt"]="rbxassetid://271042556",["SkyboxLf"]="rbxassetid://271042310",["SkyboxRt"]="rbxassetid://271042467",["SkyboxUp"]="rbxassetid://271077958",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["alien red"] = {["SkyboxBk"]="rbxassetid://1012890",["SkyboxDn"]="rbxassetid://1012891",["SkyboxFt"]="rbxassetid://1012887",["SkyboxLf"]="rbxassetid://1012889",["SkyboxRt"]="rbxassetid://1012888",["SkyboxUp"]="rbxassetid://1014449",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["walls of autumn"] = {["SkyboxBk"]="rbxassetid://7123244709",["SkyboxDn"]="rbxassetid://7123246497",["SkyboxFt"]="rbxassetid://7123255895",["SkyboxLf"]="rbxassetid://7123257992",["SkyboxRt"]="rbxassetid://7123279103",["SkyboxUp"]="rbxassetid://7123281828",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["cold wintriness"] = {["SkyboxBk"]="rbxassetid://7123754562",["SkyboxDn"]="rbxassetid://7123756028",["SkyboxFt"]="rbxassetid://7123757422",["SkyboxLf"]="rbxassetid://7123758897",["SkyboxRt"]="rbxassetid://7123760563",["SkyboxUp"]="rbxassetid://7123762364",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["oblivion"] = {["SkyboxBk"]="rbxassetid://7123654189",["SkyboxDn"]="rbxassetid://7123657455",["SkyboxFt"]="rbxassetid://7123662047",["SkyboxLf"]="rbxassetid://7123664533",["SkyboxRt"]="rbxassetid://7123666598",["SkyboxUp"]="rbxassetid://7123668994",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["hell sky"] = {["SkyboxBk"]="rbxassetid://437430787",["SkyboxDn"]="rbxassetid://437430804",["SkyboxFt"]="rbxassetid://437430543",["SkyboxLf"]="rbxassetid://437430732",["SkyboxRt"]="rbxassetid://437430747",["SkyboxUp"]="rbxassetid://437430771",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["starry night"] = {["SkyboxBk"]="rbxassetid://8291078911",["SkyboxDn"]="rbxassetid://8291077403",["SkyboxFt"]="rbxassetid://8291081613",["SkyboxLf"]="rbxassetid://8291074004",["SkyboxRt"]="rbxassetid://8291080353",["SkyboxUp"]="rbxassetid://8291075054",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["sunset"] = {["SkyboxBk"]="rbxassetid://150939022",["SkyboxDn"]="rbxassetid://150939038",["SkyboxFt"]="rbxassetid://150939047",["SkyboxLf"]="rbxassetid://150939056",["SkyboxRt"]="rbxassetid://150939063",["SkyboxUp"]="rbxassetid://150939082",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["anime"] = {["SkyboxBk"]="rbxassetid://7643700666",["SkyboxDn"]="rbxassetid://7643743687",["SkyboxFt"]="rbxassetid://7644304186",["SkyboxLf"]="rbxassetid://7644288724",["SkyboxRt"]="rbxassetid://7643700819",["SkyboxUp"]="rbxassetid://7643757404",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["cartoon sky"] = {["SkyboxBk"]="rbxassetid://6778646360",["SkyboxDn"]="rbxassetid://6778658683",["SkyboxFt"]="rbxassetid://6778648039",["SkyboxLf"]="rbxassetid://6778649136",["SkyboxRt"]="rbxassetid://6778650519",["SkyboxUp"]="rbxassetid://6778658364",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["omori"] = {["SkyboxBk"]="rbxassetid://8767416629",["SkyboxDn"]="rbxassetid://8767416629",["SkyboxFt"]="rbxassetid://8767416629",["SkyboxLf"]="rbxassetid://8767416629",["SkyboxRt"]="rbxassetid://8767416629",["SkyboxUp"]="rbxassetid://8767416629",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["clear day"] = {["SkyboxBk"]="rbxassetid://591058823",["SkyboxDn"]="rbxassetid://591059876",["SkyboxFt"]="rbxassetid://591058104",["SkyboxLf"]="rbxassetid://591057861",["SkyboxRt"]="rbxassetid://591057625",["SkyboxUp"]="rbxassetid://591059642",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["desert"] = {["SkyboxBk"]="rbxassetid://161319957",["SkyboxDn"]="rbxassetid://161319965",["SkyboxFt"]="rbxassetid://161319970",["SkyboxLf"]="rbxassetid://161319983",["SkyboxRt"]="rbxassetid://161319989",["SkyboxUp"]="rbxassetid://161319996",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["crimson"] = {["SkyboxBk"]="rbxassetid://15832429892",["SkyboxDn"]="rbxassetid://15832430998",["SkyboxFt"]="rbxassetid://15832430210",["SkyboxLf"]="rbxassetid://15832430671",["SkyboxRt"]="rbxassetid://15832431198",["SkyboxUp"]="rbxassetid://15832429401",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["pumpkin hill"] = {["SkyboxBk"]="rbxassetid://11202510597",["SkyboxDn"]="rbxassetid://11202510255",["SkyboxFt"]="rbxassetid://11202509993",["SkyboxLf"]="rbxassetid://11202510806",["SkyboxRt"]="rbxassetid://11202511066",["SkyboxUp"]="rbxassetid://11202509704",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["earth space"] = {["SkyboxBk"]="rbxassetid://15753305495",["SkyboxDn"]="rbxassetid://15753362674",["SkyboxFt"]="rbxassetid://15753305823",["SkyboxLf"]="rbxassetid://15753310707",["SkyboxRt"]="rbxassetid://15753304774",["SkyboxUp"]="rbxassetid://15753304473",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["blue abyss"] = {["SkyboxBk"]="rbxassetid://16269815885",["SkyboxDn"]="rbxassetid://16269839652",["SkyboxFt"]="rbxassetid://16269798011",["SkyboxLf"]="rbxassetid://16269813852",["SkyboxRt"]="rbxassetid://16269814948",["SkyboxUp"]="rbxassetid://16269829700",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["green aurora"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=16563478983",["SkyboxDn"]="http://www.roblox.com/asset/?id=16563481302",["SkyboxFt"]="http://www.roblox.com/asset/?id=16563484084",["SkyboxLf"]="http://www.roblox.com/asset/?id=16563485362",["SkyboxRt"]="http://www.roblox.com/asset/?id=16563487078",["SkyboxUp"]="http://www.roblox.com/asset/?id=16563489821",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["underwater"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=227635868",["SkyboxDn"]="http://www.roblox.com/asset/?id=227635921",["SkyboxFt"]="http://www.roblox.com/asset/?id=227635954",["SkyboxLf"]="http://www.roblox.com/asset/?id=227635974",["SkyboxRt"]="http://www.roblox.com/asset/?id=227635990",["SkyboxUp"]="http://www.roblox.com/asset/?id=227636031",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["orange fog"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=458016711",["SkyboxDn"]="http://www.roblox.com/asset/?id=458016826",["SkyboxFt"]="http://www.roblox.com/asset/?id=458016532",["SkyboxLf"]="http://www.roblox.com/asset/?id=458016655",["SkyboxRt"]="http://www.roblox.com/asset/?id=458016782",["SkyboxUp"]="http://www.roblox.com/asset/?id=458016792",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["purple fog"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=17279854976",["SkyboxDn"]="http://www.roblox.com/asset/?id=17279856318",["SkyboxFt"]="http://www.roblox.com/asset/?id=17279858447",["SkyboxLf"]="http://www.roblox.com/asset/?id=17279860360",["SkyboxRt"]="http://www.roblox.com/asset/?id=17279862234",["SkyboxUp"]="http://www.roblox.com/asset/?id=17279864507",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["fade night"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=16888843486",["SkyboxDn"]="http://www.roblox.com/asset/?id=16888845693",["SkyboxFt"]="http://www.roblox.com/asset/?id=16888848245",["SkyboxLf"]="http://www.roblox.com/asset/?id=16888850949",["SkyboxRt"]="http://www.roblox.com/asset/?id=16888854243",["SkyboxUp"]="http://www.roblox.com/asset/?id=16888857144",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["summer day"] = {["SkyboxBk"]="http://www.roblox.com/asset/?version=1&id=135483466",["SkyboxDn"]="http://www.roblox.com/asset/?version=1&id=135483484",["SkyboxFt"]="http://www.roblox.com/asset/?version=1&id=135483461",["SkyboxLf"]="http://www.roblox.com/asset/?version=1&id=135483495",["SkyboxRt"]="http://www.roblox.com/asset/?version=1&id=135483499",["SkyboxUp"]="http://www.roblox.com/asset/?version=1&id=135483475",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]},
+        ["green nebula"] = {["SkyboxBk"]="http://www.roblox.com/asset/?id=47974894",["SkyboxDn"]="http://www.roblox.com/asset/?id=47974690",["SkyboxFt"]="http://www.roblox.com/asset/?id=47974821",["SkyboxLf"]="http://www.roblox.com/asset/?id=47974776",["SkyboxRt"]="http://www.roblox.com/asset/?id=47974859",["SkyboxUp"]="http://www.roblox.com/asset/?id=47974909",["SunTextureId"]=sky["SunTextureId"],["MoonTextureId"]=sky["MoonTextureId"]}
     }
 
     menu_references["skybox"] = menu_references["lighting_section"]:create_element({["name"] = "skybox"}, {["toggle"] = {["flag"] = "skybox"}})
         menu_references["skybox_settings"] = menu_references["skybox"]:create_settings()
-        menu_references["skybox_value"] = menu_references["skybox_settings"]:create_element({["name"] = "sky"}, {["dropdown"] = {["flag"] = "skybox_value", ["requires_one"] = true, ["options"] = {"black storm", "blue space", "realistic", "stormy", "pink"}, ["use_custom_extensions"] = {"rbxm"}, ["default"] = {"black storm"}}})
+        menu_references["skybox_value"] = menu_references["skybox_settings"]:create_element({["name"] = "sky"}, {["dropdown"] = {["flag"] = "skybox_value", ["requires_one"] = true, ["options"] = {"black storm", "blue space", "realistic", "stormy", "pink", "minecraft", "purple day", "red night", "trollge", "night", "space", "vibe morning", "vibe night", "purple splash", "green space", "snowy", "spongebob", "pink day", "alien red", "walls of autumn", "cold wintriness", "oblivion", "hell sky", "starry night", "sunset", "anime", "cartoon sky", "omori", "clear day", "desert", "crimson", "pumpkin hill", "earth space", "blue abyss", "green aurora", "underwater", "orange fog", "purple fog", "fade night", "summer day", "green nebula"}, ["use_custom_extensions"] = {"rbxm"}, ["default"] = {"black storm"}}})
 
     local apply_skybox = LPH_NO_VIRTUALIZE(function(skybox)
         local ids = skyboxes[skybox]
@@ -12016,6 +12561,9 @@ do
         menu_references["drawing_crosshair"] = menu_references["hud_section"]:create_element({["name"] = "drawing crosshair"}, {["toggle"] = {["flag"] = "drawing_crosshair"}})
         menu_references["drawing_crosshair_settings"] = menu_references["drawing_crosshair"]:create_settings()
         menu_references["drawing_crosshair_follow_target"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "follow target"}, {["toggle"] = {["flag"] = "drawing_crosshair_follow_target"}})
+        menu_references["drawing_crosshair_style"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "style"}, {["dropdown"] = {["flag"] = "drawing_crosshair_style", ["requires_one"] = true, ["options"] = {"classic", "symbol"}, ["default"] = {"classic"}}})
+        menu_references["drawing_crosshair_indicator"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "target indicator"}, {["toggle"] = {["flag"] = "drawing_crosshair_indicator", ["default"] = false}})
+        menu_references["drawing_crosshair_indicator_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "indicator color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_indicator_color", ["default_color"] = color3_fromrgb(255, 60, 60), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_indicator_transparency"}})
         menu_references["drawing_crosshair_animation"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "animation style"}, {["dropdown"] = {["flag"] = "drawing_crosshair_animation", ["requires_one"] = true, ["options"] = {"expand", "spiral", "glitch", "ripple", "none"}, ["default"] = {"none"}}})
         menu_references["drawing_crosshair_animation_speed"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "speed"}, {["slider"] = {["flag"] = "drawing_crosshair_animation_speed", ["min"] = 1, ["max"] = 100, ["suffix"] = "%"}})
         menu_references["drawing_crosshair_target_outline_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "target outline color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_target_outline_color", ["default_color"] = color3_fromrgb(193, 222, 222), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_target_outline_transparency"}})
@@ -12023,7 +12571,7 @@ do
         menu_references["drawing_crosshair_outline_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "outline color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_outline_color", ["default_color"] = color3_fromrgb(15, 15, 15), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_outline_transparency"}})
         menu_references["drawing_crosshair_line_color"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line color"}, {["colorpicker"] = {["color_flag"] = "drawing_crosshair_line_color", ["default_color"] = color3_fromrgb(193, 247, 255), ["default_transparency"] = 0, ["transparency_flag"] = "drawing_crosshair_line_transparency"}})
         menu_references["drawing_crosshair_line_thickness"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line thickness"}, {["slider"] = {["flag"] = "drawing_crosshair_line_thickness", ["min"] = 1, ["max"] = 4, ["suffix"] = "px", ["default"] = 2}})
-        menu_references["drawing_crosshair_line_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line size"}, {["slider"] = {["flag"] = "drawing_crosshair_line_size", ["min"] = 4, ["max"] = 30, ["suffix"] = "px", ["default"] = 5}})
+        menu_references["drawing_crosshair_line_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "line size"}, {["slider"] = {["flag"] = "drawing_crosshair_line_size", ["min"] = 4, ["max"] = 30, ["suffix"] = "px", ["default"] = 12}})
         menu_references["drawing_crosshair_gap_size"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "gap size"}, {["slider"] = {["flag"] = "drawing_crosshair_gap_size", ["min"] = 1, ["max"] = 30, ["suffix"] = "px", ["default"] = 2}})
         menu_references["drawing_crosshair_rotation"] = menu_references["drawing_crosshair_settings"]:create_element({["name"] = "rotating"}, {["slider"] = {["flag"] = "drawing_crosshair_rotation", ["min"] = 0, ["max"] = 100, ["suffix"] = "%", ["min_text"] = "off"}})
         menu_references["center_panel"] = menu_references["hud_section"]:create_element({["name"] = "center panel"}, {["toggle"] = {["flag"] = "center_panel"}})
@@ -12456,34 +13004,117 @@ do
             end
     
             rot = (rot + dt * current_effective_rotation_speed) % 360
-    
             rot = rot + current_oscillation_offset
     
             local rot_rad = rot * rad
             local gap = current_gap
             local len = current_len
-    
+
+            local has_target = ragebot_target ~= nil
+            local use_indicator = flags["drawing_crosshair_indicator"]
+            local line_color = has_target and flags["drawing_crosshair_target_line_color"] or flags["drawing_crosshair_line_color"]
+            local outline_color = has_target and flags["drawing_crosshair_target_outline_color"] or flags["drawing_crosshair_outline_color"]
+
+            -- indicator: pulse the line color when target acquired
+            if use_indicator and has_target then
+                local pulse = (sin(anim_time * 8) + 1) / 2
+                line_color = flags["drawing_crosshair_indicator_color"]
+                    :Lerp(flags["drawing_crosshair_target_line_color"], pulse * 0.4)
+            end
+
+            local _cs = flags["drawing_crosshair_style"]
+            local crosshair_style = (type(_cs) == "table" and _cs[1]) or (type(_cs) == "string" and _cs) or "classic"
+
             local angles = {rot_rad, pi / 2 + rot_rad, pi + rot_rad, 3 * pi / 2 + rot_rad}
-    
-            for i = 1, 4 do
-                local angle = angles[i]
-                local idx_base = (i - 1) * 2 + 1
-                local idx_outline = idx_base + 1
-    
-                local sx = px + gap * cos(angle)
-                local sy = py + gap * sin(angle)
-                local ex = px + (gap + len) * cos(angle)
-                local ey = py + (gap + len) * sin(angle)
-    
-                local osx = px + (gap - 1) * cos(angle)
-                local osy = py + (gap - 1) * sin(angle)
-                local oex = px + (gap + len + 1) * cos(angle)
-                local oey = py + (gap + len + 1) * sin(angle)
-    
-                lines[idx_base]["From"] = vector2_new(sx, sy)
-                lines[idx_base]["To"] = vector2_new(ex, ey)
-                lines[idx_outline]["From"] = vector2_new(osx, osy)
-                lines[idx_outline]["To"] = vector2_new(oex, oey)
+
+            if crosshair_style == "symbol" then
+                -- symbol style: 4 sharp triangles pointing outward
+                -- base width scales with arm length for a proper pointed look
+                local half_base = len * 0.35 + 1.5  -- wide enough to see, scales with length
+
+                for i = 1, 4 do
+                    local angle   = angles[i]
+                    local perp    = angle + pi / 2
+
+                    -- tip (sharp point at end of arm)
+                    local tx  = px + (gap + len) * cos(angle)
+                    local ty  = py + (gap + len) * sin(angle)
+                    -- base corners (at gap from center)
+                    local blx = px + gap * cos(angle) + half_base * cos(perp)
+                    local bly = py + gap * sin(angle) + half_base * sin(perp)
+                    local brx = px + gap * cos(angle) - half_base * cos(perp)
+                    local bry = py + gap * sin(angle) - half_base * sin(perp)
+
+                    -- outline: 1px bigger all around
+                    local ob = half_base + 1
+                    local otx  = px + (gap + len + 1) * cos(angle)
+                    local oty  = py + (gap + len + 1) * sin(angle)
+                    local oblx = px + (gap - 0.5) * cos(angle) + ob * cos(perp)
+                    local obly = py + (gap - 0.5) * sin(angle) + ob * sin(perp)
+                    local obrx = px + (gap - 0.5) * cos(angle) - ob * cos(perp)
+                    local obry = py + (gap - 0.5) * sin(angle) - ob * sin(perp)
+
+                    local idx_fill    = (i - 1) * 2 + 1
+                    local idx_outline = idx_fill + 1
+
+                    -- draw outline first (lower ZIndex = behind)
+                    lines[idx_outline]["PointA"]  = vector2_new(otx,  oty)
+                    lines[idx_outline]["PointB"]  = vector2_new(oblx, obly)
+                    lines[idx_outline]["PointC"]  = vector2_new(obrx, obry)
+                    lines[idx_outline]["Color"]   = outline_color
+                    lines[idx_outline]["Filled"]  = true
+                    lines[idx_outline]["Visible"] = true
+
+                    -- draw fill on top
+                    lines[idx_fill]["PointA"]  = vector2_new(tx,  ty)
+                    lines[idx_fill]["PointB"]  = vector2_new(blx, bly)
+                    lines[idx_fill]["PointC"]  = vector2_new(brx, bry)
+                    lines[idx_fill]["Color"]   = line_color
+                    lines[idx_fill]["Filled"]  = true
+                    lines[idx_fill]["Visible"] = true
+                end
+
+                -- center dot
+                local dot_r = math.max(2, thickness)
+                if lines[17] then
+                    lines[17]["Position"] = vector2_new(px - dot_r,     py - dot_r)
+                    lines[17]["Size"]     = vector2_new(dot_r * 2,       dot_r * 2)
+                    lines[17]["Color"]    = line_color
+                    lines[17]["Visible"]  = true
+                end
+                if lines[18] then
+                    lines[18]["Position"] = vector2_new(px - dot_r - 1, py - dot_r - 1)
+                    lines[18]["Size"]     = vector2_new(dot_r * 2 + 2,  dot_r * 2 + 2)
+                    lines[18]["Color"]    = outline_color
+                    lines[18]["Visible"]  = true
+                end
+            else
+                -- classic style (original)
+                for i = 1, 4 do
+                    local angle = angles[i]
+                    local idx_base    = (i - 1) * 2 + 1
+                    local idx_outline = idx_base + 1
+
+                    local sx  = px + gap * cos(angle)
+                    local sy  = py + gap * sin(angle)
+                    local ex  = px + (gap + len) * cos(angle)
+                    local ey  = py + (gap + len) * sin(angle)
+                    local osx = px + (gap - 1) * cos(angle)
+                    local osy = py + (gap - 1) * sin(angle)
+                    local oex = px + (gap + len + 1) * cos(angle)
+                    local oey = py + (gap + len + 1) * sin(angle)
+
+                    lines[idx_base]["From"]    = vector2_new(sx,  sy)
+                    lines[idx_base]["To"]      = vector2_new(ex,  ey)
+                    lines[idx_base]["Color"]   = line_color
+                    lines[idx_outline]["From"] = vector2_new(osx, osy)
+                    lines[idx_outline]["To"]   = vector2_new(oex, oey)
+                    lines[idx_outline]["Color"]= outline_color
+                end
+
+                -- hide dot drawings if any
+                if lines[17] then lines[17]["Visible"] = false end
+                if lines[18] then lines[18]["Visible"] = false end
             end
     
             old_position = position
@@ -12493,8 +13124,12 @@ do
             local outline_tween = {["Color"] = ragebot_target and flags["drawing_crosshair_target_outline_color"] or flags["drawing_crosshair_outline_color"], ["Transparency"] = ragebot_target and -flags["drawing_crosshair_target_outline_transparency"]+1 or -flags["drawing_crosshair_outline_transparency"]+1}
             local line_tween = {["Color"] = ragebot_target and flags["drawing_crosshair_target_line_color"] or flags["drawing_crosshair_line_color"], ["Transparency"] = ragebot_target and -flags["drawing_crosshair_target_line_transparency"]+1 or -flags["drawing_crosshair_line_transparency"]+1}
             for i = 1, 8 do
-                tween(lines[i], i % 2 == 0 and outline_tween or line_tween, quad, out, 0.11)
+                if lines[i] then
+                    tween(lines[i], i % 2 == 0 and outline_tween or line_tween, quad, out, 0.11)
+                end
             end
+            if lines[17] then tween(lines[17], line_tween, quad, out, 0.11) end
+            if lines[18] then tween(lines[18], outline_tween, quad, out, 0.11) end
         end
 
         create_connection(menu_references["drawing_crosshair"]["on_toggle_change"], function(value)
@@ -12512,9 +13147,11 @@ do
 
             old_position = nil
 
-            for i = 1, #lines do
-                lines[i]:Destroy()
-                lines[i] = nil
+            for i = 1, 18 do
+                if lines[i] then
+                    pcall(function() lines[i]:Remove() end)
+                    lines[i] = nil
+                end
             end
 
             if value then
@@ -12525,15 +13162,48 @@ do
                 local line_color = ragebot_target and flags["drawing_crosshair_target_line_color"] or flags["drawing_crosshair_line_color"]
                 local outline_color = ragebot_target and flags["drawing_crosshair_target_outline_color"] or flags["drawing_crosshair_outline_color"]
 
+                local _cs2 = flags["drawing_crosshair_style"]
+                local crosshair_style = (type(_cs2) == "table" and _cs2[1]) or (type(_cs2) == "string" and _cs2) or "classic"
+
                 for i = 1, 8 do
-                    lines[i] = create_real_drawing("Line", {
-                        ["Color"] = i % 2 == 0 and outline_color or line_color,
-                        ["Thickness"] = i % 2 == 0 and thickness+2 or thickness,
-                        ["Visible"] = true,
-                        ["ZIndex"] = i % 2 == 0 and 15 or 16,
-                        ["Transparency"] = i % 2 == 0 and outline_transparency or line_transparency
-                    })
+                    if crosshair_style == "symbol" then
+                        lines[i] = create_real_drawing("Triangle", {
+                            ["Color"]        = i % 2 == 0 and outline_color or line_color,
+                            ["Filled"]       = true,
+                            ["Visible"]      = true,
+                            ["ZIndex"]       = i % 2 == 0 and 15 or 16,
+                            ["Transparency"] = i % 2 == 0 and outline_transparency or line_transparency
+                        })
+                    else
+                        lines[i] = create_real_drawing("Line", {
+                            ["Color"]        = i % 2 == 0 and outline_color or line_color,
+                            ["Thickness"]    = i % 2 == 0 and thickness+2 or thickness,
+                            ["Visible"]      = true,
+                            ["ZIndex"]       = i % 2 == 0 and 15 or 16,
+                            ["Transparency"] = i % 2 == 0 and outline_transparency or line_transparency
+                        })
+                    end
                 end
+
+                -- center dot (only for symbol style, hidden otherwise)
+                lines[17] = create_real_drawing("Square", {
+                    ["Color"]       = line_color,
+                    ["Filled"]      = true,
+                    ["Visible"]     = false,
+                    ["ZIndex"]      = 17,
+                    ["Transparency"]= line_transparency,
+                    ["Size"]        = vector2_new(4, 4),
+                    ["Position"]    = vector2_new(0, 0)
+                })
+                lines[18] = create_real_drawing("Square", {
+                    ["Color"]       = outline_color,
+                    ["Filled"]      = true,
+                    ["Visible"]     = false,
+                    ["ZIndex"]      = 14,
+                    ["Transparency"]= outline_transparency,
+                    ["Size"]        = vector2_new(6, 6),
+                    ["Position"]    = vector2_new(0, 0)
+                })
 
                 heartbeat[#heartbeat+1] = do_drawing_crosshair
             end
@@ -12668,6 +13338,28 @@ do
         create_connection(menu_references["drawing_crosshair_animation"]["on_dropdown_change"], function(value)
             animation = value and value[1] or nil
             menu_references["drawing_crosshair_animation_speed"]:set_visible(value ~= "none")
+        end)
+
+        create_connection(menu_references["drawing_crosshair_style"]["on_dropdown_change"], function(value)
+            -- rebuild lines with correct drawing type
+            if not lines[1] then return end
+            local style = value and value[1] or "classic"
+            local line_color = ragebot_target and flags["drawing_crosshair_target_line_color"] or flags["drawing_crosshair_line_color"]
+            local outline_color = ragebot_target and flags["drawing_crosshair_target_outline_color"] or flags["drawing_crosshair_outline_color"]
+            local line_t = ragebot_target and -flags["drawing_crosshair_target_line_transparency"]+1 or -flags["drawing_crosshair_line_transparency"]+1
+            local out_t  = ragebot_target and -flags["drawing_crosshair_target_outline_transparency"]+1 or -flags["drawing_crosshair_outline_transparency"]+1
+            for i = 1, 18 do
+                if lines[i] then pcall(function() lines[i]:Remove() end) lines[i] = nil end
+            end
+            for i = 1, 8 do
+                if style == "symbol" then
+                    lines[i] = create_real_drawing("Triangle", {["Color"] = i%2==0 and outline_color or line_color, ["Filled"] = true, ["Visible"] = true, ["ZIndex"] = i%2==0 and 15 or 16, ["Transparency"] = i%2==0 and out_t or line_t})
+                else
+                    lines[i] = create_real_drawing("Line", {["Color"] = i%2==0 and outline_color or line_color, ["Thickness"] = i%2==0 and thickness+2 or thickness, ["Visible"] = true, ["ZIndex"] = i%2==0 and 15 or 16, ["Transparency"] = i%2==0 and out_t or line_t})
+                end
+            end
+            lines[17] = create_real_drawing("Square", {["Color"] = line_color, ["Filled"] = true, ["Visible"] = false, ["ZIndex"] = 17, ["Transparency"] = line_t, ["Size"] = vector2_new(4,4), ["Position"] = vector2_new(0,0)})
+            lines[18] = create_real_drawing("Square", {["Color"] = outline_color, ["Filled"] = true, ["Visible"] = false, ["ZIndex"] = 14, ["Transparency"] = out_t, ["Size"] = vector2_new(6,6), ["Position"] = vector2_new(0,0)})
         end)
     end
 
@@ -13106,7 +13798,7 @@ do
         menu_references["hit_particle_behind_walls"] = menu_references["hit_particle_settings"]:create_element({["name"] = "behind walls"}, {["toggle"] = {["flag"] = "hit_particle_behind_walls"}})
         menu_references["hit_particle_lethal_color"] = menu_references["hit_particle_settings"]:create_element({["name"] = "lethal color"}, {["colorpicker"] = {["color_flag"] = "hit_particle_lethal_color", ["transparency_flag"] = "hit_particle_lethal_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
         menu_references["hit_particle_color"] = menu_references["hit_particle_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "hit_particle_color", ["transparency_flag"] = "hit_particle_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
-        menu_references["hit_particle_particle"] = menu_references["hit_particle_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "hit_particle_particle", ["default"] = {"sparks"}, ["options"] = {"bubble", "sparks", "orbs", "air"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}}})
+        menu_references["hit_particle_particle"] = menu_references["hit_particle_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "hit_particle_particle", ["default"] = {"sparks"}, ["options"] = {"bubble", "sparks", "orbs", "air", "blood", "light", "lightning", "blackflash", "gravity", "meteor"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}}})
     --[[menu_references["rpg_warning"] = menu_references["game_section"]:create_element({["name"] = "rpg warning"}, {["toggle"] = {["flag"] = "rpg_warning"}})
         menu_references["rpg_warning_settings"] = menu_references["rpg_warning"]:create_settings()
         menu_references["hit_overlay_lifetime"] = menu_references["rpg_warning_settings"]:create_element({["name"] = "lifetime"}, {["slider"] = {["flag"] = "hit_overlay_lifetime", ["min"] = 0.1, ["max"] = 0.8, ["default"] = 0.7, ["decimals"] = 1, ["suffix"] = "s", ["prefix"] = ""}})
@@ -13118,7 +13810,7 @@ do
         menu_references["hit_overlay_lethal_color"] = menu_references["hit_overlay_settings"]:create_element({["name"] = "lethal color"}, {["colorpicker"] = {["color_flag"] = "hit_overlay_lethal_color", ["transparency_flag"] = "hit_overlay_lethal_transparency", ["default_color"] = color3_fromrgb(255, 55, 55), ["default_transparency"] = 0.2}})
     menu_references["hit_sound"] = menu_references["game_section"]:create_element({["name"] = "hit sound"}, {["toggle"] = {["flag"] = "hit_sound"}})
         menu_references["hit_sound_settings"] = menu_references["hit_sound"]:create_settings()
-        menu_references["hit_sound_value"] = menu_references["hit_sound_settings"]:create_element({["name"] = "sound"}, {["dropdown"] = {["flag"] = "hit_sound_value", ["default"] = {"mc bow"}, ["options"] = {"primordial", "neverlose", "sparkle", "mc bow", "skeet", "break", "rust"}, ["requires_one"] = true, ["use_custom_extensions"] = {"mp3", "ogg", "wav"}}})
+        menu_references["hit_sound_value"] = menu_references["hit_sound_settings"]:create_element({["name"] = "sound"}, {["dropdown"] = {["flag"] = "hit_sound_value", ["default"] = {"mc bow"}, ["options"] = {"primordial", "neverlose", "sparkle", "mc bow", "skeet", "break", "rust", "agpa2", "agpa1",  "huhh", "bubble", "cowbell", "beep1", "copperbell", "quake", }, ["requires_one"] = true, ["use_custom_extensions"] = {"mp3", "ogg", "wav"}}})
         menu_references["hit_sound_volume"] = menu_references["hit_sound_settings"]:create_element({["name"] = "volume"}, {["slider"] = {["flag"] = "hit_sound_volume", ["min"] = 0.1, ["max"] = 5, ["default"] = 1, ["decimals"] = 1}})
 
     -- >> ( local bullet tracers )
@@ -14192,7 +14884,338 @@ local hit_sounds = {
                     }),
                     1
                 }
-            }
+            },
+            ["blood"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.5, 0.75),
+                        ["SpreadAngle"] = vector2_new(90, 90),
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.125,0.5),NumberSequenceKeypoint.new(1,1)},
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(130, 0, 0)),
+                        ["Speed"] = NumberRange.new(5, 10),
+                        ["Size"] = NumberSequence.new(0.5, 2),
+                        ["Acceleration"] = vector3_new(0, -20, 0),
+                        ["RotSpeed"] = NumberRange.new(-90, 90),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://241576804",
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 25
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.25, 0.5),
+                        ["SpreadAngle"] = vector2_new(360, 360),
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.25,0),NumberSequenceKeypoint.new(1,1)},
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(100, 0, 0)),
+                        ["Speed"] = NumberRange.new(15, 25),
+                        ["Size"] = NumberSequence.new(0.125, 0.6874996),
+                        ["Acceleration"] = vector3_new(0, -75, 0),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://4509687978",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityParallel,
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 15
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.75, 0.75),
+                        ["FlipbookLayout"] = Enum.ParticleFlipbookLayout.Grid4x4,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5037407,0),NumberSequenceKeypoint.new(1,1)},
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(130, 0, 0)),
+                        ["Speed"] = NumberRange.new(0.001, 0.001),
+                        ["ZOffset"] = 4,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0.25),NumberSequenceKeypoint.new(0.376,2.0625),NumberSequenceKeypoint.new(1,2.6875)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://16664856199",
+                        ["FlipbookMode"] = Enum.ParticleFlipbookMode.OneShot,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 5
+                },
+            },
+            ["light"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["LightInfluence"] = 1,
+                        ["Lifetime"] = NumberRange.new(1, 1),
+                        ["LockedToPart"] = true,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.2066,0),NumberSequenceKeypoint.new(0.4947,0),NumberSequenceKeypoint.new(0.7996,0),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Speed"] = NumberRange.new(0, 0),
+                        ["ZOffset"] = 4,
+                        ["Size"] = NumberSequence.new(7.5, 7.5),
+                        ["RotSpeed"] = NumberRange.new(100, 100),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://271370648",
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 1
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["LightInfluence"] = 1,
+                        ["Lifetime"] = NumberRange.new(1, 1),
+                        ["LockedToPart"] = true,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.4947,0),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Speed"] = NumberRange.new(0, 0),
+                        ["ZOffset"] = 5,
+                        ["Size"] = NumberSequence.new(7.5, 7.5),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://13275495915",
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 2
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["LightInfluence"] = 1,
+                        ["Lifetime"] = NumberRange.new(1, 1),
+                        ["LockedToPart"] = true,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.504,0.49375),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Speed"] = NumberRange.new(0, 0),
+                        ["ZOffset"] = 5,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,7.4375)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://15267994078",
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 3
+                },
+            },
+            ["lightning"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["FlipbookFramerate"] = NumberRange.new(17, 17),
+                        ["Lifetime"] = NumberRange.new(0.1, 1),
+                        ["FlipbookLayout"] = Enum.ParticleFlipbookLayout.Grid4x4,
+                        ["LockedToPart"] = true,
+                        ["Speed"] = NumberRange.new(0.01, 0.01),
+                        ["Brightness"] = 15,
+                        ["ZOffset"] = 3,
+                        ["Size"] = NumberSequence.new(5, 5),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://14582813693",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityPerpendicular,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 5
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.4, 0.4),
+                        ["SpreadAngle"] = vector2_new(360, 360),
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Drag"] = 15,
+                        ["Speed"] = NumberRange.new(0.0099, 0.0099),
+                        ["Brightness"] = 5,
+                        ["ZOffset"] = 4,
+                        ["Size"] = NumberSequence.new(5, 5),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://13305806509",
+                        ["FlipbookMode"] = Enum.ParticleFlipbookMode.OneShot,
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 2
+                },
+            },
+            ["blackflash"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["LightInfluence"] = 0.2,
+                        ["Lifetime"] = NumberRange.new(0.1, 0.25),
+                        ["SpreadAngle"] = vector2_new(360, 360),
+                        ["LockedToPart"] = true,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.0375,0.291),NumberSequenceKeypoint.new(0.131,0.602),NumberSequenceKeypoint.new(0.259,0.788),NumberSequenceKeypoint.new(0.403,0.906),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(255, 17, 17)),
+                        ["Speed"] = NumberRange.new(0.0135, 0.0135),
+                        ["Brightness"] = 10,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.0645,5.37),NumberSequenceKeypoint.new(0.236,11.31),NumberSequenceKeypoint.new(0.586,15.7),NumberSequenceKeypoint.new(1,18.56)},
+                        ["RotSpeed"] = NumberRange.new(-20, 20),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://10149702982",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityPerpendicular,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 3
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.07, 0.2),
+                        ["SpreadAngle"] = vector2_new(-360, 360),
+                        ["LockedToPart"] = true,
+                        ["LightEmission"] = 1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(255, 17, 17)),
+                        ["Speed"] = NumberRange.new(0.0197, 0.0197),
+                        ["Brightness"] = 15,
+                        ["ZOffset"] = 3.96,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,25.55),NumberSequenceKeypoint.new(1,0)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://15446757636",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityParallel,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 3
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.6, 1.3),
+                        ["SpreadAngle"] = vector2_new(180, 180),
+                        ["LockedToPart"] = true,
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0.6),NumberSequenceKeypoint.new(0.457,0.9625),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Drag"] = 10,
+                        ["Speed"] = NumberRange.new(72.6, 290.5),
+                        ["Brightness"] = 0.75,
+                        ["ZOffset"] = 3.46,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0.58),NumberSequenceKeypoint.new(0.5,16.25),NumberSequenceKeypoint.new(1,20.34)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://15883763954",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityParallel,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 3
+                },
+            },
+            ["gravity"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.6, 0.6),
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.578,0.7375),NumberSequenceKeypoint.new(1,1)},
+                        ["LightEmission"] = 1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(114, 44, 255)),
+                        ["Speed"] = NumberRange.new(0.0629, 0.0629),
+                        ["Brightness"] = 4,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,35.77)},
+                        ["RotSpeed"] = NumberRange.new(500, 800),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://8030746658",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityPerpendicular,
+                        ["Rotation"] = NumberRange.new(-360, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 3
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.85, 1),
+                        ["SpreadAngle"] = vector2_new(-30, 30),
+                        ["LightEmission"] = 1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(81, 62, 189)),
+                        ["Speed"] = NumberRange.new(5, 10),
+                        ["Brightness"] = 4,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.167,0.875),NumberSequenceKeypoint.new(1,0)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://8030760338",
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 35
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.2, 0.4),
+                        ["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.26,0),NumberSequenceKeypoint.new(1,0)},
+                        ["LightEmission"] = 1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(114, 44, 255)),
+                        ["Drag"] = 1,
+                        ["Speed"] = NumberRange.new(5, 10),
+                        ["Brightness"] = 3,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.11,4.0975),NumberSequenceKeypoint.new(1,0)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://8801300936",
+                        ["Orientation"] = Enum.ParticleOrientation.FacingCameraWorldUp,
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 20
+                },
+            },
+            ["meteor"] = {
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.1, 0.3),
+                        ["FlipbookLayout"] = Enum.ParticleFlipbookLayout.Grid4x4,
+                        ["SpreadAngle"] = vector2_new(40, 40),
+                        ["LightEmission"] = 0.1,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(72, 26, 255)),
+                        ["Drag"] = 9,
+                        ["Speed"] = NumberRange.new(100, 200),
+                        ["Brightness"] = 4.57,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,14.17),NumberSequenceKeypoint.new(0.374,16.19),NumberSequenceKeypoint.new(1,10.31)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "http://www.roblox.com/asset/?id=13136714025",
+                        ["FlipbookMode"] = Enum.ParticleFlipbookMode.OneShot,
+                        ["Rotation"] = NumberRange.new(0, 360),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 30
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.15, 0.25),
+                        ["SpreadAngle"] = vector2_new(30, 30),
+                        ["LockedToPart"] = true,
+                        ["LightEmission"] = 0.6,
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(69, 44, 255)),
+                        ["Drag"] = 26,
+                        ["Speed"] = NumberRange.new(0.13, 0.13),
+                        ["Brightness"] = 6.885,
+                        ["ZOffset"] = 3,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.265,1.16),NumberSequenceKeypoint.new(0.48,7.56),NumberSequenceKeypoint.new(0.72,1.4),NumberSequenceKeypoint.new(1,0)},
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://16722791958",
+                        ["Rotation"] = NumberRange.new(150, 150),
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 50
+                },
+                {
+                    create_instance("ParticleEmitter", {
+                        ["Name"] = "\0",
+                        ["Lifetime"] = NumberRange.new(0.2, 0.4),
+                        ["SpreadAngle"] = vector2_new(50, 50),
+                        ["Color"] = ColorSequence.new(Color3.fromRGB(84, 41, 255)),
+                        ["Drag"] = 8,
+                        ["Speed"] = NumberRange.new(141.44, 183.87),
+                        ["Brightness"] = 12,
+                        ["Size"] = NumberSequence.new{NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.259,1.77),NumberSequenceKeypoint.new(1,0)},
+                        ["Acceleration"] = vector3_new(0, -282.88, 0),
+                        ["RotSpeed"] = NumberRange.new(-30, 30),
+                        ["Rate"] = 0,
+                        ["Texture"] = "rbxassetid://11995504618",
+                        ["Orientation"] = Enum.ParticleOrientation.VelocityParallel,
+                        ["Enabled"] = false,
+                        ["Parent"] = hit_particle_part,
+                    }), 40
+                },
+            },
         }
 
         local hit_particle_connection = nil
@@ -16014,6 +17037,10 @@ do
         end
     end
 
+    end
+
+    do
+
     -- >> ( esp core )
 
     local do_esp = LPH_NO_VIRTUALIZE(function()
@@ -16900,6 +17927,10 @@ do
         tween_esp(data, true)
     end)
 
+    end
+
+    do
+
     -- >> ( show arms in first person)
 
     do
@@ -16968,6 +17999,10 @@ do
             end
         end)
     end
+
+    end
+
+    do
 
     -- >> ( local material )
 
@@ -17090,6 +18125,10 @@ do
             end
         end)
     end
+
+    end
+
+    do
 
     -- >> ( esp connections )
 
@@ -17903,6 +18942,10 @@ do
             end
         end))
     end
+
+    end
+
+    do
 
     -- >> ( color / transparency updaters )
 
@@ -18901,12 +19944,218 @@ do
         end)
     end
 
+    -- >> ( rainbow weapon chams )
+
+    menu_references["rainbow_weapon_chams"] = menu_references["local_character_section"]:create_element({["name"] = "rainbow weapon chams"}, {["toggle"] = {["flag"] = "rainbow_weapon_chams"}})
+        menu_references["rainbow_weapon_chams_settings"] = menu_references["rainbow_weapon_chams"]:create_settings()
+        menu_references["rainbow_weapon_chams_speed"] = menu_references["rainbow_weapon_chams_settings"]:create_element({["name"] = "speed"}, {["slider"] = {["flag"] = "rainbow_weapon_chams_speed", ["min"] = 1, ["max"] = 100, ["default"] = 30, ["suffix"] = "%"}})
+        menu_references["rainbow_weapon_chams_saturation"] = menu_references["rainbow_weapon_chams_settings"]:create_element({["name"] = "saturation"}, {["slider"] = {["flag"] = "rainbow_weapon_chams_saturation", ["min"] = 10, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["rainbow_weapon_chams_brightness"] = menu_references["rainbow_weapon_chams_settings"]:create_element({["name"] = "brightness"}, {["slider"] = {["flag"] = "rainbow_weapon_chams_brightness", ["min"] = 10, ["max"] = 100, ["default"] = 100, ["suffix"] = "%"}})
+        menu_references["rainbow_weapon_chams_transparency"] = menu_references["rainbow_weapon_chams_settings"]:create_element({["name"] = "transparency"}, {["slider"] = {["flag"] = "rainbow_weapon_chams_transparency_val", ["min"] = 0, ["max"] = 90, ["default"] = 0, ["suffix"] = "%"}})
+        menu_references["rainbow_weapon_chams_material"] = menu_references["rainbow_weapon_chams_settings"]:create_element({["name"] = "material"}, {["dropdown"] = {["flag"] = "rainbow_weapon_chams_material", ["default"] = {"neon"}, ["options"] = {"neon", "forcefield"}, ["requires_one"] = true}})
+
+    do
+        local rwc_connection = nil
+        local rwc_render_connection = nil
+
+        local function rwc_get_handle(tool)
+            return find_first_child(tool, "Default") or find_first_child(tool, "Handle")
+        end
+
+        local function rwc_apply(tool)
+            if not tool then return end
+            local handle = rwc_get_handle(tool)
+            if not handle then return end
+            if not tool:GetAttribute("RWC_TEX") then
+                tool:SetAttribute("RWC_TEX", handle["TextureID"])
+            end
+            handle["TextureID"] = ""
+            local mat = flags["rainbow_weapon_chams_material"]
+            handle["Material"] = mat == "forcefield" and Enum["Material"]["ForceField"] or Enum["Material"]["Neon"]
+        end
+
+        local function rwc_restore(tool)
+            if not tool then return end
+            local handle = rwc_get_handle(tool)
+            if not handle then return end
+            local tex = tool:GetAttribute("RWC_TEX")
+            if tex then
+                handle["TextureID"] = tex
+                tool:SetAttribute("RWC_TEX", nil)
+            end
+            handle["Material"] = Enum["Material"]["Plastic"]
+            handle["Transparency"] = 0
+        end
+
+        local function rwc_render()
+            local tool = local_tool
+            if not tool then return end
+            local handle = rwc_get_handle(tool)
+            if not handle then return end
+            local t = clock()
+            local speed = (flags["rainbow_weapon_chams_speed"] or 30) / 100
+            local sat   = (flags["rainbow_weapon_chams_saturation"] or 100) / 100
+            local bri   = (flags["rainbow_weapon_chams_brightness"] or 100) / 100
+            local trans = (flags["rainbow_weapon_chams_transparency_val"] or 0) / 100
+            local hue   = (t * speed) % 1
+            handle["Color"]        = Color3.fromHSV(hue, sat, bri)
+            handle["Transparency"] = trans
+        end
+
+        create_connection(menu_references["rainbow_weapon_chams"]["on_toggle_change"], function(value)
+            if rwc_connection then
+                rwc_connection:Disconnect()
+                rwc_connection = nil
+            end
+            if rwc_render_connection then
+                rwc_render_connection:Disconnect()
+                rwc_render_connection = nil
+            end
+
+            -- restore all current guns
+            for handle, _ in local_guns do
+                local tool = handle["Parent"]
+                rwc_restore(tool)
+            end
+
+            if value then
+                if local_tool then rwc_apply(local_tool) end
+                rwc_connection = create_connection(signals["on_local_tool_equipped"], function(tool)
+                    if tool then rwc_apply(tool) else
+                        -- unequipped – restore is handled by render stop
+                    end
+                end)
+                rwc_render_connection = create_connection(render_stepped, rwc_render)
+            end
+        end)
+
+        create_connection(menu_references["rainbow_weapon_chams_material"]["on_dropdown_change"], function()
+            if flags["rainbow_weapon_chams"] and local_tool then
+                rwc_apply(local_tool)
+            end
+        end)
+    end
+
+    -- >> ( china hat )
+
+    menu_references["china_hat"] = menu_references["local_character_section"]:create_element({["name"] = "china hat"}, {["toggle"] = {["flag"] = "china_hat"}})
+        menu_references["china_hat_settings"] = menu_references["china_hat"]:create_settings()
+        menu_references["china_hat_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "china_hat_color", ["transparency_flag"] = "china_hat_color_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
+        menu_references["china_hat_light_color"] = menu_references["china_hat_settings"]:create_element({["name"] = "light color"}, {["colorpicker"] = {["color_flag"] = "china_hat_light_color", ["transparency_flag"] = "china_hat_light_transparency", ["default_color"] = color3_fromrgb(133, 220, 225), ["default_transparency"] = 0}})
+        menu_references["china_hat_scale"] = menu_references["china_hat_settings"]:create_element({["name"] = "scale"}, {["slider"] = {["flag"] = "china_hat_scale", ["min"] = 0.5, ["max"] = 4, ["default"] = 1.7, ["decimals"] = 2}})
+        menu_references["china_hat_light_brightness"] = menu_references["china_hat_settings"]:create_element({["name"] = "light brightness"}, {["slider"] = {["flag"] = "china_hat_light_brightness", ["min"] = 0, ["max"] = 10, ["default"] = 5, ["decimals"] = 1}})
+
+    do
+        local china_hat_cone = nil
+        local china_hat_char_conn = nil
+
+        local function china_hat_remove()
+            if china_hat_cone then
+                pcall(function() china_hat_cone:Destroy() end)
+                china_hat_cone = nil
+            end
+        end
+
+        local function china_hat_create()
+            china_hat_remove()
+
+            local char = local_player["Character"]
+            if not char then return end
+            local head = char:FindFirstChild("Head")
+            if not head then return end
+
+            local s = flags["china_hat_scale"] or 1.7
+
+            local cone = create_instance("Part", {
+                ["Size"]        = vector3_new(1, 1, 1),
+                ["Material"]    = Enum["Material"]["Neon"],
+                ["Transparency"]= flags["china_hat_color_transparency"] or 0.2,
+                ["Anchored"]    = false,
+                ["CanCollide"]  = false,
+                ["CastShadow"]  = false,
+                ["Color"]       = flags["china_hat_color"] or color3_fromrgb(133, 220, 225),
+                ["Name"]        = "ChinaHat",
+                ["Parent"]      = char,
+            })
+
+            local mesh = create_instance("SpecialMesh", {
+                ["MeshType"]  = Enum["MeshType"]["FileMesh"],
+                ["MeshId"]    = "rbxassetid://1033714",
+                ["Scale"]     = vector3_new(s, 1.1, s),
+                ["Parent"]    = cone,
+            })
+
+            local weld = create_instance("Weld", {
+                ["Part0"]  = head,
+                ["Part1"]  = cone,
+                ["C0"]     = CFrame.new(0, 0.9, 0),
+                ["Parent"] = cone,
+            })
+
+            local light = create_instance("PointLight", {
+                ["Color"]      = flags["china_hat_light_color"] or color3_fromrgb(133, 220, 225),
+                ["Brightness"] = flags["china_hat_light_brightness"] or 5,
+                ["Range"]      = 12,
+                ["Shadows"]    = true,
+                ["Parent"]     = cone,
+            })
+
+            china_hat_cone = cone
+        end
+
+        create_connection(menu_references["china_hat"]["on_toggle_change"], function(value)
+            if china_hat_char_conn then
+                china_hat_char_conn:Disconnect()
+                china_hat_char_conn = nil
+            end
+            if value then
+                china_hat_create()
+                china_hat_char_conn = create_connection(local_player["CharacterAdded"], function()
+                    wait(0.5)
+                    if flags["china_hat"] then china_hat_create() end
+                end)
+            else
+                china_hat_remove()
+            end
+        end)
+
+        create_connection(menu_references["china_hat_color"]["on_color_change"], function(value)
+            if china_hat_cone then china_hat_cone["Color"] = value end
+        end)
+
+        create_connection(menu_references["china_hat_color"]["on_transparency_change"], function(value)
+            if china_hat_cone then china_hat_cone["Transparency"] = value end
+        end)
+
+        create_connection(menu_references["china_hat_light_color"]["on_color_change"], function(value)
+            if china_hat_cone then
+                local light = china_hat_cone:FindFirstChildOfClass("PointLight")
+                if light then light["Color"] = value end
+            end
+        end)
+
+        create_connection(menu_references["china_hat_scale"]["on_slider_change"], function(value)
+            if china_hat_cone then
+                local mesh = china_hat_cone:FindFirstChildOfClass("SpecialMesh")
+                if mesh then mesh["Scale"] = vector3_new(value, 1.1, value) end
+            end
+        end)
+
+        create_connection(menu_references["china_hat_light_brightness"]["on_slider_change"], function(value)
+            if china_hat_cone then
+                local light = china_hat_cone:FindFirstChildOfClass("PointLight")
+                if light then light["Brightness"] = value end
+            end
+        end)
+    end
+
+
     -- >> ( particle aura )
 
     menu_references["particle_aura"] = menu_references["local_character_section"]:create_element({["name"] = "particle aura"}, {["toggle"] = {["flag"] = "particle_aura"}})
         menu_references["particle_aura_settings"] = menu_references["particle_aura"]:create_settings()
         menu_references["particle_aura_color"] = menu_references["particle_aura_settings"]:create_element({["name"] = "color"}, {["colorpicker"] = {["color_flag"] = "particle_aura_color", ["transparency_flag"] = "particle_aura_transparency", ["default_color"] = color3_fromrgb(133, 220, 255), ["default_transparency"] = 0.2}})
-        menu_references["particle_aura_particle"] = menu_references["particle_aura_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "particle_aura_particle", ["default"] = {"angel"}, ["options"] = {"starlight", "heavenly", "ribbon", "lightning", "sakura", "angel", "wind", "flow", "star", "angel wing", "blue heat", "heal aura"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}, ["multi"] = true, ["requires_one"] = true}})
+        menu_references["particle_aura_particle"] = menu_references["particle_aura_settings"]:create_element({["name"] = "particle"}, {["dropdown"] = {["flag"] = "particle_aura_particle", ["default"] = {"angel"}, ["options"] = {"starlight", "heavenly", "ribbon", "lightning", "sakura", "angel", "wind", "flow", "star", "angel wing", "blue heat", "heal aura", "ambient", "nimb", "tornado"}, ["use_custom_extensions"] = {"rbxm", "rbmx"}, ["multi"] = true, ["requires_one"] = true}})
 
     do
         -- >> ( helper: build procedural lua auras as rbxm-style Model )
@@ -19199,6 +20448,139 @@ do
             return model
         end
 
+        local function build_ambient_aura()
+            local model = Instance.new("Model")
+            model.Name = "ambient"
+            local hrp = Instance.new("Part")
+            hrp.Name = "HumanoidRootPart"
+            hrp.Parent = model
+            local att = Instance.new("Attachment")
+            att.CFrame = CFrame.new(0, -2.75, 0)
+            att.Parent = hrp
+            local e1 = Instance.new("ParticleEmitter")
+            e1.Name = "Ambient1"
+            e1.Lifetime = NumberRange.new(2, 2)
+            e1.SpreadAngle = Vector2.new(0.001, 0.001)
+            e1.LockedToPart = true
+            e1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,1)})
+            e1.LightEmission = 1
+            e1.VelocitySpread = 0.001
+            e1.Squash = NumberSequence.new(0)
+            e1.Speed = NumberRange.new(0.001,0.001)
+            e1.Brightness = 2
+            e1.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.3,1),NumberSequenceKeypoint.new(0.6,2.5),NumberSequenceKeypoint.new(0.8,4),NumberSequenceKeypoint.new(1,6)})
+            e1.RotSpeed = NumberRange.new(-600,600)
+            e1.Texture = "https://assetgame.roblox.com/asset/?id=12713358087&assetName=crescent"
+            e1.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e1.Rotation = NumberRange.new(0,360)
+            e1.Parent = att
+            local e2 = Instance.new("ParticleEmitter")
+            e2.Name = "Ambient2"
+            e2.Lifetime = NumberRange.new(2,2)
+            e2.SpreadAngle = Vector2.new(0.001,0.001)
+            e2.LockedToPart = true
+            e2.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.6,0.2),NumberSequenceKeypoint.new(1,1)})
+            e2.LightEmission = 1
+            e2.VelocitySpread = 0.001
+            e2.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,2)})
+            e2.Speed = NumberRange.new(0.001,0.001)
+            e2.Brightness = 2
+            e2.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.3,1),NumberSequenceKeypoint.new(0.6,2.5),NumberSequenceKeypoint.new(0.8,4),NumberSequenceKeypoint.new(1,6)})
+            e2.RotSpeed = NumberRange.new(-30,30)
+            e2.Texture = "rbxassetid://7216849325"
+            e2.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e2.Rotation = NumberRange.new(0,360)
+            e2.Parent = att
+            local e3 = Instance.new("ParticleEmitter")
+            e3.Name = "Ambient3"
+            e3.Lifetime = NumberRange.new(2,2)
+            e3.SpreadAngle = Vector2.new(0.001,0.001)
+            e3.LockedToPart = true
+            e3.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.2,0.3),NumberSequenceKeypoint.new(1,1)})
+            e3.LightEmission = 1
+            e3.VelocitySpread = 0.001
+            e3.Squash = NumberSequence.new(0)
+            e3.Speed = NumberRange.new(0.001,0.001)
+            e3.Brightness = 2
+            e3.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(0.3,2),NumberSequenceKeypoint.new(0.6,5),NumberSequenceKeypoint.new(0.8,8),NumberSequenceKeypoint.new(1,12)})
+            e3.RotSpeed = NumberRange.new(-40,40)
+            e3.Texture = "rbxassetid://7216855136"
+            e3.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e3.Rotation = NumberRange.new(0,360)
+            e3.Parent = att
+            return model
+        end
+
+        local function build_nimb_aura()
+            local model = Instance.new("Model")
+            model.Name = "nimb"
+            local head = Instance.new("Part")
+            head.Name = "Head"
+            head.Parent = model
+            local att = Instance.new("Attachment")
+            att.CFrame = CFrame.new(-0.25, 0.933, 0.259, 0.469, -0.25, -0.847, -0.117, 0.933, -0.34, 0.875, 0.259, 0.408)
+            att.Parent = head
+            local e1 = Instance.new("ParticleEmitter")
+            e1.Name = "Nimb1"
+            e1.Lifetime = NumberRange.new(1,1)
+            e1.SpreadAngle = Vector2.new(5,5)
+            e1.LockedToPart = true
+            e1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.2,0),NumberSequenceKeypoint.new(0.8,0),NumberSequenceKeypoint.new(1,1)})
+            e1.LightEmission = 1
+            e1.VelocitySpread = 5
+            e1.Speed = NumberRange.new(0.001,0.001)
+            e1.Brightness = 2
+            e1.Size = NumberSequence.new(2.5,3)
+            e1.RotSpeed = NumberRange.new(-400,400)
+            e1.Rate = 7
+            e1.Texture = "rbxassetid://8819682608"
+            e1.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e1.Rotation = NumberRange.new(0,360)
+            e1.Parent = att
+            local e2 = Instance.new("ParticleEmitter")
+            e2.Name = "Nimb2"
+            e2.Lifetime = NumberRange.new(1,1)
+            e2.SpreadAngle = Vector2.new(5,5)
+            e2.LockedToPart = true
+            e2.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.2,0),NumberSequenceKeypoint.new(0.8,0),NumberSequenceKeypoint.new(1,1)})
+            e2.LightEmission = 1
+            e2.VelocitySpread = 5
+            e2.Speed = NumberRange.new(0.001,0.001)
+            e2.Brightness = 2
+            e2.Size = NumberSequence.new(2,3)
+            e2.RotSpeed = NumberRange.new(-400,400)
+            e2.Rate = 7
+            e2.Texture = "rbxassetid://8819682608"
+            e2.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e2.Rotation = NumberRange.new(0,360)
+            e2.Parent = att
+            return model
+        end
+
+        local function build_tornado_aura()
+            local model = Instance.new("Model")
+            model.Name = "tornado"
+            local hrp = Instance.new("Part")
+            hrp.Name = "HumanoidRootPart"
+            hrp.Parent = model
+            local att = Instance.new("Attachment")
+            att.CFrame = CFrame.new(0,-3,0)
+            att.Parent = hrp
+            local e = Instance.new("ParticleEmitter")
+            e.Name = "Tornado1"
+            e.LightInfluence = 1
+            e.LockedToPart = true
+            e.LightEmission = 1
+            e.Speed = NumberRange.new(0.01,0.01)
+            e.Size = NumberSequence.new(6,10)
+            e.RotSpeed = NumberRange.new(360,360)
+            e.Rate = 1
+            e.Texture = "http://www.roblox.com/asset/?id=8553497052"
+            e.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+            e.Parent = att
+            return model
+        end
+
         local particle_auras = {
             ["starlight"] = game:GetObjects("rbxassetid://134645216613107")[1],
             ["lightning"] = game:GetObjects("rbxassetid://88833232287502")[1],      
@@ -19212,6 +20594,9 @@ do
             ["angel wing"] = build_angel_wing_aura(),
             ["blue heat"] = build_blue_heat_aura(),
             ["heal aura"] = build_heal_aura(),
+            ["ambient"] = build_ambient_aura(),
+            ["nimb"] = build_nimb_aura(),
+            ["tornado"] = build_tornado_aura(),
         }
 
         -- multi-aura: selected_auras is a list of active aura names
@@ -19438,6 +20823,7 @@ do
         menu_references["auto_fire_wall_bang"] = menu_references["auto_fire_settings"]:create_element({["name"] = "wall bang"}, {["toggle"] = {["flag"] = "auto_fire_wall_bang", ["default"] = false}})
         menu_references["auto_fire_always_fire"] = menu_references["auto_fire_settings"]:create_element({["name"] = "always fire"}, {["toggle"] = {["flag"] = "auto_fire_always_fire", ["default"] = true}})
         menu_references["auto_fire_dont_render"] = menu_references["auto_fire_settings"]:create_element({["name"] = "dont render"}, {["toggle"] = {["flag"] = "auto_fire_dont_render", ["default"] = false}})
+        menu_references["auto_fire_bullet_tp"] = menu_references["auto_fire_settings"]:create_element({["name"] = "bullet tp"}, {["toggle"] = {["flag"] = "auto_fire_bullet_tp", ["default"] = false}})
         menu_references["auto_equip"] = menu_references["general_section"]:create_element({["name"] = "auto equip"}, {["toggle"] = {["flag"] = "auto_equip", ["default"] = false}})
         menu_references["auto_equip_settings"] = menu_references["auto_equip"]:create_settings()
         menu_references["auto_equip_unequip_when"] = menu_references["auto_equip_settings"]:create_element({["name"] = "unequip when"}, {["dropdown"] = {["flag"] = "auto_equip_unequip_when", ["default"] = {"no target"}, ["options"] = {"no target"}, ["multi"] = true}})
@@ -19449,6 +20835,15 @@ do
         menu_references["void_spam_resolver_void_weight"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "void trust"}, {["slider"] = {["flag"] = "void_spam_resolver_void_weight", ["min"] = 0.1, ["max"] = 5, ["default"] = 0.2, ["decimals"] = 2}})
         menu_references["void_spam_resolver_accuracy"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "accuracy"}, {["slider"] = {["flag"] = "void_spam_resolver_accuracy", ["min"] = 5, ["suffix"] = "%", ["max_text"] = "high", ["max"] = 110, ["default"] = 76.82, ["decimals"] = 2}})
         menu_references["void_spam_resolver_lerp"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "lerp % when close"}, {["slider"] = {["flag"] = "void_spam_resolver_lerp", ["min"] = 10, ["suffix"] = "%", ["max_text"] = "instant", ["max"] = 100, ["default"] = 10, ["decimals"] = 1}})
+        menu_references["void_spam_resolver_dist_penalty"] = menu_references["auto_fire_defensive_settings"]:create_element({["name"] = "distance penalty"}, {["slider"] = {["flag"] = "void_spam_resolver_dist_penalty", ["min"] = 0, ["max"] = 5, ["default"] = 2, ["decimals"] = 1, ["suffix"] = "x"}})
+
+        -- >> ( exp connection )
+        menu_references["exp_connection"] = menu_references["general_section"]:create_element({["name"] = "exp connection"}, {["toggle"] = {["flag"] = "exp_connection", ["default"] = false}})
+            menu_references["exp_connection_settings"] = menu_references["exp_connection"]:create_settings()
+            menu_references["exp_flame"]  = menu_references["exp_connection_settings"]:create_element({["name"] = "flame"},  {["toggle"] = {["flag"] = "exp_flame",  ["default"] = false}})
+            menu_references["exp_knife"]  = menu_references["exp_connection_settings"]:create_element({["name"] = "knife"},  {["toggle"] = {["flag"] = "exp_knife",  ["default"] = false}})
+            menu_references["exp_bag"]    = menu_references["exp_connection_settings"]:create_element({["name"] = "bag"},    {["toggle"] = {["flag"] = "exp_bag",    ["default"] = false}})
+
         menu_references["ragebot_hitbox"] = menu_references["general_section"]:create_element({["name"] = "target hitbox"}, {["dropdown"] = {["flag"] = "ragebot_hitbox", ["options"] = {"head", "root"}, ["default"] = {"head"}}})
         menu_references["prediction"] = menu_references["general_section"]:create_element({["name"] = "prediction"}, {["slider"] = {["flag"] = "prediction", ["min"] = 0, ["max"] = 2000, ["default"] = 0, ["min_text"] = "auto", ["max_text"] = "disabled", ["suffix"] = "%", ["decimals"] = 2}})
         menu_references["prediction_settings"] = menu_references["prediction"]:create_settings()
@@ -19962,10 +21357,19 @@ do
     local void_spam_resolver_lerp = 0.1
     local void_spam_resolver_void_weight = 0.2
     local void_spam_resolver_position_weight = 1.5
+    local void_spam_resolver_dist_penalty = 2.0
 
     set_ragebot_target = LPH_NO_VIRTUALIZE(function(target, message)
         if ragebot_target == target then
             return
+        end
+
+        -- exp connection: warn if no method chosen
+        if target and flags["exp_connection"] then
+            if not flags["exp_flame"] and not flags["exp_knife"] and not flags["exp_bag"] then
+                new_notification("error when set target rage bot cuz exp connection method didnt choosed", 5)
+                return
+            end
         end
 
         if do_notification and message and message ~= "" then
@@ -20080,16 +21484,23 @@ do
                 local hitbox_position = hitbox["Position"]
 
                 local current_time = clock()
-            
+
+                local dist_to_target = (local_server_position["p"] - hitbox_position)["Magnitude"]
+                local dist_penalty_factor = clamp(1 - (dist_to_target / 100) * (void_spam_resolver_dist_penalty * 0.01), 0.25, 1)
+                local target_speed = target_velocity and target_velocity["Magnitude"] or 0
+                local adaptive_lerp = target_speed < 5 and clamp(void_spam_resolver_lerp * 3, void_spam_resolver_lerp, 0.6) or void_spam_resolver_lerp
+                local merge_radius = clamp(200 - dist_to_target * 0.4, 80, 200)
+
                 local positions_to_remove = {}
                 for position, data in defensive_positions do
                     local time_delta = current_time - data["last_update_time"]
                     if time_delta > 0 then
                         local rate = flags["void_spam_resolver_forget_rate"]/20
-                        data["weight"]-=((position - hitbox_position)["magnitude"] > 200 and time_delta*(rate*2.5) or time_delta*rate)
+                        local pos_dist = (position - hitbox_position)["Magnitude"]
+                        local decay_mult = pos_dist > merge_radius and 2.5 or 1
+                        data["weight"] -= time_delta * rate * decay_mult
                         data["last_update_time"] = current_time
                     end
-            
                     if data["weight"] < 0.1 then
                         positions_to_remove[#positions_to_remove+1] = position
                     end
@@ -20098,11 +21509,11 @@ do
                 for _, position in positions_to_remove do
                     defensive_positions[position] = nil
                 end
-            
+
                 local old_time = clock()
-            
+
                 ragebot_aim_position = hitbox_position
-            
+
                 if target_velocity then
                     ragebot_aim_position+=(target_velocity*(prediction == 0 and local_ping/500 or prediction == 2 and 0 or prediction))
                 end
@@ -20119,43 +21530,50 @@ do
                         end
                     end
                 end
-            
+
                 local local_server_position = local_server_position["p"]
                 local did_defensive = false
-            
+
                 if flags["auto_fire_defensive"] then
-                    local weight_to_add = (hitbox_position["Magnitude"] < 9e5 and void_spam_resolver_position_weight or void_spam_resolver_void_weight)
+                    local is_in_void = hitbox_position["Magnitude"] >= 9e5
+                    local base_weight = is_in_void and void_spam_resolver_void_weight or void_spam_resolver_position_weight
+                    local weight_to_add = base_weight * dist_penalty_factor
                     local done = false
-            
+
                     for position, data in defensive_positions do
-                        if (position - hitbox_position).magnitude <= 200 then
-                            local new_position = position:Lerp(hitbox_position, void_spam_resolver_lerp)
-                        
+                        if (position - hitbox_position)["Magnitude"] <= merge_radius then
+                            local new_position = position:Lerp(hitbox_position, adaptive_lerp)
                             defensive_positions[new_position] = {
-                                weight = clamp(data.weight + weight_to_add, -1, 18),
-                                last_update_time = current_time
+                                weight = clamp(data["weight"] + weight_to_add, -1, 18),
+                                last_update_time = current_time,
+                                cluster_count = (data["cluster_count"] or 1) + 1,
                             }
                             defensive_positions[position] = nil
-                        
                             done = true
                             break
                         end
                     end
-            
+
                     if not done then
-                        defensive_positions[hitbox_position] = { ["weight"] = weight_to_add, ["last_update_time"] = current_time }
+                        defensive_positions[hitbox_position] = {
+                            ["weight"] = weight_to_add,
+                            ["last_update_time"] = current_time,
+                            ["cluster_count"] = 1,
+                        }
                     end
 
                     local highest = nil
-                    local highest_weight = 0
+                    local highest_score = 0
                     for position, data in defensive_positions do
-                        if data["weight"] > highest_weight then
-                            highest_weight = data["weight"]
+                        local cluster_count = data["cluster_count"] or 1
+                        local score = data["weight"] * clamp(cluster_count * 0.25, 1, 3)
+                        if score > highest_score then
+                            highest_score = score
                             highest = position
                         end
                     end
-            
-                    if highest and highest_weight > void_spam_resolver_accuracy then
+
+                    if highest and highest_score > void_spam_resolver_accuracy then
                         ragebot_aim_position = highest
                         target_velocity = vector3_zero
                         target_last_position = highest
@@ -20168,6 +21586,57 @@ do
                 if custom_ragebot_aim_position then
                     ragebot_aim_position = custom_ragebot_aim_position
                     custom_ragebot_aim_position = nil
+                end
+
+                -- >> ( exp connection fire )
+                if flags["exp_connection"] and ragebot_target and (old_time - last_fire > fire_cooldown) then
+                    local char  = local_character
+                    local bp    = local_player["Backpack"]
+                    local hum   = char and char:FindFirstChildOfClass("Humanoid")
+                    local hrp   = char and char:FindFirstChild("HumanoidRootPart")
+                    local t4    = ragebot_target[4]
+                    local tHRP  = t4 and t4:FindFirstChild("HumanoidRootPart")
+                    local tHead = t4 and t4:FindFirstChild("Head")
+
+                    if char and bp and hum and hrp and tHRP then
+                        if _G.flamethrower_hack then
+                            local ft = char:FindFirstChild("[Flamethrower]") or bp:FindFirstChild("[Flamethrower]")
+                            if ft then
+                                if ft["Parent"] ~= char then hum:EquipTool(ft) end
+                                hrp["CFrame"] = tHRP["CFrame"] * CFrame.new(0, 0, 3)
+                                local handle = ft:FindFirstChild("Handle")
+                                if handle and tHead then
+                                    handle["CFrame"] = tHead["CFrame"] * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(-90), 0, 0)
+                                end
+                                ft:Activate()
+                                last_fire = old_time
+                            end
+                            return
+
+                        elseif getgenv().beanbag_method then
+                            local bag = char:FindFirstChild("[BeanBag]") or bp:FindFirstChild("[BeanBag]") or
+                                        char:FindFirstChild("[BrownBag]") or bp:FindFirstChild("[BrownBag]")
+                            if bag then
+                                if bag["Parent"] ~= char then hum:EquipTool(bag) end
+                                hrp["CFrame"] = tHRP["CFrame"] * CFrame.new(0, 1.8, 2.4)
+                                local handle = bag:FindFirstChild("Handle")
+                                if handle then handle["CFrame"] = tHRP["CFrame"] end
+                                bag:Activate()
+                                last_fire = old_time
+                            end
+                            return
+
+                        elseif getgenv().connectionresolvderfgdg then
+                            local knife = char:FindFirstChild("[Knife]") or bp:FindFirstChild("[Knife]")
+                            if knife then
+                                if knife["Parent"] ~= char then hum:EquipTool(knife) end
+                                hrp["CFrame"] = tHRP["CFrame"] * CFrame.new(0, 1.8, 2.4)
+                                knife:Activate()
+                                last_fire = old_time
+                            end
+                            return
+                        end
+                    end
                 end
 
                 local is_rifle = nil
@@ -20204,6 +21673,38 @@ do
 
                         local pos = ragebot_aim_position
                         local origin = local_server_position
+
+                        -- >> ( bullet tp )
+                        if flags["auto_fire_bullet_tp"] and local_tool and ragebot_target then
+                            local right_hand = local_parts["RightHand"]
+                            local target_hrp = ragebot_target[4]["HumanoidRootPart"]
+                            if right_hand and target_hrp then
+                                local original_grip = local_tool["Grip"]
+                                -- disable grip property changed connections
+                                pcall(function()
+                                    for _, conn in getconnections(local_tool:GetPropertyChangedSignal("Grip")) do
+                                        conn:Disable()
+                                    end
+                                end)
+                                -- compute offset: RightHand → target HRP
+                                local actual_origin = right_hand["CFrame"] * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
+                                local offset = (actual_origin:ToObjectSpace(target_hrp["CFrame"])):Inverse()
+                                setscriptable(local_tool, "Parent", true)
+                                local_tool["Parent"] = local_player["Backpack"]
+                                local_tool["Grip"] = offset
+                                local_tool["Parent"] = local_character
+                                render_stepped_wait(render_stepped)
+                                local_tool["Parent"] = local_player["Backpack"]
+                                local_tool["Grip"] = original_grip
+                                local_tool["Parent"] = local_character
+                                -- re-enable grip connections
+                                pcall(function()
+                                    for _, conn in getconnections(local_tool:GetPropertyChangedSignal("Grip")) do
+                                        conn:Enable()
+                                    end
+                                end)
+                            end
+                        end
 
                         for i = 1, #new_local_guns do
                             local local_gun = new_local_guns[i]
@@ -20308,7 +21809,80 @@ do
     create_connection(menu_references["void_spam_resolver_lerp"]["on_slider_change"], function(value)
         void_spam_resolver_lerp = value/100
     end)
-    
+
+    create_connection(menu_references["void_spam_resolver_dist_penalty"]["on_slider_change"], function(value)
+        void_spam_resolver_dist_penalty = value
+    end)
+
+    do
+        -- exp connection: mutual exclusive sub-toggles
+        local exp_list = {"exp_flame", "exp_knife", "exp_bag"}
+
+        local function exp_only(chosen)
+            for _, k in ipairs(exp_list) do
+                if k ~= chosen then
+                    menu_references[k]:set_toggle(false)
+                    menu_references[k]:set_visible(false)
+                end
+            end
+            if chosen then
+                menu_references[chosen]:set_visible(true)
+            end
+        end
+
+        create_connection(menu_references["exp_connection"]["on_toggle_change"], function(value)
+            if value then
+                for _, k in ipairs(exp_list) do
+                    menu_references[k]:set_visible(true)
+                end
+            else
+                for _, k in ipairs(exp_list) do
+                    menu_references[k]:set_toggle(false)
+                    menu_references[k]:set_visible(false)
+                end
+                getgenv().connectionresolvderfgdg = false
+                getgenv().beanbag_method = false
+                _G.flamethrower_hack = false
+            end
+        end)
+
+        create_connection(menu_references["exp_flame"]["on_toggle_change"], function(value)
+            if value then
+                exp_only("exp_flame")
+                _G.flamethrower_hack = true
+                getgenv().connectionresolvderfgdg = false
+                getgenv().beanbag_method = false
+            else
+                _G.flamethrower_hack = false
+            end
+        end)
+
+        create_connection(menu_references["exp_knife"]["on_toggle_change"], function(value)
+            if value then
+                exp_only("exp_knife")
+                getgenv().connectionresolvderfgdg = true
+                getgenv().hitpedictglueee = true
+                _G.flamethrower_hack = false
+                getgenv().beanbag_method = false
+            else
+                getgenv().connectionresolvderfgdg = false
+                getgenv().hitpedictglueee = false
+            end
+        end)
+
+        create_connection(menu_references["exp_bag"]["on_toggle_change"], function(value)
+            if value then
+                exp_only("exp_bag")
+                getgenv().beanbag_method = true
+                getgenv().connectionresolvderfgdg = true
+                _G.flamethrower_hack = false
+            else
+                getgenv().beanbag_method = false
+                getgenv().connectionresolvderfgdg = false
+            end
+        end)
+    end
+
     create_connection(menu_references["auto_fire_defensive"]["on_toggle_change"], function(value)
         defensive_positions = {}
     end)
@@ -20839,61 +22413,6 @@ do
         end)
     end
 
-    -- >> ( sender rate value )
-
-    do
-        local old = getfflag("S2PhysicsSenderRate")
-
-        local do_automatic = LPH_NO_VIRTUALIZE(function()
-            setfflag("S2PhysicsSenderRate", tostring(round(local_fps, 1)))
-        end)
-
-        create_connection(menu_references["sender_rate_value"]["on_toggle_change"], function(value)
-            local rate = flags["sender_rate_value_type"][1]
-
-            setfflag("S2PhysicsSenderRate", value and (rate == "custom" and tostring(flags["sender_rate_value_rate"])) or old)
-        
-            for i = 1, #anti_aim do
-                local func = anti_aim[i]
-                if func == do_automatic then
-                    remove(anti_aim, i)
-                    break
-                end
-            end
-
-            if value and rate == "automatic" then
-                anti_aim[#anti_aim+1] = do_automatic
-            end
-        end)
-
-        create_connection(menu_references["sender_rate_value_type"]["on_dropdown_change"], function(value)
-            local rate = flags["sender_rate_value_type"][1]
-            menu_references["sender_rate_value_rate"]:set_visible(rate == "custom")
-
-            for i = 1, #anti_aim do
-                if anti_aim[i] == do_automatic then
-                    remove(anti_aim, i)
-                    break
-                end
-            end
-
-            if flags["sender_rate_value"] then
-                if rate == "automatic" then
-                    anti_aim[#anti_aim+1] = do_automatic
-                end
-                setfflag("S2PhysicsSenderRate", rate == "custom" and tostring(flags["sender_rate_value_rate"]) or "15")
-            end
-        end)
-
-        create_connection(menu_references["sender_rate_value_rate"]["on_slider_change"], function(value)
-            if flags["sender_rate_value"] and flags["sender_rate_value_type"][1] == "custom" then
-                setfflag("S2PhysicsSenderRate", tostring(value))
-            end
-        end)
-
-        menu_references["sender_rate_value_rate"]:set_visible(false)
-    end
-
     -- >> ( velocity desync )
 
     do
@@ -21011,21 +22530,285 @@ do
         local refresh_connection3 = nil
         local do_notify = false 
 
-        local do_sleep = true
-        local sethiddenproperty = sethiddenproperty
-        local cooldown = nil
+        local hooked = false
+        local ghostModel = nil
+        local groundParts = {}
+        local attachments = {}
+        local vfxConn = nil
+        local is_delta = identifyexecutor() == "Delta"
 
-        local cframe_angles = CFrame["Angles"]
-        local rad = math["rad"]
+        local PI2 = math.pi * 2
+        local OUTER_RADIUS = 3.2
+        local INNER_RADIUS = 1.8
+        local OUTER_SPEED = 2.5
+        local INNER_SPEED = -3.5
+        local GROUND_OFFSET = 3.1
+        local SPARK_INTERVAL = 0.05
 
-        local last_refresh = clock()
-        local sleep_tick = clock()
-        local sleep_rate = 0.0375
+        local lightningColor = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 180, 255)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 40, 200)),
+        })
+
+        local sparkSize = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0.18),
+            NumberSequenceKeypoint.new(0.5, 0.08),
+            NumberSequenceKeypoint.new(1, 0),
+        })
+
+        local ringSizeOuter = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0.1),
+            NumberSequenceKeypoint.new(1, 0),
+        })
+
+        local ringSizeInner = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0.07),
+            NumberSequenceKeypoint.new(1, 0),
+        })
+
         local sitting = false
         local local_fake_position = nil
 
+        local function removeGhost()
+            if vfxConn then
+                vfxConn:Disconnect()
+                vfxConn = nil
+            end
+            for _, p in ipairs(groundParts) do
+                if p.dot and p.dot.Parent then
+                    p.dot:Destroy()
+                end
+            end
+            groundParts = {}
+            attachments = {}
+            if ghostModel then
+                ghostModel:Destroy()
+                ghostModel = nil
+            end
+        end
+
+        local function rakhook(packet)
+            if packet.PacketId == 0x1B then
+                local buf = packet.AsBuffer
+                buffer.writeu32(buf, 1, 0xFFFFFFFF)
+                packet:SetData(buf)
+            end
+        end
+
+        local function makeSparks(parent)
+            local att = Instance.new("Attachment")
+            att.Parent = parent
+            local sparks = Instance.new("ParticleEmitter")
+            sparks.Color = lightningColor
+            sparks.LightEmission = 1
+            sparks.LightInfluence = 0
+            sparks.Size = sparkSize
+            sparks.Lifetime = NumberRange.new(0.1, 0.3)
+            sparks.Rate = 0
+            sparks.Speed = NumberRange.new(5, 20)
+            sparks.SpreadAngle = Vector2.new(180, 180)
+            sparks.RotSpeed = NumberRange.new(-360, 360)
+            sparks.Rotation = NumberRange.new(0, 360)
+            sparks.Parent = att
+            return att
+        end
+
+        local function makeRingDot(px, py, pz, sz, col, sparksSize)
+            local dot = Instance.new("Part")
+            dot.Anchored = true
+            dot.CanCollide = false
+            dot.CanTouch = false
+            dot.CanQuery = false
+            dot.CastShadow = false
+            dot.Size = Vector3.new(sz, sz, sz)
+            dot.Shape = Enum.PartType.Ball
+            dot.Material = Enum.Material.Neon
+            dot.Color = col
+            dot.Transparency = 0
+            dot.CFrame = CFrame.new(px, py, pz)
+            dot.Parent = workspace
+            local att = Instance.new("Attachment")
+            att.Parent = dot
+            local em = Instance.new("ParticleEmitter")
+            em.Color = lightningColor
+            em.LightEmission = 1
+            em.LightInfluence = 0
+            em.Size = sparksSize
+            em.Lifetime = NumberRange.new(0.1, 0.2)
+            em.Rate = 10
+            em.Speed = NumberRange.new(1, 5)
+            em.SpreadAngle = Vector2.new(180, 180)
+            em.Parent = att
+            return dot
+        end
+
+        local function createGhost(pos)
+            removeGhost()
+
+            local char = local_character
+            if not char then return end
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+
+            local offset = pos - hrp.Position
+
+            char.Archivable = true
+            local ghost = char:Clone()
+            char.Archivable = false
+            if not ghost then return end
+
+            ghost.Name = "GhostMarker"
+
+            for _, v in ipairs(ghost:GetDescendants()) do
+                pcall(function()
+                    if v:IsA("Script") or v:IsA("LocalScript") or v:IsA("ModuleScript") or v:IsA("Animator") or v:IsA("AnimationController") then
+                        v:Destroy()
+                    end
+                end)
+            end
+
+            local hum = ghost:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum:Destroy()
+            end
+
+            for _, v in ipairs(ghost:GetDescendants()) do
+                pcall(function()
+                    if v:IsA("BasePart") then
+                        v.Anchored = true
+                        v.CanCollide = false
+                        v.CanTouch = false
+                        v.CanQuery = false
+                        v.CastShadow = false
+                        v.Transparency = 0
+                        v.Material = Enum.Material.SmoothPlastic
+                        v.Color = Color3.fromRGB(0, 20, 80)
+                        v.CFrame = v.CFrame + offset
+                        if v.Name ~= "HumanoidRootPart" then
+                            for e = 1, 3 do
+                                local att = makeSparks(v)
+                                table.insert(attachments, att)
+                            end
+                        end
+                    end
+                end)
+            end
+
+            local ghostHRP = ghost:FindFirstChild("HumanoidRootPart")
+            if ghostHRP then
+                ghostHRP.Transparency = 1
+                ghostHRP.CFrame = CFrame.new(pos) * (hrp.CFrame - hrp.CFrame.Position)
+            end
+
+            local hl = Instance.new("Highlight")
+            hl.FillColor = Color3.fromRGB(0, 60, 180)
+            hl.FillTransparency = 0
+            hl.OutlineColor = Color3.fromRGB(0, 120, 255)
+            hl.OutlineTransparency = 0
+            hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            hl.Adornee = ghost
+            hl.Parent = ghost
+
+            ghost.Parent = workspace
+            ghostModel = ghost
+
+            for _, v in ipairs(ghost:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                    v.CanTouch = false
+                    v.CanQuery = false
+                end
+            end
+            for _, v in ipairs(ghost:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                    v.CanTouch = false
+                    v.CanQuery = false
+                end
+            end
+
+            local rCount = 32
+            local iCount = 20
+            local gy = pos.Y - GROUND_OFFSET
+            local outerCol = Color3.fromRGB(0, 100, 255)
+            local innerCol = Color3.fromRGB(150, 210, 255)
+
+            for i = 1, rCount do
+                local a = (i / rCount) * PI2
+                local dot = makeRingDot(pos.X + math.cos(a) * OUTER_RADIUS, gy, pos.Z + math.sin(a) * OUTER_RADIUS, 0.25, outerCol, ringSizeOuter)
+                table.insert(groundParts, {dot = dot, baseAngle = a, isOuter = true})
+            end
+
+            for i = 1, iCount do
+                local a = (i / iCount) * PI2
+                local dot = makeRingDot(pos.X + math.cos(a) * INNER_RADIUS, gy, pos.Z + math.sin(a) * INNER_RADIUS, 0.15, innerCol, ringSizeInner)
+                table.insert(groundParts, {dot = dot, baseAngle = a, isOuter = false})
+            end
+
+            local sparkTimer = 0
+
+            vfxConn = game:GetService("RunService").Heartbeat:Connect(function(dt)
+                if not ghostModel or not ghostModel.Parent then return end
+                local t = tick()
+                local pulse = math.abs(math.sin(t * 2))
+                local fillG = math.floor(40 + pulse * 30)
+                local fillB = math.floor(160 + pulse * 60)
+                local outG = math.floor(100 + pulse * 60)
+
+                hl.FillColor = Color3.fromRGB(0, fillG, fillB)
+                hl.OutlineColor = Color3.fromRGB(0, outG, 255)
+                hl.OutlineTransparency = pulse * 0.3
+
+                for _, entry in ipairs(groundParts) do
+                    if entry.dot and entry.dot.Parent then
+                        local radius = entry.isOuter and OUTER_RADIUS or INNER_RADIUS
+                        local speed = entry.isOuter and OUTER_SPEED or INNER_SPEED
+                        local a = entry.baseAngle + t * speed
+                        local wave = math.abs(math.sin(t * 5 + entry.baseAngle)) * 0.2
+                        local bright = math.abs(math.sin(t * 6 + entry.baseAngle)) * 0.4
+                        entry.dot.CFrame = CFrame.new(pos.X + math.cos(a) * radius, gy + wave, pos.Z + math.sin(a) * radius)
+                        entry.dot.Transparency = bright
+                        if entry.isOuter then
+                            local r = math.floor(80 + pulse * 60)
+                            entry.dot.Color = Color3.fromRGB(0, r, 255)
+                        else
+                            local r = math.floor(120 + pulse * 60)
+                            local g = math.floor(180 + pulse * 40)
+                            entry.dot.Color = Color3.fromRGB(r, g, 255)
+                        end
+                    end
+                end
+
+                sparkTimer = sparkTimer + dt
+                if sparkTimer >= SPARK_INTERVAL then
+                    sparkTimer = 0
+                    local numAtts = #attachments
+                    if numAtts > 0 then
+                        local bursts = math.random(2, 5)
+                        for b = 1, bursts do
+                            local pick = attachments[math.random(1, numAtts)]
+                            if pick and pick.Parent then
+                                local emitter = pick:FindFirstChildOfClass("ParticleEmitter")
+                                if emitter then
+                                    emitter:Emit(math.random(8, 25))
+                                end
+                            end
+                        end
+                    end
+                    for _, v in ipairs(ghostModel:GetDescendants()) do
+                        if v:IsA("BasePart") then
+                            v.CanCollide = false
+                            v.CanTouch = false
+                            v.CanQuery = false
+                            v.Anchored = true
+                        end
+                    end
+                end
+            end)
+        end
+
         local do_refresh = function()
-            last_refresh = clock()
             if do_notify then
                 new_notification(
                     "refreshing fake position",
@@ -21033,50 +22816,38 @@ do
                 )
             end
 
-            wait(0.05)
-            setfpscap(6)
-            setfflag("S2PhysicsSenderRate", "1")
-            wait(flags["fake_position_freeze_time"])
-            setfflag("S2PhysicsSenderRate", "240")
-            setfpscap(1000)
-            wait(0.5)
-            local_fake_position = local_server_position["p"]
+            local char = local_character
+            if not char then return end
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+
+            local_fake_position = hrp.Position
+            
+            if flags["fake_position_indicator"] then
+                createGhost(hrp.Position)
+            end
+
+            if is_delta then
+                pcall(function() Raknet.Desync(true) end)
+            else
+                pcall(function() raknet.add_send_hook(rakhook) end)
+            end
+            
+            hooked = true
         end
 
-        local do_fake_position = LPH_JIT_MAX(function(dt, hrp)
-            setfflag("S2PhysicsSenderRate", tostring(round(local_fps, 1)))
-            if sitting then
-                local_fake_position = nil
-                return
+        local disable_fake_position = function()
+            hooked = false
+            local_fake_position = nil
+            
+            if is_delta then
+                pcall(function() Raknet.Desync(false) end)
+            else
+                pcall(function() raknet.remove_send_hook(rakhook) end)
             end
-            if dt > 0.45 then
-                local_fake_position = nil
-                do_refresh()
-                return
-            end
-            local tick = clock()
-            if hrp and tick-sleep_tick > dt*sleep_rate then
-                do_sleep = not do_sleep
-                sleep_tick = tick
-                sethiddenproperty(hrp, "NetworkIsSleeping", do_sleep)
-            end
-            local remainder = tick - last_refresh
-            if flags["fake_position_safe_mode"] and remainder < 1.5 then
-                local old = hrp["CFrame"]
-                hrp["CFrame"] = cframe_new(vector3_new(math_random(-2147483647, 2147483647), math_random(-400, 2147483647), math_random(-2147483647, 2147483647)))*cframe_angles(rad(math_random(1,359)), rad(math_random(1,359)), rad(math_random(1,359)))
-                render_stepped_wait(render_stepped)
-                hrp["CFrame"] = old
-            end
-            if cooldown and remainder > cooldown then
-                if remainder > cooldown+0.15 then
-                    last_refresh = clock()
-                    setfpscap(1000)
-                    return
-                end
-                setfpscap(8)
-                return
-            end
-        end)
+            
+            removeGhost()
+        end
 
         local stop_sitting = LPH_JIT_MAX(function(character)
             local humanoid = local_parts["Humanoid"]
@@ -21090,32 +22861,21 @@ do
             refresh_connection3 = create_connection(humanoid["GetPropertyChangedSignal"](humanoid, "Sit"), function()
                 sitting = humanoid["Sit"]
 
-                if do_notify then
-                    if sitting then
-                        local_fake_position = local_client_position["p"]
+                if sitting then
+                    if do_notify then
                         new_notification(
                             "fake position disabled (you are sitting)",
                             2
                         )
-                    else
-                        do_refresh()
                     end
+                    disable_fake_position()
+                else
+                    do_refresh()
                 end
             end)
         end)
-
-        local old = tostring(getfflag("S2PhysicsSenderRate"))
         
         create_connection(menu_references["fake_position"]["on_toggle_change"], function(value)
-            local_fake_position = nil
-
-            for i = 1, #anti_aim do
-                if anti_aim[i] == do_fake_position then
-                    remove(anti_aim, i)
-                    break
-                end
-            end
-
             if refresh_connection then
                 refresh_connection:Disconnect()
                 refresh_connection = nil
@@ -21143,8 +22903,6 @@ do
                     menu_references["sender_rate_value"]:set_toggle(false)
                 end
 
-                anti_aim[#anti_aim+1] = do_fake_position
-
                 refresh_connection = create_connection(signals["on_local_character_added"], do_refresh)
                 refresh_connection2 = create_connection(signals["on_local_character_added"], stop_sitting)
 
@@ -21152,209 +22910,32 @@ do
                     stop_sitting(local_character)
                 end
                 
-                last_refresh = clock()
                 do_refresh()
             else
-                setfflag("S2PhysicsSenderRate", old)
+                disable_fake_position()
 
                 menu_references["network_desync"]:set_visible(true)
                 menu_references["sender_rate_value"]:set_visible(true)
             end
         end)
-
-        create_connection(menu_references["refresh_every"]["on_slider_change"], function(value)
-            cooldown = value ~= 240 and value or nil
-        end)
-
-        create_connection(menu_references["sleep_rate"]["on_slider_change"], function(value)
-            sleep_rate = value == 100 and 0 or (101-value)/100
-        end)
-
-        menu_references["sleep_rate"]:set_slider(30)
             
         create_connection(menu_references["fake_position_notifications"]["on_toggle_change"], function(value)
             do_notify = value
         end)
 
-        -- >> ( fake position indicator )
-
-        local visible = false
-        local circle = nil
-        local image = nil
-        local glow = nil
-        local shadow_transparency = {["Transparency"] = 0.09}
-        local circle_transparency = {["Transparency"] = 0.8}
-        local image_transparency = {["Transparency"] = 0.8}
-        local offset = vector3_new(0, 0.5, 0)
-        local data = base64_decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAVUExURf///1FRUXh4eHl5eXp6elJSUgAAAFkqzC8AAAAHdFJOU////////wAaSwNGAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAGHRFWHRTb2Z0d2FyZQBQYWludC5ORVQgNS4xLjQS36aDAAAAtmVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABAAAABaAAAAaYcEAAEAAABqAAAAAAAAAAx3AQDoAwAADHcBAOgDAABQYWludC5ORVQgNS4xLjQAAwAAkAcABAAAADAyMzABoAMAAQAAAAEAAAAFoAQAAQAAAJQAAAAAAAAAAgABAAIABAAAAFI5OAACAAcABAAAADAxMDAAAAAA0NlgAbHwM8wAAACjSURBVDhP1ZFLDsQwCENJ87n/kQvBGDKqNMuqb5EaYyWIyvrD5wJCYBip0QMwMwC/EA18QLt6h4yOn07ruxood2Enapkui+MBFNJCHQmhll7toAR4gZKJmEe5SmAUTfKFU1M+B2YZMh+eVDpYmSck9mHoVT9rUbJvmzW37nZ0Mx1NIkBrV5DejwDdxPsM8BmAH1sCR4TtI7AndFAbR+CJ9wNr3d6DDmOS3Q1aAAAAAElFTkSuQmCC")
-        local last_pos = nil
-        local do_smooth_fake_position_indicator = nil
-    
-        local do_fake_position_indicator = LPH_JIT_MAX(function(dt)
-            if local_fake_position and local_client_position ~= local_fake_position then                
-                local pos, on_screen = world_to_viewport_point(camera, local_fake_position)
-    
-                if do_smooth_fake_position_indicator then
-                    if not last_pos then
-                        last_pos = pos
-                    end
-                    pos = last_pos + (pos - last_pos) * dt*4^2
-                end
-    
-                last_pos = pos
-                if not on_screen and visible then
-                    tween(glow, hide_transparency, circular, out, 0)
-                    tween(image, hide_transparency, circular, out, 0)
-                    tween(circle, hide_transparency, circular, out, 0)
-                    visible = false
-                    return
-                elseif not visible and on_screen then
-                    spawn(function()
-                        tween(glow, shadow_transparency, circular, out, 0.07)
-                        tween(image, image_transparency, circular, out, 0.07)
-                        tween(circle, circle_transparency, circular, out, 0.07)
-                    end)
-                    visible = true
-                elseif not visible and not on_screen then
-                    visible = false
-                    return
-                end
-    
-                local pos2, _ = world_to_viewport_point(camera, local_fake_position + offset)
-    
-                local size = clamp((pos["Y"]-pos2["Y"])*10, 35, 45)
-    
-                local pos = vector2_new(pos["X"], pos["Y"])
-                circle["Size"] = vector2_new(size, size)
-                circle["Position"] = pos - vector2_new(size/2, size/2)
-    
-                local image_size = vector2_new(size*0.6, size*0.6)
-                image["Position"] = pos - image_size/2
-                image["Size"] = image_size
-    
-                local glow_size = vector2_new(size*1.1, size*1.1)
-                glow["Position"] = pos - glow_size/2
-                glow["Size"] = glow_size
-                glow["Rounding"] = size/2
-            elseif visible then
-                visible = false
-                tween(glow, hide_transparency, circular, out, 0.09)
-                tween(image, hide_transparency, circular, out, 0.09)
-                tween(circle, hide_transparency, circular, out, 0.09)
-            end
-        end)
-    
-        local create_drawing = identifyexecutor() == "Wave" and create_fake_drawing or create_real_drawing
-    
-        create_connection(menu_references["smooth_fake_position_indicator"]["on_toggle_change"], function(value)
-            last_pos = nil
-            do_smooth_fake_position_indicator = value
-        end)
-    
         create_connection(menu_references["fake_position_indicator"]["on_toggle_change"], function(value)
-            menu_references["smooth_fake_position_indicator"]:set_visible(value)
-            menu_references["fake_position_indicator_background_color"]:set_visible(value)
-            menu_references["fake_position_indicator_icon_color"]:set_visible(value)
-            menu_references["fake_position_indicator_glow_color"]:set_visible(value)
-
-            last_pos = nil
-            for i = 1, #heartbeat do
-                if heartbeat[i] == do_fake_position_indicator then
-                    remove(heartbeat, i)
-                    break
-                end
-            end
-    
-            visible = false
-    
-            if circle then
-                circle:Destroy()
-                circle = nil
-            end
-    
-            if image then
-                image:Destroy()
-                image = nil
-            end
-    
-            if glow then
-                glow:Destroy()
-                glow = nil
-            end
-        
             if value then
-                circle = create_drawing("Image", {
-                    ["Color"] = flags["fake_position_indicator_background_color"],
-                    ["Transparency"] = 0,
-                    ["ZIndex"] = 2,
-                    ["Visible"] = true,
-                    ["Data"] = pixel_image_data,
-                    ["Rounding"] = 30,
-                    ["Position"] = vector2_new(0, 0),
-                    ["Size"] = vector2_new(65, 65),
-                })
-    
-                image = create_drawing("Image", {
-                    ["Color"] = flags["fake_position_indicator_icon_color"],
-                    ["Transparency"] = 0,
-                    ["ZIndex"] = 3,
-                    ["Visible"] = true,
-                    ["Data"] = data,
-                    ["Position"] = vector2_new(0, 0),
-                    ["Size"] = vector2_new(29, 29),
-                })
-    
-                glow = create_drawing("Image", {
-                    ["Color"] = flags["fake_position_indicator_glow_color"],
-                    ["Transparency"] = 0,
-                    ["ZIndex"] = 1,
-                    ["Visible"] = true,
-                    ["Data"] = shadow_image_data,
-                    ["Rounding"] = 36,
-                    ["Position"] = vector2_new(0, 0),
-                    ["Size"] = vector2_new(73, 73)
-                })
-    
-                heartbeat[#heartbeat+1] = do_fake_position_indicator
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_glow_color"]["on_color_change"], function(value)
-            if glow then
-                glow["Color"] = value
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_glow_color"]["on_transparency_change"], function(value)
-            if glow and visible then
-                glow["Transparency"] = -value+1
-                shadow_transparency["Transparency"] = {["Transparency"] = -value+1}
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_icon_color"]["on_color_change"], function(value)
-            if image then
-                image["Color"] = value
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_icon_color"]["on_transparency_change"], function(value)
-            if image and visible then
-                image["Transparency"] = -value+1
-                image_transparency["Transparency"] = {["Transparency"] = -value+1}
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_background_color"]["on_color_change"], function(value)
-            if circle then
-                circle["Color"] = value
-            end
-        end)
-    
-        create_connection(menu_references["fake_position_indicator_background_color"]["on_transparency_change"], function(value)
-            if circle and visible then
-                circle["Transparency"] = -value+1
-                circle_transparency["Transparency"] = {["Transparency"] = -value+1}
+                if flags["fake_position"] then
+                    local char = local_character
+                    if char then
+                        local hrp = char:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            createGhost(local_fake_position or hrp.Position)
+                        end
+                    end
+                end
+            else
+                removeGhost()
             end
         end)
 
