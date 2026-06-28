@@ -1,103 +1,11 @@
--- > (check those important things) 
-if not hookmetamethod then warn("hookmetamethod NOT supported") return end
-if not getconnections then warn("getconnections NOT supported") return end
-if not newcclosure then warn("newcclosure NOT supported") return end
 
 -- > (wait game load)
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-local executor = (identifyexecutor or getexecutorname or function() return "" end)()
-if (executor == "AWP" or executor == "Nihon") then
+if (identifyexecutor() == "AWP" or identifyexecutor() == "Nihon") then
     cleardrawcache()
 end
-
--- > ( luraph variables )
-
-if not LPH_OBFUSCATED then
-    LPH_JIT_MAX = function(...) return ... end
-    LPH_NO_VIRTUALIZE = function(...) return ... end
-    LPH_ENCSTR = function(...) return ... end
-    LPH_NO_UPVALUES = function(...) return ... end
-    LPH_JIT = function(...) return ... end
-end
-
-getgenv()["juju"] = {}
-
--- > ( bypass )
-
-LPH_JIT_MAX(function()
-    if not getgenv().done then
-        local reg = getreg()
-        local connection = reg["RBXScriptConnection"]
-        local signal = reg["RBXScriptSignal"]
-        local gc = getgc(true)
-
-        local connection_count = 0
-
-        for i, v in reg do
-            if typeof(v) == "function" and islclosure(v) then
-                local info = getinfo(v)
-                local _, count = string.gsub(info.source, "%.", "")
-                if count == 1 and not string.find(info.source, "Replicated") then
-                    if getupvalues(v)[2] ~= 26 then
-                        connection_count+=1
-                        reg[i] = function(a) end
-                    end
-                end
-            end
-        end
-
-        --[[if connection_count < 4 then
-            cloneref(game:GetService("Players"))["LocalPlayer"]:Kick("[juju]\nda hood has updated, please wait for juju to update.")
-            task["wait"](9e9) -- << idk if this will yield in luraph ?
-            return
-        end]]
-
-        local function safe_hook_function(old, replace)
-            local fake_old = clonefunction(old)
-
-            local replacements = {}
-
-            for _, v in gc do
-                if typeof(v) == "table" and #v < 2500 then
-                    local index = table.find(v, old)
-
-                    if index then
-                        replacements[v] = index
-                    end
-                end
-            end
-
-            hookfunction(old, replace)
-
-            for _, v in replacements do
-                rawset(_, v, fake_old)
-            end
-
-            return fake_old
-        end
-
-        old = nil; old = safe_hook_function(signal.__index, LPH_NO_UPVALUES(function(self, index)
-            if (index:find("^[Cc]onnect")) and getinfo(3) then
-                local source = getinfo(3).source
-                local _, count = string.gsub(source, "%.", "")
-                if count == 1 and not string.find(source, "Replicated") then
-                    return function()
-                        return setrawmetatable(newproxy(), connection)
-                    end
-                end
-            end
-            return old(self, index)
-        end))
-
-        old2 = nil; old2 = safe_hook_function(cloneref(game["GetService"](game, "UserInputService")).GetFocusedTextBox, newcclosure(LPH_NO_UPVALUES(function()
-            return nil
-        end)))
-
-        getgenv().done = true
-    end
-end)()
  
  -- > (bypass anti cheat + hit accurate)
  
@@ -304,7 +212,92 @@ task.spawn(function()
     end
 end)
  
+-- > ( luraph variables )
 
+if not LPH_OBFUSCATED then
+    LPH_JIT_MAX = function(...) return ... end
+    LPH_NO_VIRTUALIZE = function(...) return ... end
+    LPH_ENCSTR = function(...) return ... end
+    LPH_NO_UPVALUES = function(...) return ... end
+    LPH_JIT = function(...) return ... end
+end
+
+getgenv()["juju"] = {}
+
+-- > ( bypass )
+
+LPH_JIT_MAX(function()
+    if not getgenv().done then
+        local reg = getreg()
+        local connection = reg["RBXScriptConnection"]
+        local signal = reg["RBXScriptSignal"]
+        local gc = getgc(true)
+
+        local connection_count = 0
+
+        for i, v in reg do
+            if typeof(v) == "function" and islclosure(v) then
+                local info = getinfo(v)
+                local _, count = string.gsub(info.source, "%.", "")
+                if count == 1 and not string.find(info.source, "Replicated") then
+                    if getupvalues(v)[2] ~= 26 then
+                        connection_count+=1
+                        reg[i] = function(a) end
+                    end
+                end
+            end
+        end
+
+        --[[if connection_count < 4 then
+            cloneref(game:GetService("Players"))["LocalPlayer"]:Kick("[juju]\nda hood has updated, please wait for juju to update.")
+            task["wait"](9e9) -- << idk if this will yield in luraph ?
+            return
+        end]]
+
+        local function safe_hook_function(old, replace)
+            local fake_old = clonefunction(old)
+
+            local replacements = {}
+
+            for _, v in gc do
+                if typeof(v) == "table" and #v < 2500 then
+                    local index = table.find(v, old)
+
+                    if index then
+                        replacements[v] = index
+                    end
+                end
+            end
+
+            hookfunction(old, replace)
+
+            for _, v in replacements do
+                rawset(_, v, fake_old)
+            end
+
+            return fake_old
+        end
+
+        old = nil; old = safe_hook_function(signal.__index, LPH_NO_UPVALUES(function(self, index)
+            if (index:find("^[Cc]onnect")) and getinfo(3) then
+                local source = getinfo(3).source
+                local _, count = string.gsub(source, "%.", "")
+                if count == 1 and not string.find(source, "Replicated") then
+                    return function()
+                        return setrawmetatable(newproxy(), connection)
+                    end
+                end
+            end
+            return old(self, index)
+        end))
+
+        old2 = nil; old2 = safe_hook_function(cloneref(game["GetService"](game, "UserInputService")).GetFocusedTextBox, newcclosure(LPH_NO_UPVALUES(function()
+            return nil
+        end)))
+
+        getgenv().done = true
+    end
+end)()
 
 -- > ( global cheat variables )
 
@@ -25480,6 +25473,28 @@ do
     local silent_aim_hitbox = "Head"
     local silent_aim_max_curve = nil
     local silent_aim_dont_curve_vertically = false
+
+    -- >> ( silent aim )
+    do
+        local __index_sa; __index_sa = hookmetamethod(game, "__index", newcclosure(LPH_NO_VIRTUALIZE(function(self, key)
+            if flags["silent_aim"] and self == mouse and key == "Hit" then
+                if legitbot_target and not legitbot_dont_aim then
+                    local data = legitbot_target[1]
+                    if data and not data[18] and not data[7] then
+                        local part = data[4][silent_aim_hitbox == "closest" and get_closest_part(data) or silent_aim_hitbox]
+                        if part then
+                            local part_position = custom_silent_aim_position or part["Position"]
+                            if local_gun and (silent_aim_max_distance == 2500 or (part_position - local_client_position["p"])["Magnitude"] <= (silent_aim_max_distance == 0 and (local_gun or 250) or silent_aim_max_distance)) then
+                                local pred = part["Velocity"] * (local_ping / 1000 * 0.5)
+                                return cframe_new(part_position + pred)
+                            end
+                        end
+                    end
+                end
+            end
+            return __index_sa(self, key)
+        end)))
+    end
 
     local do_silent_aim = LPH_JIT_MAX(function(dt, hrp)
         local mouse_position = get_mouse_location(user_input_service)
