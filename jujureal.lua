@@ -1,3 +1,7 @@
+-- > (check those important things) 
+if not hookmetamethod then warn("hookmetamethod NOT supported") return end
+if not getconnections then warn("getconnections NOT supported") return end
+if not newcclosure then warn("newcclosure NOT supported") return end
 
 -- > (wait game load)
 
