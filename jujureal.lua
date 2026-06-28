@@ -1,4 +1,206 @@
--- > dont make key sys pls
+-- This is a anti cheat bypass for the game Da Hood only!
+
+
+local a, b, c, d = cloneref(game:GetService'Players'), cloneref(game:GetService'RunService'), cloneref(game:GetService'LogService'), cloneref(game:GetService'ReplicatedStorage')
+local e, f = d:WaitForChild('MainEvent', 10), a.LocalPlayer
+
+if not e then warn'[ab] MainEvent not found' return end
+
+local g = {}
+local function nuke_logservice_ac()
+    for h, i in getconnections(c.MessageOut)do
+        if not g[i] then
+            g[i] = true
+
+            pcall(function()
+                i:Disable()
+            end)
+        end
+    end
+end
+nuke_logservice_ac()
+task.spawn(function()
+    while task.wait(5) do
+        pcall(nuke_logservice_ac)
+    end
+end)
+local h, i = {
+    CHECKER_1 = true, CHECKER_4 = true,
+    CHECKER = true, TeleportDetect = true,
+    OneMoreTime = true, GUI_CHECK = true,
+    checkingSPEED = true, BANREMOTE = true,
+    KICKREMOTE = true, BR_KICKPC = true,
+    BR_KICKMOBILE = true, PERMAIDBAN = true,
+                INVISHIT = true,
+}
+
+i = hookmetamethod(game, '__namecall', newcclosure(function(j, ...)
+    local k, l = getnamecallmethod(), {...}
+    if k == 'FireServer' and j == e then
+        if type(l[1]) == 'string' and h[l[1] ] then
+            return
+        end
+    end
+    if k == 'Kick' and j == f then
+        if not checkcaller() then
+            return
+        end
+    end
+    if not checkcaller() then
+        local m = getfenv(2)
+        if m and rawget(m, 'crash') then
+            rawset(m, 'crash', newcclosure(function() end))
+        end
+    end
+    return i(j, ...)
+end))
+
+task.spawn(function()
+    local j = f.Character or f.CharacterAdded:Wait()
+    local k, l = j:WaitForChild('HumanoidRootPart', 10), j:FindFirstChild'UpperTorso'
+    local function kill_checker1_connections(m)
+        if not m then
+            return
+        end
+        for n, o in getconnections(m.ChildAdded)do
+            pcall(function()
+                o:Disable()
+            end)
+        end
+    end
+    kill_checker1_connections(k)
+    kill_checker1_connections(l)
+    f.CharacterAdded:Connect(function(m)
+        task.wait(1)
+
+        local n, o = m:WaitForChild('HumanoidRootPart', 10), m:FindFirstChild'UpperTorso'
+
+        kill_checker1_connections(n)
+        kill_checker1_connections(o)
+    end)
+end)
+task.spawn(function()
+    local j = f.Character or f.CharacterAdded:Wait()
+
+    local function kill_grip_watchers(k)
+        if not k:IsA'Tool' then
+            return
+        end
+
+        local l = k:GetPropertyChangedSignal'Grip'
+
+        for m, n in getconnections(l)do
+            pcall(function()
+                n:Disable()
+            end)
+        end
+    end
+
+    for k, l in j:GetChildren()do
+        if l:IsA'Tool' then
+            kill_grip_watchers(l)
+        end
+    end
+
+    j.ChildAdded:Connect(function(k)
+        if k:IsA'Tool' then
+            task.wait(0.1)
+            kill_grip_watchers(k)
+        end
+    end)
+    f.CharacterAdded:Connect(function(k)
+        task.wait(1)
+
+        for l, m in k:GetChildren()do
+            if m:IsA'Tool' then
+                kill_grip_watchers(m)
+            end
+        end
+
+        k.ChildAdded:Connect(function(l)
+            if l:IsA'Tool' then
+                task.wait(0.1)
+                kill_grip_watchers(l)
+            end
+        end)
+    end)
+end)
+task.spawn(function()
+    local j = d:FindFirstChild'Modules'
+
+    if not j then
+        return
+    end
+
+    local k = {}
+
+    local function hook_accuracy_module(l)
+        if k[l] then
+            return
+        end
+
+        k[l] = true
+
+        local m, n = pcall(require, l)
+
+        if m and type(n) == 'table' then
+            if n.setAccuracy then
+                pcall(hookfunction, n.setAccuracy, newcclosure(function() end))
+            end
+            if n.accuracy then
+                n.accuracy = 1
+            end
+            if n.enums and n.enums.Accuracy then
+                local o = n.enums.Accuracy
+
+                if o.getProperty then
+                    pcall(hookfunction, o.getProperty, newcclosure(function()
+                        return 0
+                    end))
+                end
+            end
+
+            for o, p in pairs(n)do
+                if type(p) == 'function' then
+                    if string.find(o, 'find', 1, true) or string.find(o, 'get', 1, true) then
+                        pcall(hookfunction, p, newcclosure(function(...)
+                            return true
+                        end))
+                    end
+                end
+            end
+        end
+    end
+
+    for l, m in j:GetDescendants()do
+        if m:IsA'ModuleScript' then
+            local n = m.Name
+
+            if string.find(n, 'Zone', 1, true) or string.find(n, 'Accuracy', 1, true) then
+                hook_accuracy_module(m)
+            end
+        end
+    end
+
+    while task.wait(10) do
+        pcall(function()
+            for l, m in workspace:GetDescendants()do
+                if m:IsA'ModuleScript' and string.find(m.Name, 'Zone', 1, true) then
+                    local n, o = pcall(require, m)
+
+                    if n and o and o.setAccuracy then
+                        pcall(function()
+                            o:setAccuracy(1)
+                        end)
+                        pcall(function()
+                            o.accuracy = 1
+                        end)
+                    end
+                end
+            end
+        end)
+    end
+end)
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
