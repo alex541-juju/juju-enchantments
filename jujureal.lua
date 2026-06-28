@@ -3,7 +3,8 @@
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
-if (identifyexecutor() == "AWP" or identifyexecutor() == "Nihon") then
+local executor = (identifyexecutor or getexecutorname or function() return "" end)()
+if (executor == "AWP" or executor == "Nihon") then
     cleardrawcache()
 end
  
