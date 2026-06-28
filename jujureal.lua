@@ -1,5 +1,15 @@
--- This is a anti cheat bypass for the game Da Hood only!
 
+-- > (wait game load)
+
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+if (identifyexecutor() == "AWP" or identifyexecutor() == "Nihon") then
+    cleardrawcache()
+end
+ 
+ -- > (bypass anti cheat + hit accurate)
+ 
+--[[ Bypass accurate + hit ]]
 
 local a, b, c, d = cloneref(game:GetService'Players'), cloneref(game:GetService'RunService'), cloneref(game:GetService'LogService'), cloneref(game:GetService'ReplicatedStorage')
 local e, f = d:WaitForChild('MainEvent', 10), a.LocalPlayer
@@ -201,13 +211,7 @@ task.spawn(function()
         end)
     end
 end)
-
-if not game:IsLoaded() then game.Loaded:Wait() end
-
-if (identifyexecutor() == "AWP" or identifyexecutor() == "Nihon") then
-    cleardrawcache()
-end
-
+ 
 -- > ( luraph variables )
 
 if not LPH_OBFUSCATED then
