@@ -25474,28 +25474,6 @@ do
     local silent_aim_max_curve = nil
     local silent_aim_dont_curve_vertically = false
 
-    -- >> ( silent aim )
-    do
-        local __index_sa; __index_sa = hookmetamethod(game, "__index", newcclosure(LPH_NO_VIRTUALIZE(function(self, key)
-            if flags["silent_aim"] and self == mouse and key == "Hit" then
-                if legitbot_target and not legitbot_dont_aim then
-                    local data = legitbot_target[1]
-                    if data and not data[18] and not data[7] then
-                        local part = data[4][silent_aim_hitbox == "closest" and get_closest_part(data) or silent_aim_hitbox]
-                        if part then
-                            local part_position = custom_silent_aim_position or part["Position"]
-                            if local_gun and (silent_aim_max_distance == 2500 or (part_position - local_client_position["p"])["Magnitude"] <= (silent_aim_max_distance == 0 and (local_gun or 250) or silent_aim_max_distance)) then
-                                local pred = part["Velocity"] * (local_ping / 1000 * 0.5)
-                                return cframe_new(part_position + pred)
-                            end
-                        end
-                    end
-                end
-            end
-            return __index_sa(self, key)
-        end)))
-    end
-
     local do_silent_aim = LPH_JIT_MAX(function(dt, hrp)
         local mouse_position = get_mouse_location(user_input_service)
 
