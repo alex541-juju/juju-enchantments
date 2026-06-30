@@ -10758,6 +10758,13 @@ end)
 
     -- >> ( tools )
 
+    menu_references["watermark"] = menu_references["utility_section"]:create_element({["name"] = "watermark"}, {["toggle"] = {["flag"] = "watermark", ["default"] = true}})
+    menu_references["watermark_settings"] = menu_references["watermark"]:create_settings()
+    menu_references["watermark_show_fps"] = menu_references["watermark_settings"]:create_element({["name"] = "show fps"}, {["toggle"] = {["flag"] = "watermark_show_fps", ["default"] = true}})
+    menu_references["watermark_show_ping"] = menu_references["watermark_settings"]:create_element({["name"] = "show ping"}, {["toggle"] = {["flag"] = "watermark_show_ping", ["default"] = true}})
+    menu_references["watermark_show_time"] = menu_references["watermark_settings"]:create_element({["name"] = "show time"}, {["toggle"] = {["flag"] = "watermark_show_time", ["default"] = true}})
+    menu_references["watermark_time_format"] = menu_references["watermark_settings"]:create_element({["name"] = "time format"}, {["dropdown"] = {["flag"] = "watermark_time_format", ["default"] = "HH:MM", ["options"] = {"HH:MM", "HH:MM:SS", "DD/MM/YYYY", "HH:MM DD/MM", "HH:MM:SS DD/MM/YYYY"}}})
+
     menu_references["server_section"] = menu["groups"]["misc."]:create_section("main", "server", 2, 0.3, 0.7)
     create_connection(menu_references["server_section"]:create_element({["name"] = "copy join script"}, {["button"] = {}})["on_clicked"], function()
         setclipboard("cloneref(game:GetService(\"TeleportService\")):TeleportToPlaceInstance("..game["PlaceId"]..", \""..game["JobId"].."\")")
@@ -27442,6 +27449,112 @@ do
         spawn(menu["load_config"], autoload)
         menu["new_notification"]("autoloaded config "..autoload, 1)
     end
+end
+
+-- > ( watermark )
+
+do
+    local wm_gui = create_instance("ScreenGui", {
+        ["Name"] = "wm_juju",
+        ["ZIndexBehavior"] = Enum["ZIndexBehavior"]["Global"],
+        ["Parent"] = hui
+    })
+
+    local wm_frame = create_instance("Frame", {
+        ["Parent"] = wm_gui,
+        ["Active"] = true,
+        ["BackgroundColor3"] = color3_fromrgb(13, 10, 28),
+        ["BackgroundTransparency"] = 0.35,
+        ["BorderSizePixel"] = 0,
+        ["Position"] = udim2_new(0, 10, 0, 10),
+        ["Size"] = udim2_new(0, 400, 0, 33),
+        ["Draggable"] = true
+    })
+
+    create_instance("UICorner", {
+        ["CornerRadius"] = UDim["new"](0, 9),
+        ["Parent"] = wm_frame
+    })
+
+    create_instance("ImageLabel", {
+        ["Parent"] = wm_frame,
+        ["BackgroundTransparency"] = 1,
+        ["Position"] = udim2_new(0, -14, 0, -16),
+        ["Size"] = udim2_new(0.995, 30, 0.939, 30),
+        ["ZIndex"] = 0,
+        ["Image"] = "rbxassetid://5028857084",
+        ["ImageColor3"] = color3_fromrgb(72, 0, 255),
+        ["ImageTransparency"] = 0.4,
+        ["ScaleType"] = Enum["ScaleType"]["Slice"],
+        ["SliceCenter"] = Rect["new"](24, 24, 276, 276)
+    })
+
+    create_instance("ImageLabel", {
+        ["Parent"] = wm_frame,
+        ["AnchorPoint"] = vector2_new(0.5, 0),
+        ["BackgroundTransparency"] = 1,
+        ["Position"] = udim2_new(0.046, 0, 0.076, 3),
+        ["Size"] = udim2_new(0, 20, 0, 19),
+        ["Image"] = "rbxassetid://10272150497"
+    })
+
+    create_instance("TextLabel", {
+        ["Parent"] = wm_frame,
+        ["BackgroundTransparency"] = 1,
+        ["Position"] = udim2_new(0.091, 0, 0.107, 0),
+        ["Size"] = udim2_new(0, 50, 0, 25),
+        ["Font"] = Enum["Font"]["GothamBold"],
+        ["Text"] = "JUJU",
+        ["TextColor3"] = color3_fromrgb(188, 188, 188),
+        ["TextSize"] = 14,
+        ["TextXAlignment"] = Enum["TextXAlignment"]["Left"]
+    })
+
+    local wm_stats = create_instance("TextLabel", {
+        ["Parent"] = wm_frame,
+        ["BackgroundTransparency"] = 1,
+        ["Position"] = udim2_new(0.2, 0, 0.107, 0),
+        ["Size"] = udim2_new(0, 320, 0, 25),
+        ["Font"] = Enum["Font"]["GothamBold"],
+        ["TextColor3"] = color3_fromrgb(188, 188, 188),
+        ["TextSize"] = 14,
+        ["TextXAlignment"] = Enum["TextXAlignment"]["Left"]
+    })
+
+    create_connection(run_service["Heartbeat"], LPH_NO_VIRTUALIZE(function()
+        local visible = flags["watermark"]
+        wm_frame["Visible"] = visible
+        if not visible then return end
+
+        local text_parts = {}
+
+        if flags["watermark_show_time"] then
+            local time_format = flags["watermark_time_format"] or "HH:MM"
+            local os_time = os["time"]()
+            if time_format == "HH:MM" then
+                table.insert(text_parts, os["date"]("%H:%M", os_time))
+            elseif time_format == "HH:MM:SS" then
+                table.insert(text_parts, os["date"]("%H:%M:%S", os_time))
+            elseif time_format == "DD/MM/YYYY" then
+                table.insert(text_parts, os["date"]("%d/%m/%Y", os_time))
+            elseif time_format == "HH:MM DD/MM" then
+                table.insert(text_parts, os["date"]("%H:%M %d/%m", os_time))
+            elseif time_format == "HH:MM:SS DD/MM/YYYY" then
+                table.insert(text_parts, os["date"]("%H:%M:%S %d/%m/%Y", os_time))
+            end
+        end
+
+        if flags["watermark_show_fps"] then
+            table.insert(text_parts, "FPS: "..floor(local_fps))
+        end
+
+        if flags["watermark_show_ping"] then
+            table.insert(text_parts, "PING: "..local_ping)
+        end
+
+        local display_text = table.concat(text_parts, " | ")
+        wm_stats["Text"] = display_text
+    end))
 end
 
 -- > ( update data )
